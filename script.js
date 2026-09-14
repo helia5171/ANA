@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     // =========================
     // عناصر اصلی
     // =========================
@@ -23,17 +24,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showPage(page) {
+        if (!page) return;
+
         Object.values(pages).forEach(p => {
-            if (p) p.classList.remove("active");
+            if (!p) return;
+            p.classList.remove("active");
+            p.classList.add("hidden");
         });
 
-        if (page) {
-            page.classList.add("active");
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
+        page.classList.remove("hidden");
+        page.classList.add("active");
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }
 
     function createConfetti() {
@@ -46,8 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             piece.style.left = `${Math.random() * 100}%`;
             piece.style.animationDelay = `${Math.random() * 0.8}s`;
-            piece.style.animationDuration =
-                `${2 + Math.random() * 2}s`;
+            piece.style.animationDuration = `${2 + Math.random() * 2}s`;
 
             container.appendChild(piece);
         }
@@ -71,18 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const calendarMessage = document.getElementById("calendarMessage");
 
     const shamsiMonths = [
-        "فروردین",
-        "اردیبهشت",
-        "خرداد",
-        "تیر",
-        "مرداد",
-        "شهریور",
-        "مهر",
-        "آبان",
-        "آذر",
-        "دی",
-        "بهمن",
-        "اسفند"
+        "فروردین", "اردیبهشت", "خرداد",
+        "تیر", "مرداد", "شهریور",
+        "مهر", "آبان", "آذر",
+        "دی", "بهمن", "اسفند"
     ];
 
     let calendarMonth = 5;
@@ -118,8 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 button.addEventListener("click", () => {
                     if (calendarMessage) {
-                        calendarMessage.textContent =
-                            "آرههه! خودشه! 🎂💗";
+                        calendarMessage.textContent = "آرههه! خودشه! 🎂💗";
                     }
 
                     createConfetti();
@@ -143,23 +138,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     prevMonth?.addEventListener("click", () => {
         calendarMonth--;
-
         if (calendarMonth < 0) {
             calendarMonth = 11;
             calendarYear--;
         }
-
         renderCalendar();
     });
 
     nextMonth?.addEventListener("click", () => {
         calendarMonth++;
-
         if (calendarMonth > 11) {
             calendarMonth = 0;
             calendarYear++;
         }
-
         renderCalendar();
     });
 
@@ -180,15 +171,14 @@ document.addEventListener("DOMContentLoaded", () => {
             showPage(pages[section]);
 
             updateGiftProgress();
-            updateSecretLock();
         });
     });
 
     // =========================
-    // دکمه‌های برگشت
+    // دکمه‌های برگشت (پشتیبانی از هر دو حالت)
     // =========================
 
-    document.querySelectorAll("[data-back]").forEach(button => {
+    document.querySelectorAll("[data-back], .back-button").forEach(button => {
         button.addEventListener("click", () => {
             showPage(pages.home);
         });
@@ -201,10 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const giftProgress = document.getElementById("giftProgress");
 
     function updateGiftProgress() {
-        if (!giftProgress) return;
-
-        giftProgress.textContent =
-            `${persianNumber(openedGifts.size)} از ${persianNumber(3)} کادو باز شده`;
+        if (giftProgress) {
+            giftProgress.textContent =
+                `${persianNumber(openedGifts.size)} از ${persianNumber(3)} کادو باز شده`;
+        }
 
         updateSecretLock();
     }
@@ -222,16 +212,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     growFlower?.addEventListener("click", () => {
         if (flowerGrown) return;
-
         flowerGrown = true;
 
-        if (flowerStem) {
-            flowerStem.classList.add("grown");
-        }
-
-        if (flowerHead) {
-            flowerHead.classList.add("bloom");
-        }
+        if (flowerStem) flowerStem.classList.add("grown");
+        if (flowerHead) flowerHead.classList.add("bloom");
 
         if (growFlower) {
             growFlower.textContent = "گل شکوفه زد 🌸";
@@ -240,12 +224,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (flowerMessage) {
             flowerMessage.innerHTML = `
-                <p>
-                    برای اناهیتا قشنگم که مثل همین گل زیباس 🌸
-                </p>
-                <p>
-                    امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه 💗
-                </p>
+                <p>برای اناهیتا قشنگم که مثل همین گل زیباس 🌸</p>
+                <p>امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه 💗</p>
             `;
         }
 
@@ -264,34 +244,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     blowCake?.addEventListener("click", () => {
         if (cakeBlown) return;
-
         cakeBlown = true;
 
         const cake = document.querySelector(".cake");
-
-        if (cake) {
-            cake.classList.add("blown");
-        }
+        if (cake) cake.classList.add("blown");
 
         blowCake.textContent = "هورا ! 🎉";
         blowCake.disabled = true;
 
-        if (footballStats) {
-            footballStats.classList.add("show");
-        }
+        if (footballStats) footballStats.classList.add("show");
 
         if (realMessage) {
             realMessage.innerHTML = `
-                <p>
-                    برای اناهیتایی که عاشق فوتباله ⚽🤍
-                </p>
-                <p>
-                    Hala Madrid! 🤍💙
-                </p>
-                <p>
-                    امیدوارم همیشه توی دویدن، فوتبال و رسیدن به
-                    آرزوهات موفق باشی ✨
-                </p>
+                <p>برای اناهیتایی که عاشق فوتباله ⚽🤍</p>
+                <p>Hala Madrid! 🤍💙</p>
+                <p>امیدوارم همیشه توی دویدن، فوتبال و رسیدن به آرزوهات موفق باشی ✨</p>
             `;
         }
 
@@ -322,9 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!typedLetter) return;
 
         typedLetter.textContent = "";
-        if (letterSignature) {
-            letterSignature.classList.remove("show");
-        }
+        if (letterSignature) letterSignature.classList.remove("show");
 
         let index = 0;
 
@@ -332,21 +297,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (index < letterText.length) {
                 typedLetter.textContent += letterText[index];
                 index++;
-
-                typedLetter.scrollTop =
-                    typedLetter.scrollHeight;
+                typedLetter.scrollTop = typedLetter.scrollHeight;
             } else {
                 clearInterval(interval);
 
                 if (letterSignature) {
-                    letterSignature.textContent =
-                        "از طرف هلیا ♡";
-
+                    letterSignature.textContent = "از طرف هلیا ♡";
                     letterSignature.classList.add("show");
                 }
 
-                // فقط قفل مرحله مخفی را بررسی می‌کنیم.
-                // اینجا دیگر وارد مرحله مخفی نمی‌شویم.
                 updateSecretLock();
             }
         }, 35);
@@ -354,15 +313,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     openLetter?.addEventListener("click", () => {
         if (letterOpened) return;
-
         letterOpened = true;
 
-        const envelope =
-            document.getElementById("envelope");
-
-        if (envelope) {
-            envelope.classList.add("open");
-        }
+        const envelope = document.getElementById("envelope");
+        if (envelope) envelope.classList.add("open");
 
         openLetter.textContent = "نامه باز شد 💌";
         openLetter.disabled = true;
@@ -376,45 +330,31 @@ document.addEventListener("DOMContentLoaded", () => {
     // مرحله مخفی
     // =========================
 
-    const secretUnlockBox =
-        document.getElementById("secretUnlockBox");
-
-    const secretUnlockButton =
-        document.getElementById("secretUnlockButton");
-
-    const secretUnlockText =
-        document.getElementById("secretUnlockText");
+    const secretUnlockBox = document.getElementById("secretUnlockBox");
+    const secretUnlockButton = document.getElementById("secretUnlockButton");
+    const secretUnlockText = document.getElementById("secretUnlockText");
 
     let secretUnlocked = false;
 
     function updateSecretLock() {
-        if (!secretUnlockBox || !secretUnlockButton) {
-            return;
-        }
+        if (!secretUnlockBox || !secretUnlockButton) return;
 
         if (openedGifts.size < 3) {
             secretUnlockBox.classList.add("locked");
-
             secretUnlockButton.disabled = true;
-            secretUnlockButton.textContent =
-                "هنوز قفله 🔒";
+            secretUnlockButton.textContent = "هنوز قفله 🔒";
 
             if (secretUnlockText) {
-                const remaining =
-                    3 - openedGifts.size;
-
+                const remaining = 3 - openedGifts.size;
                 secretUnlockText.textContent =
                     `هنوز ${persianNumber(remaining)} کادو باقی مونده...`;
             }
-
             return;
         }
 
         secretUnlockBox.classList.remove("locked");
-
         secretUnlockButton.disabled = false;
-        secretUnlockButton.textContent =
-            "باز کردن مرحله مخفی ✨";
+        secretUnlockButton.textContent = "باز کردن مرحله مخفی ✨";
 
         if (secretUnlockText) {
             secretUnlockText.textContent =
@@ -427,7 +367,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (secretUnlocked) return;
 
         secretUnlocked = true;
-
         createConfetti();
 
         setTimeout(() => {
@@ -436,12 +375,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // =========================
-    // مرحله مخفی
+    // مرحله مخفی - دکمه داخل صفحه
     // =========================
 
-    const secretButton =
-        document.getElementById("secretButton");
-
+    const secretButton = document.getElementById("secretButton");
     secretButton?.addEventListener("click", () => {
         createConfetti();
     });
