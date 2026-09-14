@@ -45,11 +45,9 @@ function showPage(page) {
     pages.forEach(item => {
 
         item.classList.remove("active");
-
         item.classList.add("hidden");
 
     });
-
 
     page.classList.remove("hidden");
 
@@ -108,7 +106,6 @@ const monthNames = [
 
 
 let currentYear = 1405;
-
 let currentMonth = 5;
 
 
@@ -127,9 +124,7 @@ const calendarMessage =
     document.getElementById("calendarMessage");
 
 
-/*
-    تعداد روزهای ماه شمسی
-*/
+/* تعداد روزهای ماه شمسی */
 
 function getMonthDays(
     year,
@@ -137,15 +132,11 @@ function getMonthDays(
 ) {
 
     if (month <= 5) {
-
         return 31;
-
     }
 
     if (month <= 10) {
-
         return 30;
-
     }
 
     return 29;
@@ -153,9 +144,7 @@ function getMonthDays(
 }
 
 
-/*
-    ساخت تقویم
-*/
+/* ساخت تقویم */
 
 function renderCalendar() {
 
@@ -167,11 +156,6 @@ function renderCalendar() {
 
     calendarDays.innerHTML = "";
 
-
-    /*
-        برای طراحی ساده و زیبا،
-        روز اول را با offset مناسب قرار می‌دهیم.
-    */
 
     const offset =
         getFirstDayOffset(
@@ -225,7 +209,7 @@ function renderCalendar() {
 
 
         /*
-            تولد:
+            تولد اناهیتا:
             ۲۸ شهریور
         */
 
@@ -264,22 +248,12 @@ function renderCalendar() {
 }
 
 
-/*
-    offset تقویم
-
-    اینجا عمداً برای شهریور ۱۴۰۵
-    ظاهر تقویم را مرتب نگه می‌داریم.
-*/
+/* offset تقویم */
 
 function getFirstDayOffset(
     year,
     month
 ) {
-
-    /*
-        شهریور ۱۴۰۵
-        با یک offset زیبا شروع می‌شود.
-    */
 
     if (
         year === 1405 &&
@@ -289,12 +263,6 @@ function getFirstDayOffset(
         return 1;
 
     }
-
-
-    /*
-        برای ماه‌های دیگر
-        یک مقدار تقریبی مناسب.
-    */
 
     return (month * 2) % 7;
 
@@ -373,7 +341,6 @@ document
             if (currentMonth < 0) {
 
                 currentMonth = 11;
-
                 currentYear--;
 
             }
@@ -395,7 +362,6 @@ document
             if (currentMonth > 11) {
 
                 currentMonth = 0;
-
                 currentYear++;
 
             }
@@ -482,9 +448,14 @@ giftCards.forEach(card => {
 
 function updateOpenedCounter() {
 
-    document.getElementById(
-        "openedCount"
-    ).textContent =
+    const counter =
+        document.getElementById(
+            "openedCount"
+        );
+
+    if (!counter) return;
+
+    counter.textContent =
         toPersianNumber(
             openedGifts.size
         );
@@ -506,10 +477,6 @@ document
 
                 showPage(homePage);
 
-                /*
-                    وقتی هر سه هدیه باز شدند،
-                    Secret Level آماده است.
-                */
 
                 if (
                     openedGifts.size === 3
@@ -557,66 +524,82 @@ let flowerAlreadyGrown =
     false;
 
 
-growFlower.addEventListener(
-    "click",
-    () => {
+if (growFlower) {
 
-        if (
-            flowerAlreadyGrown
-        ) {
+    growFlower.addEventListener(
+        "click",
+        () => {
 
-            return;
+            if (
+                flowerAlreadyGrown
+            ) {
 
-        }
+                return;
 
-
-        flowerAlreadyGrown =
-            true;
+            }
 
 
-        growFlower.textContent =
-            "شکوفه داد 🌷";
+            flowerAlreadyGrown =
+                true;
 
 
-        flowerStem.style.height =
-            "150px";
+            growFlower.textContent =
+                "شکوفه داد 🌷";
 
 
-        document
-            .querySelectorAll(".leaf")
-            .forEach(leaf => {
+            if (flowerStem) {
+
+                flowerStem.style.height =
+                    "150px";
+
+            }
+
+
+            document
+                .querySelectorAll(".leaf")
+                .forEach(leaf => {
+
+                    setTimeout(() => {
+
+                        leaf.style.opacity =
+                            "1";
+
+                    }, 700);
+
+                });
+
+
+            if (flowerHead) {
 
                 setTimeout(() => {
 
-                    leaf.style.opacity =
+                    flowerHead.style.opacity =
                         "1";
 
-                }, 700);
+                    flowerHead.style.transform =
+                        "translateX(-50%) scale(1)";
 
-            });
+                }, 900);
 
-
-        setTimeout(() => {
-
-            flowerHead.style.opacity =
-                "1";
-
-            flowerHead.style.transform =
-                "translateX(-50%) scale(1)";
-
-        }, 900);
+            }
 
 
-        setTimeout(() => {
+            if (flowerMessage) {
 
-            flowerMessage.classList.add(
-                "show"
-            );
+                setTimeout(() => {
 
-        }, 1800);
+                    flowerMessage.classList.add(
+                        "show"
+                    );
 
-    }
-);
+                }, 1800);
+
+            }
+
+        }
+    );
+
+}
 
 
 /* =====================================================
@@ -643,49 +626,67 @@ let cakeAlreadyBlown =
     false;
 
 
-blowCake.addEventListener(
-    "click",
-    () => {
+if (blowCake) {
 
-        if (
-            cakeAlreadyBlown
-        ) {
+    blowCake.addEventListener(
+        "click",
+        () => {
 
-            return;
+            if (
+                cakeAlreadyBlown
+            ) {
+
+                return;
+
+            }
+
+
+            cakeAlreadyBlown =
+                true;
+
+
+            /*
+                تغییر اصلی:
+                بعد از فوت کردن کیک
+                متن «هورا ! 🎉» نمایش داده می‌شود.
+            */
+
+            blowCake.textContent =
+                "هورا ! 🎉";
+
+
+            createConfetti();
+
+
+            if (footballStats) {
+
+                setTimeout(() => {
+
+                    footballStats.classList.add(
+                        "show"
+                    );
+
+                }, 500);
+
+            }
+
+
+            if (realMessage) {
+
+                setTimeout(() => {
+
+                    realMessage.classList.add(
+                        "show"
+                    );
+
+                }, 1500);
+
+            }
 
         }
+    );
 
-
-        cakeAlreadyBlown =
-            true;
-
-
-        blowCake.textContent =
-            "Level Up شد! ⚽";
-
-
-        createConfetti();
-
-
-        setTimeout(() => {
-
-            footballStats.classList.add(
-                "show"
-            );
-
-        }, 500);
-
-
-        setTimeout(() => {
-
-            realMessage.classList.add(
-                "show"
-            );
-
-        }, 1500);
-
-    }
-);
+}
 
 
 /* =====================================================
@@ -694,14 +695,14 @@ blowCake.addEventListener(
 
 
 /*
-    متن واقعی نامه‌ی هلیا
+    متن نامه‌ی هلیا
 */
 
 const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
 
 خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
 خیلی خیلی دوست دارم و خیلی برام باارزشی،
-بابت تمام خنده‌ها و لحظات خوبی که برام ساختی.
+بابت تمام خنده‌ها و لحظات خوبی که برام ساختی، ممنونم.
 
 فرشته کوچولو،
 امیدوارم همیشه به تمام آرزوهات برسی
@@ -733,46 +734,54 @@ let letterAlreadyOpened =
     false;
 
 
-openLetter.addEventListener(
-    "click",
-    () => {
+if (openLetter) {
 
-        if (
-            letterAlreadyOpened
-        ) {
+    openLetter.addEventListener(
+        "click",
+        () => {
 
-            return;
+            if (
+                letterAlreadyOpened
+            ) {
+
+                return;
+
+            }
+
+
+            letterAlreadyOpened =
+                true;
+
+
+            if (envelope) {
+
+                envelope.classList.add(
+                    "open"
+                );
+
+            }
+
+
+            openLetter.textContent =
+                "نامه باز شد 🤍";
+
+
+            setTimeout(
+                typeLetter,
+                800
+            );
 
         }
+    );
+
+}
 
 
-        letterAlreadyOpened =
-            true;
-
-
-        envelope.classList.add(
-            "open"
-        );
-
-
-        openLetter.textContent =
-            "نامه باز شد 🤍";
-
-
-        setTimeout(
-            typeLetter,
-            800
-        );
-
-    }
-);
-
-
-/*
-    افکت تایپ
-*/
+/* افکت تایپ */
 
 function typeLetter() {
+
+    if (!typedLetter) return;
 
     let index = 0;
 
@@ -800,9 +809,16 @@ function typeLetter() {
 
             setTimeout(() => {
 
-                letterSignature.classList.add(
-                    "show"
-                );
+                if (letterSignature) {
+
+                    letterSignature.textContent =
+                        "از طرف هلیا ♡";
+
+                    letterSignature.classList.add(
+                        "show"
+                    );
+
+                }
 
             }, 500);
 
@@ -897,11 +913,6 @@ function showSecretNotification() {
             secretPage
         );
 
-
-        /*
-            برای اینکه دوباره
-            نمایش داده نشود.
-        */
 
         secretNotificationShown =
             true;
