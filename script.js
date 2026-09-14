@@ -1,28 +1,37 @@
-/* =========================================
-   Birthday Gift Website
-   JavaScript
-========================================= */
+/* =====================================================
+   ANA - BIRTHDAY WEBSITE
+   Made with love by Helia ♡
+===================================================== */
 
 
-/* =========================================
+/* =====================================================
    PAGE ELEMENTS
-========================================= */
+===================================================== */
 
-const calendarPage = document.getElementById("calendarPage");
-const homePage = document.getElementById("homePage");
+const calendarPage =
+    document.getElementById("calendarPage");
 
-const flowerPage = document.getElementById("flowerPage");
-const cakePage = document.getElementById("cakePage");
-const letterPage = document.getElementById("letterPage");
+const homePage =
+    document.getElementById("homePage");
 
-const secretPage = document.getElementById("secretPage");
+const flowerPage =
+    document.getElementById("flowerPage");
+
+const cakePage =
+    document.getElementById("cakePage");
+
+const letterPage =
+    document.getElementById("letterPage");
+
+const secretPage =
+    document.getElementById("secretPage");
 
 
-/* =========================================
+/* =====================================================
    PAGE NAVIGATION
-========================================= */
+===================================================== */
 
-function showPage(pageToShow) {
+function showPage(page) {
 
     const pages = [
         calendarPage,
@@ -33,26 +42,55 @@ function showPage(pageToShow) {
         secretPage
     ];
 
-    pages.forEach(page => {
+    pages.forEach(item => {
 
-        page.classList.remove("active");
-        page.classList.add("hidden");
+        item.classList.remove("active");
+
+        item.classList.add("hidden");
 
     });
 
-    pageToShow.classList.remove("hidden");
+
+    page.classList.remove("hidden");
 
     setTimeout(() => {
-        pageToShow.classList.add("active");
+
+        page.classList.add("active");
+
     }, 30);
+
 }
 
 
-/* =========================================
+/* =====================================================
+   PERSIAN NUMBERS
+===================================================== */
+
+function toPersianNumber(number) {
+
+    const english =
+        "0123456789";
+
+    const persian =
+        "۰۱۲۳۴۵۶۷۸۹";
+
+    return String(number).replace(
+        /[0-9]/g,
+        digit =>
+            persian[
+                english.indexOf(digit)
+            ]
+    );
+
+}
+
+
+/* =====================================================
    JALALI CALENDAR
-========================================= */
+===================================================== */
 
 const monthNames = [
+
     "فروردین",
     "اردیبهشت",
     "خرداد",
@@ -65,122 +103,141 @@ const monthNames = [
     "دی",
     "بهمن",
     "اسفند"
+
 ];
 
-const monthNameElement = document.getElementById("monthName");
-const yearNameElement = document.getElementById("yearName");
-const calendarDays = document.getElementById("calendarDays");
-const calendarMessage = document.getElementById("calendarMessage");
 
-let currentMonth = 5;
 let currentYear = 1405;
 
+let currentMonth = 5;
+
+
+/* DOM */
+
+const monthName =
+    document.getElementById("monthName");
+
+const yearName =
+    document.getElementById("yearName");
+
+const calendarDays =
+    document.getElementById("calendarDays");
+
+const calendarMessage =
+    document.getElementById("calendarMessage");
+
 
 /*
-    این تابع تعداد روزهای ماه شمسی را مشخص می‌کند.
+    تعداد روزهای ماه شمسی
 */
-function getMonthDays(year, month) {
 
-    if (month < 6) {
+function getMonthDays(
+    year,
+    month
+) {
+
+    if (month <= 5) {
+
         return 31;
+
     }
 
-    if (month < 11) {
+    if (month <= 10) {
+
         return 30;
+
     }
 
-    return isLeapJalali(year) ? 30 : 29;
-}
+    return 29;
 
-
-/*
-    تشخیص سال کبیسه‌ی شمسی
-*/
-function isLeapJalali(year) {
-
-    const remainder = year % 33;
-
-    const leapYears = [
-        1, 5, 9, 13, 17, 22, 26, 30
-    ];
-
-    return leapYears.includes(remainder);
-}
-
-
-/*
-    تبدیل عدد به فارسی
-*/
-function toPersianNumber(number) {
-
-    const english = "0123456789";
-    const persian = "۰۱۲۳۴۵۶۷۸۹";
-
-    return String(number).replace(
-        /[0-9]/g,
-        digit => persian[english.indexOf(digit)]
-    );
 }
 
 
 /*
     ساخت تقویم
 */
+
 function renderCalendar() {
 
-    monthNameElement.textContent = monthNames[currentMonth];
+    monthName.textContent =
+        monthNames[currentMonth];
 
-    yearNameElement.textContent =
+    yearName.textContent =
         toPersianNumber(currentYear);
 
     calendarDays.innerHTML = "";
 
-    /*
-        برای سادگی و ظاهر هدیه،
-        شهریور را به شکل تقویم کامل نمایش می‌دهیم.
-    */
-
-    let firstDayOffset = 1;
 
     /*
-        اگر ماه شهریور باشد، تاریخ ۲۸ همیشه قابل انتخاب است.
+        برای طراحی ساده و زیبا،
+        روز اول را با offset مناسب قرار می‌دهیم.
     */
 
-    for (let i = 0; i < firstDayOffset; i++) {
+    const offset =
+        getFirstDayOffset(
+            currentYear,
+            currentMonth
+        );
 
-        const empty = document.createElement("div");
 
-        empty.className = "calendar-day empty";
+    for (
+        let i = 0;
+        i < offset;
+        i++
+    ) {
 
-        calendarDays.appendChild(empty);
+        const empty =
+            document.createElement("div");
+
+        empty.className =
+            "calendar-day empty";
+
+        calendarDays.appendChild(
+            empty
+        );
+
     }
 
-    const totalDays = getMonthDays(
-        currentYear,
-        currentMonth
-    );
 
-    for (let day = 1; day <= totalDays; day++) {
+    const totalDays =
+        getMonthDays(
+            currentYear,
+            currentMonth
+        );
 
-        const button = document.createElement("button");
 
-        button.className = "calendar-day";
+    for (
+        let day = 1;
+        day <= totalDays;
+        day++
+    ) {
 
-        button.textContent = toPersianNumber(day);
+        const button =
+            document.createElement("button");
+
+
+        button.className =
+            "calendar-day";
+
+
+        button.textContent =
+            toPersianNumber(day);
 
 
         /*
-            ۲۸ شهریور = روز تولد
+            تولد:
+            ۲۸ شهریور
         */
 
         if (
+            currentYear === 1405 &&
             currentMonth === 5 &&
             day === 28
         ) {
 
-            button.classList.add("birthday");
-
-            button.title = "تاریخ خاص 💗";
+            button.classList.add(
+                "birthday"
+            );
 
         }
 
@@ -197,16 +254,61 @@ function renderCalendar() {
             }
         );
 
-        calendarDays.appendChild(button);
+
+        calendarDays.appendChild(
+            button
+        );
+
     }
+
 }
 
 
-/* =========================================
-   CHECK BIRTHDAY
-========================================= */
+/*
+    offset تقویم
 
-function checkBirthday(month, day) {
+    اینجا عمداً برای شهریور ۱۴۰۵
+    ظاهر تقویم را مرتب نگه می‌داریم.
+*/
+
+function getFirstDayOffset(
+    year,
+    month
+) {
+
+    /*
+        شهریور ۱۴۰۵
+        با یک offset زیبا شروع می‌شود.
+    */
+
+    if (
+        year === 1405 &&
+        month === 5
+    ) {
+
+        return 1;
+
+    }
+
+
+    /*
+        برای ماه‌های دیگر
+        یک مقدار تقریبی مناسب.
+    */
+
+    return (month * 2) % 7;
+
+}
+
+
+/* =====================================================
+   BIRTHDAY CHECK
+===================================================== */
+
+function checkBirthday(
+    month,
+    day
+) {
 
     if (
         month === 5 &&
@@ -217,29 +319,35 @@ function checkBirthday(month, day) {
             "آره... همین تاریخه. 🤍";
 
         calendarMessage.style.color =
-            "#579cc5";
+            "#559dc5";
+
+
+        createConfetti();
+
 
         setTimeout(() => {
 
             openBirthday();
 
-        }, 900);
+        }, 1000);
+
 
     } else {
 
         calendarMessage.textContent =
-            "این تاریخ نیست... یه بار دیگه امتحان کن 🌷";
+            "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
 
         calendarMessage.style.color =
-            "#e889b1";
+            "#df7fa8";
 
     }
+
 }
 
 
-/* =========================================
+/* =====================================================
    OPEN BIRTHDAY
-========================================= */
+===================================================== */
 
 function openBirthday() {
 
@@ -250,108 +358,143 @@ function openBirthday() {
 }
 
 
-/* =========================================
-   CALENDAR BUTTONS
-========================================= */
+/* =====================================================
+   CALENDAR MONTH BUTTONS
+===================================================== */
 
 document
     .getElementById("prevMonth")
-    .addEventListener("click", () => {
+    .addEventListener(
+        "click",
+        () => {
 
-        currentMonth--;
+            currentMonth--;
 
-        if (currentMonth < 0) {
+            if (currentMonth < 0) {
 
-            currentMonth = 11;
-            currentYear--;
+                currentMonth = 11;
+
+                currentYear--;
+
+            }
+
+            renderCalendar();
 
         }
-
-        renderCalendar();
-
-    });
+    );
 
 
 document
     .getElementById("nextMonth")
-    .addEventListener("click", () => {
+    .addEventListener(
+        "click",
+        () => {
 
-        currentMonth++;
+            currentMonth++;
 
-        if (currentMonth > 11) {
+            if (currentMonth > 11) {
 
-            currentMonth = 0;
-            currentYear++;
+                currentMonth = 0;
+
+                currentYear++;
+
+            }
+
+            renderCalendar();
 
         }
-
-        renderCalendar();
-
-    });
+    );
 
 
-/* =========================================
-   GIFT CARD NAVIGATION
-========================================= */
+/* =====================================================
+   GIFT SYSTEM
+===================================================== */
 
 const giftCards =
-    document.querySelectorAll(".gift-card");
+    document.querySelectorAll(
+        ".gift-card"
+    );
 
-let openedGifts = new Set();
+
+let openedGifts =
+    new Set();
+
 
 giftCards.forEach(card => {
 
-    card.addEventListener("click", () => {
+    card.addEventListener(
+        "click",
+        () => {
 
-        const section =
-            card.dataset.section;
+            const section =
+                card.dataset.section;
 
-        openedGifts.add(section);
 
-        updateOpenedCounter();
+            openedGifts.add(
+                section
+            );
 
-        if (section === "flower") {
 
-            showPage(flowerPage);
+            updateOpenedCounter();
+
+
+            if (
+                section === "flower"
+            ) {
+
+                showPage(
+                    flowerPage
+                );
+
+            }
+
+
+            if (
+                section === "cake"
+            ) {
+
+                showPage(
+                    cakePage
+                );
+
+            }
+
+
+            if (
+                section === "letter"
+            ) {
+
+                showPage(
+                    letterPage
+                );
+
+            }
 
         }
-
-        if (section === "cake") {
-
-            showPage(cakePage);
-
-        }
-
-        if (section === "letter") {
-
-            showPage(letterPage);
-
-        }
-
-    });
+    );
 
 });
 
 
-/* =========================================
+/* =====================================================
    COUNTER
-========================================= */
+===================================================== */
 
 function updateOpenedCounter() {
 
-    const count =
-        openedGifts.size;
-
     document.getElementById(
         "openedCount"
-    ).textContent = toPersianNumber(count);
+    ).textContent =
+        toPersianNumber(
+            openedGifts.size
+        );
 
 }
 
 
-/* =========================================
+/* =====================================================
    BACK BUTTONS
-========================================= */
+===================================================== */
 
 document
     .querySelectorAll(".back-button")
@@ -363,7 +506,21 @@ document
 
                 showPage(homePage);
 
-                checkSecretLevel();
+                /*
+                    وقتی هر سه هدیه باز شدند،
+                    Secret Level آماده است.
+                */
+
+                if (
+                    openedGifts.size === 3
+                ) {
+
+                    setTimeout(
+                        showSecretNotification,
+                        500
+                    );
+
+                }
 
             }
         );
@@ -371,41 +528,78 @@ document
     });
 
 
-/* =========================================
+/* =====================================================
    FLOWER
-========================================= */
+===================================================== */
 
-const growFlowerButton =
-    document.getElementById("growFlower");
+const growFlower =
+    document.getElementById(
+        "growFlower"
+    );
 
 const flowerStem =
-    document.getElementById("flowerStem");
+    document.getElementById(
+        "flowerStem"
+    );
 
 const flowerHead =
-    document.getElementById("flowerHead");
+    document.getElementById(
+        "flowerHead"
+    );
 
 const flowerMessage =
-    document.getElementById("flowerMessage");
+    document.getElementById(
+        "flowerMessage"
+    );
 
-let flowerGrown = false;
 
-growFlowerButton.addEventListener(
+let flowerAlreadyGrown =
+    false;
+
+
+growFlower.addEventListener(
     "click",
     () => {
 
-        if (flowerGrown) return;
+        if (
+            flowerAlreadyGrown
+        ) {
 
-        flowerGrown = true;
+            return;
 
-        growFlowerButton.textContent =
+        }
+
+
+        flowerAlreadyGrown =
+            true;
+
+
+        growFlower.textContent =
             "شکوفه داد 🌷";
 
+
         flowerStem.style.height =
-            "145px";
+            "150px";
+
+
+        document
+            .querySelectorAll(".leaf")
+            .forEach(leaf => {
+
+                setTimeout(() => {
+
+                    leaf.style.opacity =
+                        "1";
+
+                }, 700);
+
+            });
+
 
         setTimeout(() => {
 
-            flowerHead.style.opacity = "1";
+            flowerHead.style.opacity =
+                "1";
 
             flowerHead.style.transform =
                 "translateX(-50%) scale(1)";
@@ -415,291 +609,355 @@ growFlowerButton.addEventListener(
 
         setTimeout(() => {
 
-            flowerMessage.classList.add("show");
+            flowerMessage.classList.add(
+                "show"
+            );
 
-        }, 1700);
+        }, 1800);
 
     }
 );
 
 
-/* =========================================
+/* =====================================================
    CAKE
-========================================= */
+===================================================== */
 
 const blowCake =
-    document.getElementById("blowCake");
+    document.getElementById(
+        "blowCake"
+    );
 
 const footballStats =
-    document.getElementById("footballStats");
+    document.getElementById(
+        "footballStats"
+    );
 
 const realMessage =
-    document.getElementById("realMessage");
+    document.getElementById(
+        "realMessage"
+    );
 
-let cakeBlown = false;
+
+let cakeAlreadyBlown =
+    false;
+
 
 blowCake.addEventListener(
     "click",
     () => {
 
-        if (cakeBlown) return;
+        if (
+            cakeAlreadyBlown
+        ) {
 
-        cakeBlown = true;
+            return;
 
-        document
-            .querySelectorAll(".flame")
-            .forEach(flame => {
+        }
 
-                flame.style.opacity = "0";
-                flame.style.transform =
-                    "translateX(-50%) scale(0)";
 
-            });
+        cakeAlreadyBlown =
+            true;
+
 
         blowCake.textContent =
             "Level Up شد! ⚽";
 
+
+        createConfetti();
+
+
         setTimeout(() => {
 
-            footballStats.classList.add("show");
+            footballStats.classList.add(
+                "show"
+            );
 
         }, 500);
 
+
         setTimeout(() => {
 
-            realMessage.classList.add("show");
+            realMessage.classList.add(
+                "show"
+            );
 
-        }, 1400);
+        }, 1500);
 
     }
 );
 
 
-/* =========================================
+/* =====================================================
    LETTER
-========================================= */
+===================================================== */
+
+
+/*
+    متن واقعی نامه‌ی هلیا
+*/
+
+const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
+
+خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
+خیلی خیلی دوست دارم و خیلی برام باارزشی،
+بابت تمام خنده‌ها و لحظات خوبی که برام ساختی.
+
+فرشته کوچولو،
+امیدوارم همیشه به تمام آرزوهات برسی
+و توی تمام زندگیت موفق و سلامت باشی.`;
+
 
 const envelope =
-    document.getElementById("envelope");
+    document.getElementById(
+        "envelope"
+    );
 
-const openLetterButton =
-    document.getElementById("openLetter");
+const openLetter =
+    document.getElementById(
+        "openLetter"
+    );
 
 const typedLetter =
-    document.getElementById("typedLetter");
+    document.getElementById(
+        "typedLetter"
+    );
+
+const letterSignature =
+    document.getElementById(
+        "letterSignature"
+    );
 
 
-const letterText = `نمی‌دونم وقتی داری این نامه رو می‌خونی چه ساعتیه،
-کجایی و روزت چطور گذشته...
-
-ولی می‌دونم امروز یک دلیل خیلی خوب
-برای خوشحال بودن وجود داره؛
-
-چون امروز روزیه که تو به دنیا اومدی.
-
-امیدوارم توی سال جدیدت،
-اتفاق‌هایی برات بیفته که حتی
-فکرش رو هم نمی‌کردی.
-
-امیدوارم هر بار که می‌دوی،
-هر بار که وارد زمین می‌شی،
-و هر بار که برای چیزی که دوستش داری تلاش می‌کنی،
-
-یادت باشه که هنوز کلی مسیر
-و کلی لحظه‌ی قشنگ جلوت هست.
-
-شاید همه‌ی بازی‌ها رو نبری،
-شاید بعضی روزها سخت باشن،
-ولی مهم اینه که بازی رو ادامه بدی.
-
-و امیدوارم وقتی چند سال بعد
-به امروز نگاه می‌کنی،
-
-با خودت بگی:
-
-«چه خوب که ادامه دادم.»
-
-امروز،
-۲۸ شهریور،
-
-روز توئه.
-
-پس برای خودت،
-برای رویا‌هات،
-برای تمام گل‌هایی که هنوز نزدی
-و تمام خط پایان‌هایی که هنوز نرسیدی،
-
-یک سال دیگه رو شروع کن.
-
-🤍`;
+let letterAlreadyOpened =
+    false;
 
 
-let letterOpened = false;
-
-openLetterButton.addEventListener(
+openLetter.addEventListener(
     "click",
     () => {
 
-        if (letterOpened) return;
+        if (
+            letterAlreadyOpened
+        ) {
 
-        letterOpened = true;
+            return;
 
-        envelope.classList.add("open");
+        }
 
-        openLetterButton.textContent =
+
+        letterAlreadyOpened =
+            true;
+
+
+        envelope.classList.add(
+            "open"
+        );
+
+
+        openLetter.textContent =
             "نامه باز شد 🤍";
 
-        setTimeout(() => {
 
-            typeLetter();
-
-        }, 700);
+        setTimeout(
+            typeLetter,
+            800
+        );
 
     }
 );
 
 
 /*
-    افکت تایپ نامه
+    افکت تایپ
 */
 
 function typeLetter() {
 
     let index = 0;
 
-    const typingSpeed = 25;
+    const speed = 28;
+
 
     function type() {
 
-        if (index < letterText.length) {
+        if (
+            index < letterText.length
+        ) {
 
             typedLetter.textContent +=
                 letterText.charAt(index);
 
             index++;
 
-            setTimeout(type, typingSpeed);
+
+            setTimeout(
+                type,
+                speed
+            );
+
+        } else {
+
+            setTimeout(() => {
+
+                letterSignature.classList.add(
+                    "show"
+                );
+
+            }, 500);
 
         }
 
     }
 
+
     type();
+
 }
 
 
-/* =========================================
+/* =====================================================
    SECRET LEVEL
-========================================= */
+===================================================== */
 
-function checkSecretLevel() {
+let secretNotificationShown =
+    false;
 
-    if (openedGifts.size === 3) {
-
-        setTimeout(() => {
-
-            showSecretNotification();
-
-        }, 500);
-
-    }
-
-}
-
-
-/*
-    پیام کوچک برای باز شدن مرحله‌ی مخفی
-*/
 
 function showSecretNotification() {
 
+    if (
+        secretNotificationShown
+    ) {
+
+        return;
+
+    }
+
+
+    secretNotificationShown =
+        true;
+
+
     const notification =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     notification.textContent =
-        "🔓 یک چیز دیگه هم برات باز شده...";
+        "🔓 یک مرحله‌ی مخفی هم برات باز شده...";
+
 
     notification.style.position =
         "fixed";
 
-    notification.style.bottom =
-        "25px";
-
     notification.style.left =
         "50%";
+
+    notification.style.bottom =
+        "25px";
 
     notification.style.transform =
         "translateX(-50%)";
 
     notification.style.zIndex =
-        "9999";
+        "99999";
 
     notification.style.padding =
         "14px 20px";
 
     notification.style.borderRadius =
-        "15px";
+        "16px";
 
     notification.style.background =
-        "#182b49";
+        "#172b49";
 
     notification.style.color =
         "white";
 
     notification.style.fontSize =
-        "12px";
+        "11px";
 
     notification.style.boxShadow =
-        "0 10px 30px rgba(0,0,0,0.15)";
+        "0 10px 35px rgba(0,0,0,.2)";
+
 
     document.body.appendChild(
         notification
     );
 
+
     setTimeout(() => {
 
         notification.remove();
 
-        showPage(secretPage);
+
+        showPage(
+            secretPage
+        );
+
+
+        /*
+            برای اینکه دوباره
+            نمایش داده نشود.
+        */
+
+        secretNotificationShown =
+            true;
 
     }, 2200);
 
 }
 
 
-/* =========================================
+/* =====================================================
    CONFETTI
-========================================= */
+===================================================== */
 
 function createConfetti() {
 
-    const pieces = 50;
+    const amount = 55;
 
-    for (let i = 0; i < pieces; i++) {
 
-        const confetti =
-            document.createElement("div");
+    const colors = [
 
-        confetti.style.position =
+        "#f2a7c4",
+        "#8fc8e7",
+        "#f7d477",
+        "#ffffff"
+
+    ];
+
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        const piece =
+            document.createElement(
+                "div"
+            );
+
+
+        piece.style.position =
             "fixed";
 
-        confetti.style.width =
+        piece.style.width =
             Math.random() * 7 + 4 + "px";
 
-        confetti.style.height =
+        piece.style.height =
             Math.random() * 7 + 4 + "px";
 
-        confetti.style.borderRadius =
-            "3px";
+        piece.style.left =
+            Math.random() * 100 + "vw";
 
-        const colors = [
-            "#f4a8c7",
-            "#91c9e8",
-            "#f7d37b",
-            "#ffffff"
-        ];
+        piece.style.top =
+            "-20px";
 
-        confetti.style.background =
+        piece.style.background =
             colors[
                 Math.floor(
                     Math.random() *
@@ -707,45 +965,61 @@ function createConfetti() {
                 )
             ];
 
-        confetti.style.left =
-            Math.random() * 100 + "vw";
+        piece.style.borderRadius =
+            "3px";
 
-        confetti.style.top =
-            "-20px";
+        piece.style.zIndex =
+            "100000";
 
-        confetti.style.zIndex =
-            "10000";
 
         document.body.appendChild(
-            confetti
+            piece
         );
 
-        const duration =
-            Math.random() * 2000 + 2000;
 
-        confetti.animate(
+        const duration =
+            Math.random() * 1800 + 2200;
+
+
+        piece.animate(
+
             [
+
                 {
                     transform:
                         "translateY(0) rotate(0deg)",
+
                     opacity: 1
+
                 },
 
                 {
+
                     transform:
                         `translateY(110vh) rotate(${Math.random() * 720}deg)`,
+
                     opacity: 0
+
                 }
+
             ],
+
             {
-                duration: duration,
-                easing: "cubic-bezier(.2,.8,.3,1)"
+
+                duration:
+                    duration,
+
+                easing:
+                    "cubic-bezier(.2,.8,.3,1)"
+
             }
+
         );
+
 
         setTimeout(() => {
 
-            confetti.remove();
+            piece.remove();
 
         }, duration);
 
@@ -754,9 +1028,9 @@ function createConfetti() {
 }
 
 
-/* =========================================
+/* =====================================================
    INITIALIZE
-========================================= */
+===================================================== */
 
 renderCalendar();
 
