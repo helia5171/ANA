@@ -3,15 +3,26 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>برای اناهیتا ♡</title>
-    <meta name="description" content="یک هدیه‌ی کوچک برای اناهیتا">
+
+    <meta name="description"
+          content="یک هدیه‌ی کوچک برای اناهیتا">
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
 <div id="particles"></div>
+
 
 <!-- =====================================================
      1. CALENDAR PAGE
@@ -26,7 +37,9 @@
 
         <div class="small-heart">♡</div>
 
-        <p class="eyebrow">یک تاریخ خاص...</p>
+        <p class="eyebrow">
+            یک تاریخ خاص...
+        </p>
 
         <h1 class="calendar-title">
             بعضی تاریخ‌ها
@@ -40,22 +53,36 @@
             تا چیزی که برات آماده شده رو ببینی.
         </p>
 
+
         <div class="calendar-box">
 
             <div class="calendar-header">
 
-                <button id="prevMonth" class="month-button" type="button">‹</button>
+                <button id="prevMonth"
+                        class="month-button">
+                    ‹
+                </button>
 
                 <div class="month-title">
-                    <strong id="monthName">شهریور</strong>
-                    <span id="yearName">۱۴۰۵</span>
+                    <strong id="monthName">
+                        شهریور
+                    </strong>
+
+                    <span id="yearName">
+                        ۱۴۰۵
+                    </span>
                 </div>
 
-                <button id="nextMonth" class="month-button" type="button">›</button>
+                <button id="nextMonth"
+                        class="month-button">
+                    ›
+                </button>
 
             </div>
 
+
             <div class="weekdays">
+
                 <span>ش</span>
                 <span>ی</span>
                 <span>د</span>
@@ -63,19 +90,26 @@
                 <span>چ</span>
                 <span>پ</span>
                 <span>ج</span>
+
             </div>
 
-            <div id="calendarDays" class="calendar-days"></div>
+
+            <div id="calendarDays"
+                 class="calendar-days">
+            </div>
 
         </div>
 
-        <p id="calendarMessage" class="calendar-message">
+
+        <p id="calendarMessage"
+           class="calendar-message">
             منتظر انتخاب توئه... 💗
         </p>
 
     </main>
 
 </section>
+
 
 
 <!-- =====================================================
@@ -90,72 +124,162 @@
 
     <main class="home-wrapper">
 
-        <p class="welcome-label">بالاخره رسیدی...</p>
+
+        <p class="welcome-label">
+            بالاخره رسیدی...
+        </p>
+
+
+        <!-- PHOTO -->
 
         <div class="photo-frame">
+
             <div class="photo-glow"></div>
-            <img src="anahita.jpg" alt="عکس اناهیتا" class="anahita-photo">
-            <div class="photo-heart">♡</div>
+
+            <img src="anahita.jpg"
+                 alt="عکس اناهیتا"
+                 class="anahita-photo">
+
+            <div class="photo-heart">
+                ♡
+            </div>
+
         </div>
 
-        <h1 class="birthday-title">تولد مبارک.</h1>
+
+        <h1 class="birthday-title">
+            تولد مبارک.
+        </h1>
+
 
         <p class="birthday-intro">
             روی هر کدوم بزن تا ببینی توش چیاس
         </p>
 
+
+        <!-- GIFT CARDS -->
+
         <div class="gift-cards">
 
-            <button class="gift-card" data-section="flower" type="button">
-                <div class="gift-icon flower-icon">🌷</div>
-                <div class="gift-info">
-                    <h2>یک گل برای تو</h2>
+
+            <!-- FLOWER -->
+
+            <button class="gift-card"
+                    data-section="flower">
+
+                <div class="gift-icon flower-icon">
+                    🌷
                 </div>
-                <span class="gift-arrow">←</span>
+
+                <div class="gift-info">
+
+                    <h2>
+                        یک گل برای تو
+                    </h2>
+
+                </div>
+
+                <span class="gift-arrow">
+                    ←
+                </span>
+
             </button>
 
-            <button class="gift-card" data-section="cake" type="button">
-                <div class="gift-icon cake-icon">🎂</div>
-                <div class="gift-info">
-                    <h2>کیک</h2>
+
+
+            <!-- CAKE -->
+
+            <button class="gift-card"
+                    data-section="cake">
+
+                <div class="gift-icon cake-icon">
+                    🎂
                 </div>
-                <span class="gift-arrow">←</span>
+
+                <div class="gift-info">
+
+                    <h2>
+                      کیک
+                    </h2>
+
+                </div>
+
+                <span class="gift-arrow">
+                    ←
+                </span>
+
             </button>
 
-            <button class="gift-card" data-section="letter" type="button">
-                <div class="gift-icon letter-icon">💌</div>
-                <div class="gift-info">
-                    <h2>یک نامه</h2>
+
+
+            <!-- LETTER -->
+
+            <button class="gift-card"
+                    data-section="letter">
+
+                <div class="gift-icon letter-icon">
+                    💌
                 </div>
-                <span class="gift-arrow">←</span>
+
+                <div class="gift-info">
+
+                    <h2>
+                        یک نامه
+                    </h2>
+
+                </div>
+
+                <span class="gift-arrow">
+                    ←
+                </span>
+
             </button>
+
 
         </div>
 
-        <!-- ✅ اصلاح شد: id="giftProgress" اضافه شد -->
-        <div class="gift-progress" id="giftProgress">
-            ۰ از ۳ کادو باز شده
+
+        <div class="gift-progress">
+
+            <span id="openedCount">
+                ۰
+            </span>
+
+            / ۳ هدیه باز شده
+
         </div>
+
 
     </main>
 
 </section>
 
 
+
 <!-- =====================================================
      3. FLOWER PAGE
 ===================================================== -->
 
-<section id="flowerPage" class="page hidden gift-page flower-page">
+<section id="flowerPage"
+         class="page hidden gift-page flower-page">
 
-    <!-- ✅ اصلاح شد: data-back اضافه شد -->
-    <button class="back-button" data-back type="button">← برگشت</button>
+    <button class="back-button">
+        ← برگشت
+    </button>
+
 
     <main class="flower-wrapper">
 
-        <p class="gift-label">هدیه‌ی اول</p>
+        <p class="gift-label">
+            هدیه‌ی اول
+        </p>
 
-        <h1>یک گل برای اناهیتا فقط</h1>
+        <h1>
+            یک گل برای اناهیتا فقط
+        </h1>
+
+
+        <!-- GARDEN -->
 
         <div class="flower-garden">
 
@@ -165,201 +289,402 @@
             <div class="little-star star-b">✧</div>
             <div class="little-star star-c">✦</div>
 
+
             <div class="ground"></div>
 
-            <div id="flowerStem" class="flower-stem">
+
+            <!-- STEM -->
+
+            <div id="flowerStem"
+                 class="flower-stem">
+
                 <div class="leaf leaf-left"></div>
                 <div class="leaf leaf-right"></div>
+
             </div>
 
-            <div id="flowerHead" class="flower-head">
+
+            <!-- FLOWER -->
+
+            <div id="flowerHead"
+                 class="flower-head">
+
                 <div class="petal petal-1"></div>
                 <div class="petal petal-2"></div>
                 <div class="petal petal-3"></div>
                 <div class="petal petal-4"></div>
                 <div class="petal petal-5"></div>
+
                 <div class="flower-center"></div>
+
             </div>
+
 
         </div>
 
-        <button id="growFlower" class="primary-button" type="button">
+
+        <button id="growFlower"
+                class="primary-button">
+
             گل رو رشد بده 🌱
+
         </button>
 
-        <div id="flowerMessage" class="flower-message">
-            <h2>یک گل برای اناهیتا فقط 🌸</h2>
+
+        <!-- MESSAGE -->
+
+        <div id="flowerMessage"
+             class="flower-message">
+
+            <h2>
+                یک گل برای اناهیتا فقط 🌸
+            </h2>
+
             <p>
                 برای اناهیتا قشنگم که مثل همین گل زیباس،
                 <br>
                 امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه.
             </p>
+
         </div>
 
     </main>
 
 </section>
+
 
 
 <!-- =====================================================
      4. CAKE / FOOTBALL PAGE
 ===================================================== -->
 
-<section id="cakePage" class="page hidden gift-page football-page">
+<section id="cakePage"
+         class="page hidden gift-page football-page">
 
-    <!-- ✅ اصلاح شد: data-back اضافه شد -->
-    <button class="back-button" data-back type="button">← برگشت</button>
+    <button class="back-button">
+        ← برگشت
+    </button>
+
 
     <main class="football-wrapper">
 
-        <p class="gift-label">هدیه‌ی دوم</p>
+        <p class="gift-label">
+            هدیه‌ی دوم
+        </p>
+
 
         <div class="level-title">
-            <span>کیک تولد</span>
+
+            <span>
+                کیک تولد
+            </span>
+
         </div>
+
+
+        <!-- CAKE IMAGE -->
 
         <div class="cake-photo-wrapper">
+
             <div class="cake-photo-glow"></div>
-            <img src="cake.jpg" alt="کیک تولد" class="cake-photo">
+
+            <img src="cake.jpg"
+                 alt="کیک تولد"
+                 class="cake-photo">
+
         </div>
 
-        <button id="blowCake" class="primary-button" type="button">
+
+        <button id="blowCake"
+                class="primary-button">
+
             شمع‌ها رو فوت کن 🎂
+
         </button>
 
-        <div id="footballStats" class="football-stats">
+
+        <!-- FOOTBALL STATS -->
+
+        <div id="footballStats"
+             class="football-stats">
+
 
             <div class="stat-card">
-                <div class="stat-icon">⚽</div>
-                <h3>Football</h3>
-                <p>برای تمام گل‌هایی<br>که هنوز نزدی.</p>
+
+                <div class="stat-icon">
+                    ⚽
+                </div>
+
+                <h3>
+                    Football
+                </h3>
+
+                <p>
+                    برای تمام گل‌هایی
+                    <br>
+                    که هنوز نزدی.
+                </p>
+
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon">🏃</div>
-                <h3>Running</h3>
-                <p>برای تمام خط پایان‌هایی<br>که هنوز منتظر توئن.</p>
-            </div>
 
             <div class="stat-card">
-                <div class="stat-icon">🏆</div>
-                <h3>Dreams</h3>
-                <p>برای تمام رویاهایی<br>که هنوز شروع نشدن.</p>
+
+                <div class="stat-icon">
+                    🏃
+                </div>
+
+                <h3>
+                    Running
+                </h3>
+
+                <p>
+                    برای تمام خط پایان‌هایی
+                    <br>
+                    که هنوز منتظر توئن.
+                </p>
+
             </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏆
+                </div>
+
+                <h3>
+                    Dreams
+                </h3>
+
+                <p>
+                    برای تمام رویاهایی
+                    <br>
+                    که هنوز شروع نشدن.
+                </p>
+
+            </div>
+
 
         </div>
 
-        <div id="realMessage" class="real-message">
-            <div class="football-ball">⚽</div>
-            <h2>و یادت نره...</h2>
-            <strong>Hala Madrid 🤍</strong>
+
+        <!-- REAL MADRID -->
+
+        <div id="realMessage"
+             class="real-message">
+
+            <div class="football-ball">
+                ⚽
+            </div>
+
+            <h2>
+                و یادت نره...
+            </h2>
+
+            <strong>
+                Hala Madrid 🤍
+            </strong>
+
         </div>
 
     </main>
 
 </section>
+
 
 
 <!-- =====================================================
      5. LETTER PAGE
 ===================================================== -->
 
-<section id="letterPage" class="page hidden gift-page letter-page">
+<section id="letterPage"
+         class="page hidden gift-page letter-page">
 
-    <!-- ✅ اصلاح شد: data-back اضافه شد -->
-    <button class="back-button" data-back type="button">← برگشت</button>
+    <button class="back-button">
+        ← برگشت
+    </button>
+
 
     <main class="letter-wrapper">
 
-        <p class="gift-label">هدیه‌ی سوم</p>
+        <p class="gift-label">
+            هدیه‌ی سوم
+        </p>
 
-        <div id="envelope" class="envelope">
+
+        <!-- ENVELOPE -->
+
+        <div id="envelope"
+             class="envelope">
 
             <div class="envelope-back"></div>
 
+
             <div class="letter-paper">
+
                 <div class="letter-inner">
-                    <p class="letter-to">برای اناهیتا قشنگم ♡</p>
+
+                    <p class="letter-to">
+                        برای اناهیتا قشنگم ♡
+                    </p>
+
                     <div id="typedLetter"></div>
-                    <p id="letterSignature" class="letter-signature">از طرف هلیا ♡</p>
+
+                    <p id="letterSignature"
+                       class="letter-signature">
+
+                        از طرف هلیا ♡
+
+                    </p>
+
                 </div>
+
             </div>
+
 
             <div class="envelope-front"></div>
 
         </div>
 
-        <button id="openLetter" class="primary-button" type="button">
+
+        <button id="openLetter"
+                class="primary-button">
+
             نامه رو باز کن 💌
+
         </button>
 
-        <div id="secretUnlockBox" class="secret-unlock-box locked">
 
-            <div class="secret-lock-icon">🔒</div>
+        <!-- SECRET LEVEL UNLOCK -->
 
-            <h2>مرحله‌ی مخفی</h2>
+        <div id="secretUnlockBox"
+             class="secret-unlock-box locked">
+
+            <div class="secret-lock-icon">
+                🔒
+            </div>
+
+            <h2>
+                مرحله‌ی مخفی
+            </h2>
 
             <p id="secretUnlockText">
                 اول هر سه کادو رو باز کن تا این مرحله باز بشه...
             </p>
 
-            <button id="secretUnlockButton" type="button" disabled>
+            <button id="secretUnlockButton"
+                    type="button"
+                    disabled>
+
                 هنوز قفله 🔒
+
             </button>
 
         </div>
 
+
     </main>
 
 </section>
+
 
 
 <!-- =====================================================
      6. SECRET LEVEL
 ===================================================== -->
 
-<section id="secretPage" class="page hidden secret-page">
+<section id="secretPage"
+         class="page hidden secret-page">
+
 
     <div class="stadium-light light-left"></div>
     <div class="stadium-light light-right"></div>
 
+
     <main class="secret-wrapper">
 
-        <p class="secret-label">🔓 SECRET LEVEL UNLOCKED</p>
-
-        <h1>فکر کردی دیگه تموم شد؟</h1>
-
-        <div class="stadium">
-            <div class="field">
-                <div class="field-center-line"></div>
-                <div class="field-center-circle"></div>
-                <div class="penalty-box penalty-left"></div>
-                <div class="penalty-box penalty-right"></div>
-                <div class="football-final">⚽</div>
-            </div>
-        </div>
-
-        <h2>برای تمام بازی‌های بعدی...</h2>
-
-        <p class="secret-text">
-            امیدوارم همیشه برای چیزی که دوستش داری
-            <br>
-            با همون انرژی بدوی
-            <br>
-            که برای رسیدن به خط پایان می‌دوی.
+        <p class="secret-label">
+            🔓 SECRET LEVEL UNLOCKED
         </p>
 
-        <div class="final-message">
-            <span>۲۸ شهریور</span>
-            <strong>HAPPY BIRTHDAY</strong>
-            <small>برای اناهیتا ♡</small>
-            <b>Hala Madrid 🤍</b>
+
+        <h1>
+            فکر کردی دیگه تموم شد؟
+        </h1>
+
+
+        <!-- STADIUM -->
+
+        <div class="stadium">
+
+            <div class="field">
+
+                <div class="field-center-line"></div>
+
+                <div class="field-center-circle"></div>
+
+                <div class="penalty-box penalty-left"></div>
+
+                <div class="penalty-box penalty-right"></div>
+
+                <div class="football-final">
+                    ⚽
+                </div>
+
+            </div>
+
         </div>
+
+
+        <h2>
+            برای تمام بازی‌های بعدی...
+        </h2>
+
+
+        <p class="secret-text">
+
+            امیدوارم همیشه برای چیزی که دوستش داری
+            <br>
+
+            با همون انرژی بدوی
+            <br>
+
+            که برای رسیدن به خط پایان می‌دوی.
+
+        </p>
+
+
+        <div class="final-message">
+
+            <span>
+                ۲۸ شهریور
+            </span>
+
+            <strong>
+                HAPPY BIRTHDAY
+            </strong>
+
+            <small>
+                برای اناهیتا ♡
+            </small>
+
+            <b>
+                Hala Madrid 🤍
+            </b>
+
+        </div>
+
 
     </main>
 
 </section>
 
+
+
+<!-- =====================================================
+     SCRIPT
+===================================================== -->
 
 <script src="script.js"></script>
 
