@@ -16,6 +16,7 @@ function showPage(page) {
 
     Object.values(pages).forEach(p => {
         if (!p) return;
+
         p.classList.remove("active");
         p.classList.add("hidden");
     });
@@ -67,9 +68,7 @@ function persianNumber(n) {
 }
 
 function daysInMonth(month) {
-    return month <= 5
-        ? 31
-        : (month <= 10 ? 30 : 29);
+    return month <= 5 ? 31 : (month <= 10 ? 30 : 29);
 }
 
 function renderCalendar() {
@@ -87,7 +86,9 @@ function renderCalendar() {
 
     for (let i = 0; i < offset; i++) {
         const empty = document.createElement("span");
+
         empty.className = "calendar-day empty";
+
         calendarDays.appendChild(empty);
     }
 
@@ -102,7 +103,6 @@ function renderCalendar() {
         button.className = "calendar-day";
         button.textContent = persianNumber(day);
 
-        // تولد اناهیتا: ۲۸ شهریور
         if (
             currentYear === 1405 &&
             currentMonth === 5 &&
@@ -142,11 +142,9 @@ function renderCalendar() {
     }
 }
 
-
-// ماه قبل
-document.getElementById("prevMonth")?.addEventListener(
-    "click",
-    () => {
+document
+    .getElementById("prevMonth")
+    ?.addEventListener("click", () => {
 
         currentMonth--;
 
@@ -156,14 +154,11 @@ document.getElementById("prevMonth")?.addEventListener(
         }
 
         renderCalendar();
-    }
-);
+    });
 
-
-// ماه بعد
-document.getElementById("nextMonth")?.addEventListener(
-    "click",
-    () => {
+document
+    .getElementById("nextMonth")
+    ?.addEventListener("click", () => {
 
         currentMonth++;
 
@@ -173,8 +168,7 @@ document.getElementById("nextMonth")?.addEventListener(
         }
 
         renderCalendar();
-    }
-);
+    });
 
 
 /* =========================
@@ -188,14 +182,12 @@ function openGift(section) {
     if (section === "flower") {
         openedGifts.add("flower");
         showPage(pages.flower);
-    }
 
-    else if (section === "cake") {
+    } else if (section === "cake") {
         openedGifts.add("cake");
         showPage(pages.cake);
-    }
 
-    else if (section === "letter") {
+    } else if (section === "letter") {
         openedGifts.add("letter");
         showPage(pages.letter);
     }
@@ -204,50 +196,40 @@ function openGift(section) {
 }
 
 
+/* 
+   فقط تعداد کادوهای بازشده را نمایش می‌دهیم.
+   مرحله مخفی اینجا فعال نمی‌شود تا وسط نامه ظاهر نشود.
+*/
+
 function updateGiftProgress() {
 
-    const count =
-        document.getElementById("openedCount");
+    const count = document.getElementById("openedCount");
 
     if (count) {
         count.textContent =
             persianNumber(openedGifts.size);
     }
-
-    // وقتی هر سه هدیه باز شدند
-    if (openedGifts.size === 3) {
-
-        setTimeout(
-            unlockSecretLevel,
-            700
-        );
-    }
 }
 
 
-// کارت‌های هدیه
-document.querySelectorAll(".gift-card")
+document
+    .querySelectorAll(".gift-card")
     .forEach(card => {
 
         card.addEventListener("click", () => {
 
-            openGift(
-                card.dataset.section
-            );
+            openGift(card.dataset.section);
 
         });
 
     });
 
 
-// دکمه‌های برگشت
-document.querySelectorAll(".back-button")
+document
+    .querySelectorAll(".back-button")
     .forEach(button => {
 
-        button.addEventListener(
-            "click",
-            goHome
-        );
+        button.addEventListener("click", goHome);
 
     });
 
@@ -270,55 +252,43 @@ const flowerMessage =
 
 let flowerGrown = false;
 
+growFlower?.addEventListener("click", () => {
 
-growFlower?.addEventListener(
-    "click",
-    () => {
+    if (flowerGrown) return;
 
-        if (flowerGrown) return;
+    flowerGrown = true;
 
-        flowerGrown = true;
+    growFlower.textContent =
+        "شکوفه داد 🌷";
 
-        growFlower.textContent =
-            "شکوفه داد 🌷";
+    if (flowerStem) {
 
+        flowerStem.classList.add("grow");
 
-        if (flowerStem) {
+        flowerStem.style.height = "150px";
+    }
 
-            flowerStem.classList.add("grow");
-
-            flowerStem.style.height =
-                "150px";
-        }
-
-
-        if (flowerHead) {
-
-            setTimeout(() => {
-
-                flowerHead.classList.add(
-                    "bloom"
-                );
-
-                flowerHead.style.opacity =
-                    "1";
-
-                flowerHead.style.transform =
-                    "translateX(-50%) scale(1)";
-
-            }, 700);
-        }
-
+    if (flowerHead) {
 
         setTimeout(() => {
 
-            flowerMessage?.classList.add(
-                "show"
-            );
+            flowerHead.classList.add("bloom");
 
-        }, 1300);
+            flowerHead.style.opacity = "1";
+
+            flowerHead.style.transform =
+                "translateX(-50%) scale(1)";
+
+        }, 700);
     }
-);
+
+    setTimeout(() => {
+
+        flowerMessage?.classList.add("show");
+
+    }, 1300);
+
+});
 
 
 /* =========================
@@ -336,46 +306,36 @@ const realMessage =
 
 let cakeBlown = false;
 
+blowCake?.addEventListener("click", () => {
 
-blowCake?.addEventListener(
-    "click",
-    () => {
+    if (cakeBlown) return;
 
-        if (cakeBlown) return;
+    cakeBlown = true;
 
-        cakeBlown = true;
+    blowCake.textContent =
+        "هورا ! 🎉";
 
-        // متن جدید
-        blowCake.textContent =
-            "هورا ! 🎉";
+    createConfetti();
 
-        createConfetti();
+    if (footballStats) {
 
+        setTimeout(() => {
 
-        if (footballStats) {
+            footballStats.classList.add("show");
 
-            setTimeout(() => {
-
-                footballStats.classList.add(
-                    "show"
-                );
-
-            }, 500);
-        }
-
-
-        if (realMessage) {
-
-            setTimeout(() => {
-
-                realMessage.classList.add(
-                    "show"
-                );
-
-            }, 900);
-        }
+        }, 500);
     }
-);
+
+    if (realMessage) {
+
+        setTimeout(() => {
+
+            realMessage.classList.add("show");
+
+        }, 900);
+    }
+
+});
 
 
 /* =========================
@@ -405,29 +365,22 @@ const letterText = `سلام اناهیتا قشنگم، تولدت مبارک �
 امیدوارم همیشه به تمام آرزوهات برسی
 و توی تمام زندگیت موفق و سلامت باشی.`;
 
-
 let letterOpened = false;
 
+openLetter?.addEventListener("click", () => {
 
-openLetter?.addEventListener(
-    "click",
-    () => {
+    if (letterOpened) return;
 
-        if (letterOpened) return;
+    letterOpened = true;
 
-        letterOpened = true;
+    envelope?.classList.add("open");
 
-        envelope?.classList.add("open");
+    openLetter.textContent =
+        "نامه باز شد 🤍";
 
-        openLetter.textContent =
-            "نامه باز شد 🤍";
+    setTimeout(typeLetter, 700);
 
-        setTimeout(
-            typeLetter,
-            700
-        );
-    }
-);
+});
 
 
 function typeLetter() {
@@ -437,13 +390,10 @@ function typeLetter() {
     typedLetter.textContent = "";
 
     if (letterSignature) {
-        letterSignature.classList.remove(
-            "show"
-        );
+        letterSignature.classList.remove("show");
     }
 
     let i = 0;
-
 
     function type() {
 
@@ -454,21 +404,35 @@ function typeLetter() {
 
             i++;
 
-            setTimeout(
-                type,
-                25
-            );
+            setTimeout(type, 25);
 
         } else {
+
+            /* وقتی نامه کاملاً نوشته شد */
 
             if (letterSignature) {
 
                 letterSignature.textContent =
                     "از طرف هلیا ♡";
 
-                letterSignature.classList.add(
-                    "show"
-                );
+                letterSignature.classList.add("show");
+            }
+
+
+            /*
+               مرحله مخفی فقط بعد از تمام شدن
+               تایپ نامه باز می‌شود.
+               ۳.۵ ثانیه هم صبر می‌کنیم تا
+               اناهیتا فرصت داشته باشد نامه را ببیند.
+            */
+
+            if (openedGifts.size === 3) {
+
+                setTimeout(() => {
+
+                    unlockSecretLevel();
+
+                }, 3500);
             }
         }
     }
@@ -483,7 +447,6 @@ function typeLetter() {
 
 let secretUnlocked = false;
 
-
 function unlockSecretLevel() {
 
     if (
@@ -497,46 +460,46 @@ function unlockSecretLevel() {
 
     createConfetti();
 
-
     const notification =
         document.createElement("div");
 
     notification.textContent =
         "🔓 مرحله‌ی مخفی باز شد...";
 
+    Object.assign(notification.style, {
 
-    Object.assign(
-        notification.style,
-        {
-            position: "fixed",
-            left: "50%",
-            bottom: "25px",
-            transform:
-                "translateX(-50%)",
-            zIndex: "99999",
-            padding: "14px 22px",
-            borderRadius: "18px",
-            background: "#172b49",
-            color: "#fff",
-            fontSize: "14px",
-            boxShadow:
-                "0 10px 35px rgba(0,0,0,.22)"
-        }
-    );
+        position: "fixed",
 
+        left: "50%",
 
-    document.body.appendChild(
-        notification
-    );
+        bottom: "25px",
 
+        transform:
+            "translateX(-50%)",
+
+        zIndex: "99999",
+
+        padding: "14px 22px",
+
+        borderRadius: "18px",
+
+        background: "#172b49",
+
+        color: "#fff",
+
+        fontSize: "14px",
+
+        boxShadow:
+            "0 10px 35px rgba(0,0,0,.22)"
+    });
+
+    document.body.appendChild(notification);
 
     setTimeout(() => {
 
         notification.remove();
 
-        showPage(
-            pages.secret
-        );
+        showPage(pages.secret);
 
     }, 1800);
 }
@@ -555,7 +518,6 @@ function createConfetti() {
         "#ffffff"
     ];
 
-
     for (let i = 0; i < 45; i++) {
 
         const piece =
@@ -567,59 +529,64 @@ function createConfetti() {
         const duration =
             Math.random() * 1600 + 1800;
 
+        Object.assign(piece.style, {
 
-        Object.assign(
-            piece.style,
-            {
-                position: "fixed",
-                width: `${size}px`,
-                height: `${size}px`,
-                left: `${Math.random() * 100}vw`,
-                top: "-15px",
-                background:
-                    colors[
-                        Math.floor(
-                            Math.random() *
-                            colors.length
-                        )
-                    ],
-                borderRadius: "3px",
-                zIndex: "100000",
-                pointerEvents: "none"
-            }
-        );
+            position: "fixed",
 
+            width: `${size}px`,
 
-        document.body.appendChild(
-            piece
-        );
+            height: `${size}px`,
 
+            left: `${Math.random() * 100}vw`,
+
+            top: "-15px",
+
+            background:
+                colors[
+                    Math.floor(
+                        Math.random() *
+                        colors.length
+                    )
+                ],
+
+            borderRadius: "3px",
+
+            zIndex: "100000",
+
+            pointerEvents: "none"
+        });
+
+        document.body.appendChild(piece);
 
         piece.animate(
             [
                 {
                     transform:
                         "translateY(0) rotate(0deg)",
+
                     opacity: 1
                 },
+
                 {
                     transform:
                         `translateY(110vh) rotate(${Math.random() * 720}deg)`,
+
                     opacity: 0
                 }
             ],
             {
-                duration: duration,
+                duration,
+
                 easing:
                     "cubic-bezier(.2,.8,.3,1)"
             }
         );
 
+        setTimeout(() => {
 
-        setTimeout(
-            () => piece.remove(),
-            duration
-        );
+            piece.remove();
+
+        }, duration);
     }
 }
 
