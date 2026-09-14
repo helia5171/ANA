@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تولد اناهیتا قشنگم</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: Tahoma, sans-serif;
+  background: #ffe4ec;
+  min-height: 100vh;
+  color: #333;
+}
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+h1 { color: #d6336c; margin-bottom: 20px; font-size: 1.8rem; }
+.env {
+  width: 220px;
+  height: 150px;
+  background: #ff8fab;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(214,51,108,0.3);
+  margin: 20px auto;
+}
+.env::before {
+  content: '♥';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  color: white;
+  font-size: 2.5rem;
+  z-index: 5;
+}
+.env::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 70px;
+  background: #ff7a9e;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  border-radius: 10px 10px 0 0;
+}
+.hidden { display: none !important; }
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  min-height: 100vh;
+}
+.app h1 { text-align: center; color: #d6336c; }
+.app p { text-align: center; line-height: 2; color: #555; margin: 15px 0; }
+.photo {
+  display: block;
+  max-width: 200px;
+  margin: 20px auto;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(214,51,108,0.3);
+}
+.msg {
+  background: #fff0f5;
+  padding: 25px;
+  border-radius: 15px;
+  margin-top: 25px;
+}
+.msg h2 { color: #d6336c; margin-bottom: 15px; text-align: center; font-size: 1.3rem; }
+.msg p { text-align: right; line-height: 2; }
+.sig { text-align: center; color: #d6336c; font-weight: bold; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div id="envelope" class="screen">
+  <h1>♡ For Anahita ♡</h1>
+  <p style="color:#888;">یک سورپرایز کوچولو...</p>
+  <div class="env" onclick="openIt()"></div>
+  <p style="color:#b08898; margin-top:30px; animation: pulse 1.5s infinite;">روی پاکت بزن ✨</p>
+</div>
+
+<div id="app" class="app hidden">
+  <h1>تولدت مبارک اناهیتا قشنگم 🎂</h1>
+  
+  <img src="assets/anahita.jpg" class="photo" alt="اناهیتا">
+  
+  <p>امیدوارم هر روزت پر از شادی، سلامتی و اتفاق‌های قشنگ باشه ♡</p>
+  
+  <div class="msg">
+    <h2>Happy Birthday, my dear Anahita</h2>
+    <p>
+      اناهیتا قشنگم،<br><br>
+      امروز روزیه که باید بیشتر از همیشه بهت بگم چقدر بودنت قشنگه. برای مهربونی‌هات، قلب بزرگت و تمام لحظه‌هایی که با حضورت دنیا رو شیرین‌تر می‌کنی، ممنونم.<br><br>
+      تو یه دوست فوق‌العاده‌ای؛ امروز نوبت خودته که تمام خوبی‌ها و آرامشی که به دیگران دادی، چند برابر به خودت برگرده.<br><br>
+      آرزو می‌کنم سال جدید زندگی‌ات پر از سلامتی، موفقیت، عشق، سفر، خنده و رویاهایی باشه که یکی‌یکی به قشنگ‌ترین شکل ممکن به واقعیت تبدیل می‌شن.<br><br>
+      تولدت مبارک اناهیتا قشنگم. همیشه همین‌قدر دوست‌داشتنی، قوی، مهربون و درخشان بمون. ❤️
+    </p>
+    <div class="sig">
+      با کلی عشق،<br>
+      برای اناهیتا قشنگم ♡
+    </div>
+  </div>
+
+  <p style="text-align:center; margin-top:30px;">⚽ 🏃‍♀️ 🏅 🥇 🎽</p>
+</div>
+
+<style>
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+</style>
+
+<script>
+function openIt() {
+  document.getElementById('envelope').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
