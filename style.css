@@ -1,0 +1,1397 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --pink: #f4a8c7;
+    --pink-dark: #e889b1;
+    --pink-light: #ffe5ef;
+
+    --blue: #91c9e8;
+    --blue-dark: #579cc5;
+    --blue-light: #e5f5ff;
+
+    --navy: #182b49;
+    --white: #ffffff;
+
+    --text: #24324a;
+    --muted: #7b8495;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Vazirmatn", sans-serif;
+    color: var(--text);
+    overflow-x: hidden;
+    background: #fdfbfc;
+}
+
+
+/* =========================
+   PAGE SYSTEM
+========================= */
+
+.page {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.6s ease,
+        visibility 0.6s ease;
+}
+
+.page.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.page.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+
+/* =========================
+   CALENDAR PAGE
+========================= */
+
+#calendarPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at 15% 20%, rgba(244, 168, 199, 0.25), transparent 25%),
+        radial-gradient(circle at 85% 80%, rgba(145, 201, 232, 0.25), transparent 30%),
+        #fffafd;
+}
+
+.calendar-container {
+    position: relative;
+    width: min(430px, 90%);
+    text-align: center;
+    z-index: 2;
+}
+
+.tiny-heart {
+    font-size: 35px;
+    color: var(--pink-dark);
+    margin-bottom: 10px;
+    animation: floating 3s ease-in-out infinite;
+}
+
+.small-title {
+    color: var(--blue-dark);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.calendar-container h1 {
+    font-size: clamp(28px, 6vw, 42px);
+    line-height: 1.5;
+    font-weight: 800;
+    color: var(--navy);
+}
+
+.calendar-description {
+    margin-top: 15px;
+    line-height: 2;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+
+/* Calendar */
+
+.calendar {
+    margin-top: 30px;
+
+    background: rgba(255, 255, 255, 0.85);
+
+    border: 1px solid rgba(244, 168, 199, 0.3);
+
+    border-radius: 25px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 20px 60px rgba(80, 100, 130, 0.12),
+        0 5px 20px rgba(244, 168, 199, 0.08);
+
+    backdrop-filter: blur(15px);
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.calendar-header button {
+    border: none;
+    background: var(--pink-light);
+    color: var(--pink-dark);
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 50%;
+
+    font-size: 25px;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.calendar-header button:hover {
+    transform: scale(1.1);
+    background: var(--pink);
+    color: white;
+}
+
+.calendar-header div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+#monthName {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#yearName {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.weekdays,
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 7px;
+}
+
+.weekdays {
+    margin-bottom: 10px;
+}
+
+.weekdays span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    border-radius: 13px;
+
+    border: none;
+    background: transparent;
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition: 0.25s;
+}
+
+.calendar-day:hover {
+    background: var(--blue-light);
+    transform: translateY(-2px);
+}
+
+.calendar-day.birthday {
+    background: linear-gradient(135deg, var(--pink), var(--blue));
+    color: white;
+    font-weight: 800;
+
+    box-shadow: 0 7px 20px rgba(244, 168, 199, 0.35);
+
+    animation: birthdayPulse 2s infinite;
+}
+
+.calendar-day.empty {
+    cursor: default;
+}
+
+.calendar-message {
+    margin-top: 15px;
+    min-height: 25px;
+
+    font-size: 12px;
+    color: var(--pink-dark);
+
+    transition: 0.3s;
+}
+
+
+/* =========================
+   BACKGROUND SHAPES
+========================= */
+
+.background-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+}
+
+.shape-one {
+    width: 300px;
+    height: 300px;
+
+    background: rgba(244, 168, 199, 0.12);
+
+    top: -100px;
+    left: -100px;
+}
+
+.shape-two {
+    width: 350px;
+    height: 350px;
+
+    background: rgba(145, 201, 232, 0.12);
+
+    bottom: -150px;
+    right: -100px;
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+#homePage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at 0% 0%, rgba(244, 168, 199, 0.2), transparent 30%),
+        radial-gradient(circle at 100% 100%, rgba(145, 201, 232, 0.25), transparent 35%),
+        #fff;
+
+    padding: 40px 20px;
+}
+
+.home-content {
+    position: relative;
+    width: min(650px, 100%);
+    text-align: center;
+    z-index: 3;
+}
+
+.welcome-small {
+    font-size: 13px;
+    color: var(--blue-dark);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.home-content h1 {
+    font-size: clamp(36px, 8vw, 60px);
+    font-weight: 800;
+
+    background: linear-gradient(
+        100deg,
+        var(--pink-dark),
+        var(--blue-dark)
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-text {
+    margin-top: 10px;
+    line-height: 2;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+
+/* Gift cards */
+
+.cards {
+    display: grid;
+    gap: 14px;
+    margin-top: 35px;
+}
+
+.gift-card {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    text-align: right;
+
+    border: 1px solid rgba(120, 130, 150, 0.1);
+
+    border-radius: 22px;
+
+    padding: 17px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    background: white;
+
+    box-shadow: 0 10px 35px rgba(60, 70, 100, 0.08);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.gift-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 45px rgba(60, 70, 100, 0.13);
+}
+
+.gift-card:active {
+    transform: scale(0.98);
+}
+
+.card-icon {
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    margin-left: 15px;
+
+    font-size: 31px;
+}
+
+.flower-card .card-icon {
+    background: var(--pink-light);
+}
+
+.cake-card .card-icon {
+    background: #e8f5ff;
+}
+
+.letter-card .card-icon {
+    background: #f1ebff;
+}
+
+.card-text {
+    flex: 1;
+}
+
+.card-text h2 {
+    font-size: 15px;
+    color: var(--navy);
+    margin-bottom: 4px;
+}
+
+.card-text p {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.card-arrow {
+    color: var(--muted);
+    font-size: 18px;
+}
+
+.opened-counter {
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+#openedCount {
+    color: var(--pink-dark);
+    font-weight: 800;
+}
+
+
+/* Floating objects */
+
+.floating-heart,
+.floating-star {
+    position: absolute;
+    pointer-events: none;
+}
+
+.floating-heart {
+    color: var(--pink);
+    font-size: 25px;
+    animation: floating 4s ease-in-out infinite;
+}
+
+.heart-1 {
+    top: 15%;
+    left: 10%;
+}
+
+.heart-2 {
+    top: 70%;
+    right: 12%;
+    animation-delay: 1s;
+}
+
+.heart-3 {
+    top: 30%;
+    right: 8%;
+    animation-delay: 2s;
+}
+
+.floating-star {
+    color: var(--blue);
+    font-size: 22px;
+    animation: floating 3s ease-in-out infinite;
+}
+
+.star-1 {
+    bottom: 15%;
+    left: 12%;
+}
+
+.star-2 {
+    top: 12%;
+    right: 20%;
+    animation-delay: 1.5s;
+}
+
+
+/* =========================
+   GIFT PAGES
+========================= */
+
+.gift-page {
+    padding: 60px 20px 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-button {
+    position: fixed;
+
+    top: 20px;
+    right: 20px;
+
+    z-index: 20;
+
+    border: none;
+
+    padding: 10px 15px;
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.8);
+
+    backdrop-filter: blur(10px);
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+
+    transition: 0.3s;
+}
+
+.back-button:hover {
+    transform: translateX(4px);
+}
+
+
+/* =========================
+   FLOWER
+========================= */
+
+.flower-page {
+    background:
+        linear-gradient(
+            180deg,
+            #fff7fb,
+            #eaf7ff
+        );
+}
+
+.flower-scene {
+    width: min(600px, 100%);
+    text-align: center;
+}
+
+.flower-title p,
+.gift-number {
+    color: var(--pink-dark);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.flower-title h1 {
+    margin-top: 8px;
+
+    font-size: clamp(24px, 6vw, 36px);
+    color: var(--navy);
+}
+
+.flower-garden {
+    position: relative;
+
+    height: 300px;
+
+    margin: 20px auto;
+
+    overflow: hidden;
+
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.7),
+            rgba(211, 238, 250, 0.6)
+        );
+
+    box-shadow:
+        inset 0 0 50px rgba(255, 255, 255, 0.7),
+        0 20px 50px rgba(80, 100, 130, 0.1);
+}
+
+.ground {
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 45px;
+
+    background: rgba(123, 184, 139, 0.35);
+
+    border-radius: 50% 50% 0 0;
+}
+
+.flower-stem {
+    position: absolute;
+
+    width: 7px;
+    height: 0;
+
+    bottom: 35px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-radius: 10px;
+
+    background: #65a878;
+
+    transition: height 1.5s ease;
+}
+
+.flower-head {
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    left: 50%;
+
+    bottom: 160px;
+
+    transform:
+        translateX(-50%)
+        scale(0);
+
+    transition: 1s ease;
+
+    opacity: 0;
+}
+
+.petal {
+    position: absolute;
+
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #f7b6d0,
+        #e888b0
+    );
+}
+
+.p1 {
+    top: 0;
+    left: 21px;
+}
+
+.p2 {
+    top: 21px;
+    right: 0;
+}
+
+.p3 {
+    bottom: 0;
+    left: 21px;
+}
+
+.p4 {
+    top: 21px;
+    left: 0;
+}
+
+.p5 {
+    top: 8px;
+    left: 8px;
+    opacity: 0.8;
+}
+
+.flower-center {
+    position: absolute;
+
+    width: 32px;
+    height: 32px;
+
+    background: #f5c95c;
+
+    border-radius: 50%;
+
+    top: 29px;
+    left: 29px;
+
+    z-index: 5;
+}
+
+.main-action {
+    border: none;
+
+    padding: 14px 24px;
+
+    border-radius: 17px;
+
+    font-family: inherit;
+
+    font-weight: 600;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            100deg,
+            var(--pink-dark),
+            var(--blue-dark)
+        );
+
+    cursor: pointer;
+
+    box-shadow: 0 10px 25px rgba(90, 160, 200, 0.2);
+
+    transition: 0.3s;
+}
+
+.main-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(90, 160, 200, 0.3);
+}
+
+.hidden-message {
+    opacity: 0;
+    transform: translateY(20px);
+
+    margin: 25px auto 0;
+
+    max-width: 500px;
+
+    transition: 1s ease;
+}
+
+.hidden-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hidden-message h2 {
+    color: var(--navy);
+    margin-bottom: 15px;
+}
+
+.hidden-message p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 2;
+    margin-top: 10px;
+}
+
+
+/* =========================
+   FOOTBALL / CAKE
+========================= */
+
+.football-page {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(145, 201, 232, 0.25), transparent 40%),
+        #f8fbff;
+}
+
+.football-content {
+    width: min(750px, 100%);
+    text-align: center;
+}
+
+.level-title {
+    margin-top: 8px;
+
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.level-title span {
+    font-size: clamp(35px, 9vw, 70px);
+    font-weight: 800;
+    color: var(--navy);
+}
+
+.level-title strong {
+    font-size: clamp(45px, 11vw, 85px);
+    font-weight: 900;
+
+    background: linear-gradient(
+        135deg,
+        var(--pink-dark),
+        var(--blue-dark)
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.level-subtitle {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.birthday-cake {
+    position: relative;
+
+    width: 260px;
+    height: 190px;
+
+    margin: 20px auto;
+}
+
+.cake-bottom,
+.cake-middle,
+.cake-top {
+    position: absolute;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-radius: 15px;
+}
+
+.cake-bottom {
+    bottom: 20px;
+
+    width: 240px;
+    height: 65px;
+
+    background: #f0a9c5;
+}
+
+.cake-middle {
+    bottom: 75px;
+
+    width: 215px;
+    height: 55px;
+
+    background: #8fc6e5;
+}
+
+.cake-top {
+    bottom: 125px;
+
+    width: 190px;
+    height: 45px;
+
+    background: #f8c8dc;
+}
+
+.cake-candle {
+    position: absolute;
+
+    bottom: 170px;
+
+    width: 8px;
+    height: 38px;
+
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    z-index: 5;
+}
+
+.candle-1 {
+    left: 105px;
+}
+
+.candle-2 {
+    left: 126px;
+}
+
+.candle-3 {
+    left: 147px;
+}
+
+.flame {
+    position: absolute;
+
+    width: 12px;
+    height: 18px;
+
+    left: 50%;
+    top: -15px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50% 50% 50% 50%;
+
+    background: #ffc95d;
+
+    animation: flame 0.7s ease-in-out infinite alternate;
+}
+
+.football-stats {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-top: 25px;
+
+    opacity: 0;
+    transform: translateY(15px);
+
+    transition: 1s;
+}
+
+.football-stats.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stat-box {
+    padding: 18px 12px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(70, 100, 130, 0.08);
+}
+
+.stat-box span {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.stat-box strong {
+    font-size: 13px;
+    color: var(--navy);
+}
+
+.stat-box p {
+    font-size: 10px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-top: 5px;
+}
+
+.real-message {
+    margin-top: 30px;
+
+    opacity: 0;
+    transform: scale(0.9);
+
+    transition: 1s;
+}
+
+.real-message.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.stadium-ball {
+    font-size: 55px;
+    animation: ballBounce 2s infinite;
+}
+
+.real-message h2 {
+    color: var(--navy);
+    margin-top: 10px;
+}
+
+.real-message p {
+    color: var(--muted);
+    margin: 10px;
+}
+
+.real-message span {
+    font-weight: 800;
+    color: var(--navy);
+}
+
+
+/* =========================
+   LETTER
+========================= */
+
+.letter-page {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(244, 168, 199, 0.18), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(145, 201, 232, 0.2), transparent 30%),
+        #fff;
+}
+
+.letter-content {
+    width: min(650px, 100%);
+    text-align: center;
+}
+
+.letter-content h1 {
+    margin-top: 7px;
+    color: var(--navy);
+    font-size: clamp(25px, 6vw, 40px);
+}
+
+.envelope {
+    position: relative;
+
+    width: min(460px, 90%);
+    height: 280px;
+
+    margin: 30px auto;
+
+    cursor: pointer;
+}
+
+.envelope-back {
+    position: absolute;
+
+    inset: 0;
+
+    background: #a9d8ef;
+
+    border-radius: 12px;
+
+    box-shadow: 0 20px 50px rgba(80, 100, 130, 0.12);
+}
+
+.letter-paper {
+    position: absolute;
+
+    width: 88%;
+    height: 88%;
+
+    left: 6%;
+    bottom: 5%;
+
+    background: #fffdf8;
+
+    border-radius: 5px;
+
+    transition: 1s ease;
+
+    z-index: 2;
+
+    overflow: hidden;
+}
+
+.letter-inner {
+    text-align: right;
+
+    padding: 22px;
+
+    height: 100%;
+
+    overflow-y: auto;
+
+    color: var(--text);
+
+    font-size: 11px;
+
+    line-height: 2;
+}
+
+.letter-to {
+    font-weight: 800;
+    color: var(--pink-dark);
+    margin-bottom: 10px;
+}
+
+#typedLetter {
+    white-space: pre-line;
+}
+
+.letter-end {
+    margin-top: 15px;
+
+    font-weight: 800;
+
+    color: var(--pink-dark);
+}
+
+.envelope-front {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 60%;
+
+    background: #91c9e8;
+
+    clip-path: polygon(
+        0 0,
+        50% 55%,
+        100% 0,
+        100% 100%,
+        0 100%
+    );
+
+    border-radius: 0 0 12px 12px;
+
+    z-index: 4;
+}
+
+.envelope.open .letter-paper {
+    transform: translateY(-150px);
+
+    height: 110%;
+
+    box-shadow: 0 15px 35px rgba(50, 70, 90, 0.1);
+}
+
+.envelope.open .envelope-front {
+    opacity: 0.3;
+}
+
+.letter-content .main-action {
+    margin-top: 10px;
+}
+
+
+/* =========================
+   SECRET PAGE
+========================= */
+
+.secret-page {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1), transparent 25%),
+        #07101f;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 40px 20px;
+}
+
+.secret-content {
+    width: min(700px, 100%);
+    position: relative;
+    z-index: 3;
+}
+
+.secret-content > p:first-child {
+    color: #8ec8e9;
+    font-size: 11px;
+    letter-spacing: 3px;
+}
+
+.secret-content h1 {
+    margin-top: 15px;
+
+    font-size: clamp(28px, 7vw, 55px);
+}
+
+.stadium {
+    position: relative;
+
+    width: min(550px, 100%);
+    height: 250px;
+
+    margin: 30px auto;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            #295e48,
+            #102d25
+        );
+
+    box-shadow:
+        0 0 70px rgba(145, 201, 232, 0.15),
+        inset 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.field-lines {
+    position: absolute;
+
+    inset: 20px;
+
+    border: 2px solid rgba(255,255,255,0.3);
+
+    border-radius: 10px;
+}
+
+.center-line {
+    position: absolute;
+
+    width: 2px;
+    height: 100%;
+
+    left: 50%;
+
+    background: rgba(255,255,255,0.3);
+}
+
+.center-circle {
+    position: absolute;
+
+    width: 80px;
+    height: 80px;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border: 2px solid rgba(255,255,255,0.3);
+
+    border-radius: 50%;
+}
+
+.stadium-ball-big {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 60px;
+
+    animation: stadiumBall 4s ease-in-out infinite;
+}
+
+.secret-content h2 {
+    font-size: 22px;
+}
+
+.secret-text {
+    margin: 12px auto;
+
+    max-width: 500px;
+
+    color: #aeb9c8;
+
+    font-size: 13px;
+
+    line-height: 2;
+}
+
+.final-message {
+    margin-top: 30px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.final-message span {
+    color: #8ec8e9;
+    font-size: 12px;
+}
+
+.final-message strong {
+    font-size: 25px;
+
+    background: linear-gradient(
+        90deg,
+        #f2a9c7,
+        #8ec8e9
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.final-message small {
+    color: #fff;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes floating {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes birthdayPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes flame {
+
+    from {
+        transform: translateX(-50%) scale(1);
+    }
+
+    to {
+        transform: translateX(-50%) scale(1.15);
+    }
+}
+
+@keyframes ballBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes stadiumBall {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) rotate(0);
+    }
+
+    50% {
+        transform: translate(-50%, -70%) rotate(180deg);
+    }
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+    .calendar {
+        padding: 15px;
+    }
+
+    .calendar-day {
+        font-size: 11px;
+    }
+
+    .gift-page {
+        align-items: flex-start;
+        padding-top: 75px;
+        padding-bottom: 30px;
+    }
+
+    .football-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-box {
+        padding: 14px;
+    }
+
+    .flower-garden {
+        height: 250px;
+    }
+
+    .envelope {
+        height: 230px;
+    }
+
+    .envelope.open .letter-paper {
+        transform: translateY(-110px);
+    }
+
+    .secret-page {
+        align-items: flex-start;
+        padding-top: 70px;
+    }
+
+    .stadium {
+        height: 190px;
+    }
+
+}
