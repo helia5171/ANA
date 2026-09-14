@@ -1,130 +1,421 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تولد اناهیتا قشنگم</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: Tahoma, sans-serif;
-  background: #ffe4ec;
-  min-height: 100vh;
-  color: #333;
-}
-.screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
-  text-align: center;
-}
-h1 { color: #d6336c; margin-bottom: 20px; font-size: 1.8rem; }
-.env {
-  width: 220px;
-  height: 150px;
-  background: #ff8fab;
-  border-radius: 10px;
-  position: relative;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(214,51,108,0.3);
-  margin: 20px auto;
-}
-.env::before {
-  content: '♥';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  color: white;
-  font-size: 2.5rem;
-  z-index: 5;
-}
-.env::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 70px;
-  background: #ff7a9e;
-  clip-path: polygon(0 0, 50% 100%, 100% 0);
-  border-radius: 10px 10px 0 0;
-}
-.hidden { display: none !important; }
-.app {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #fff;
-  min-height: 100vh;
-}
-.app h1 { text-align: center; color: #d6336c; }
-.app p { text-align: center; line-height: 2; color: #555; margin: 15px 0; }
-.photo {
-  display: block;
-  max-width: 200px;
-  margin: 20px auto;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(214,51,108,0.3);
-}
-.msg {
-  background: #fff0f5;
-  padding: 25px;
-  border-radius: 15px;
-  margin-top: 25px;
-}
-.msg h2 { color: #d6336c; margin-bottom: 15px; text-align: center; font-size: 1.3rem; }
-.msg p { text-align: right; line-height: 2; }
-.sig { text-align: center; color: #d6336c; font-weight: bold; margin-top: 20px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یک هدیه برای تو 🎂</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="envelope" class="screen">
-  <h1>♡ For Anahita ♡</h1>
-  <p style="color:#888;">یک سورپرایز کوچولو...</p>
-  <div class="env" onclick="openIt()"></div>
-  <p style="color:#b08898; margin-top:30px; animation: pulse 1.5s infinite;">روی پاکت بزن ✨</p>
-</div>
+    <!-- =========================
+         صفحه‌ی ورود / تقویم
+    ========================== -->
 
-<div id="app" class="app hidden">
-  <h1>تولدت مبارک اناهیتا قشنگم 🎂</h1>
-  
-  <img src="assets/anahita.jpg" class="photo" alt="اناهیتا">
-  
-  <p>امیدوارم هر روزت پر از شادی، سلامتی و اتفاق‌های قشنگ باشه ♡</p>
-  
-  <div class="msg">
-    <h2>Happy Birthday, my dear Anahita</h2>
-    <p>
-      اناهیتا قشنگم،<br><br>
-      امروز روزیه که باید بیشتر از همیشه بهت بگم چقدر بودنت قشنگه. برای مهربونی‌هات، قلب بزرگت و تمام لحظه‌هایی که با حضورت دنیا رو شیرین‌تر می‌کنی، ممنونم.<br><br>
-      تو یه دوست فوق‌العاده‌ای؛ امروز نوبت خودته که تمام خوبی‌ها و آرامشی که به دیگران دادی، چند برابر به خودت برگرده.<br><br>
-      آرزو می‌کنم سال جدید زندگی‌ات پر از سلامتی، موفقیت، عشق، سفر، خنده و رویاهایی باشه که یکی‌یکی به قشنگ‌ترین شکل ممکن به واقعیت تبدیل می‌شن.<br><br>
-      تولدت مبارک اناهیتا قشنگم. همیشه همین‌قدر دوست‌داشتنی، قوی، مهربون و درخشان بمون. ❤️
-    </p>
-    <div class="sig">
-      با کلی عشق،<br>
-      برای اناهیتا قشنگم ♡
-    </div>
-  </div>
+    <section id="calendarPage" class="page active">
 
-  <p style="text-align:center; margin-top:30px;">⚽ 🏃‍♀️ 🏅 🥇 🎽</p>
-</div>
+        <div class="background-shape shape-one"></div>
+        <div class="background-shape shape-two"></div>
 
-<style>
-@keyframes pulse {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-</style>
+        <div class="calendar-container">
 
-<script>
-function openIt() {
-  document.getElementById('envelope').classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-}
-</script>
+            <div class="tiny-heart">♡</div>
+
+            <p class="small-title">یک تاریخ خاص...</p>
+
+            <h1>
+                بعضی تاریخ‌ها<br>
+                فقط یک تاریخ نیستن.
+            </h1>
+
+            <p class="calendar-description">
+                تاریخ تولدت رو انتخاب کن<br>
+                تا چیزی که برات آماده شده رو ببینی.
+            </p>
+
+            <div class="calendar">
+
+                <div class="calendar-header">
+                    <button id="prevMonth">‹</button>
+
+                    <div>
+                        <span id="monthName">شهریور</span>
+                        <span id="yearName">۱۴۰۵</span>
+                    </div>
+
+                    <button id="nextMonth">›</button>
+                </div>
+
+                <div class="weekdays">
+                    <span>ش</span>
+                    <span>ی</span>
+                    <span>د</span>
+                    <span>س</span>
+                    <span>چ</span>
+                    <span>پ</span>
+                    <span>ج</span>
+                </div>
+
+                <div id="calendarDays" class="calendar-days"></div>
+
+            </div>
+
+            <p id="calendarMessage" class="calendar-message">
+                منتظر انتخاب توئه... 💗
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         صفحه‌ی اصلی هدیه
+    ========================== -->
+
+    <section id="homePage" class="page hidden">
+
+        <div class="home-background">
+            <span class="floating-heart heart-1">♡</span>
+            <span class="floating-heart heart-2">♡</span>
+            <span class="floating-heart heart-3">♡</span>
+            <span class="floating-star star-1">✦</span>
+            <span class="floating-star star-2">✧</span>
+        </div>
+
+        <div class="home-content">
+
+            <p class="welcome-small">
+                بالاخره رسیدی...
+            </p>
+
+            <h1>
+                تولدت مبارک
+                <span>🤍</span>
+            </h1>
+
+            <p class="welcome-text">
+                یه چیز کوچیک برات آماده کردم؛
+                <br>
+                ولی امیدوارم خاطره‌ی بزرگی برات بشه.
+            </p>
+
+            <div class="cards">
+
+                <!-- گل -->
+                <button class="gift-card flower-card" data-section="flower">
+
+                    <div class="card-icon">
+                        <span>🌷</span>
+                    </div>
+
+                    <div class="card-text">
+                        <h2>یک گل برای تو</h2>
+                        <p>چیزی که باید رشد کنه...</p>
+                    </div>
+
+                    <span class="card-arrow">←</span>
+
+                </button>
+
+
+                <!-- کیک -->
+                <button class="gift-card cake-card" data-section="cake">
+
+                    <div class="card-icon">
+                        <span>🎂</span>
+                    </div>
+
+                    <div class="card-text">
+                        <h2>یک Level جدید</h2>
+                        <p>یک سال دیگه از بازی زندگی</p>
+                    </div>
+
+                    <span class="card-arrow">←</span>
+
+                </button>
+
+
+                <!-- نامه -->
+                <button class="gift-card letter-card" data-section="letter">
+
+                    <div class="card-icon">
+                        <span>💌</span>
+                    </div>
+
+                    <div class="card-text">
+                        <h2>یک نامه</h2>
+                        <p>چیزی که باید خودت بخونیش...</p>
+                    </div>
+
+                    <span class="card-arrow">←</span>
+
+                </button>
+
+            </div>
+
+            <p class="opened-counter">
+                <span id="openedCount">۰</span> / ۳ هدیه باز شده
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         بخش گل
+    ========================== -->
+
+    <section id="flowerPage" class="page hidden gift-page flower-page">
+
+        <button class="back-button">← برگشت</button>
+
+        <div class="flower-scene">
+
+            <div class="flower-title">
+                <p>هدیه‌ی اول</p>
+                <h1>چیزی که آرام‌آرام رشد می‌کند 🌷</h1>
+            </div>
+
+            <div id="flowerGarden" class="flower-garden">
+
+                <div class="ground"></div>
+
+                <div id="flowerStem" class="flower-stem"></div>
+
+                <div id="flowerHead" class="flower-head">
+                    <div class="petal p1"></div>
+                    <div class="petal p2"></div>
+                    <div class="petal p3"></div>
+                    <div class="petal p4"></div>
+                    <div class="petal p5"></div>
+                    <div class="flower-center"></div>
+                </div>
+
+            </div>
+
+            <button id="growFlower" class="main-action">
+                گل رو رشد بده 🌱
+            </button>
+
+            <div id="flowerMessage" class="hidden-message">
+
+                <h2>برای تو 🤍</h2>
+
+                <p>
+                    بعضی چیزها یک‌شبه اتفاق نمی‌افتن.
+                    <br>
+                    آروم‌آروم رشد می‌کنن،
+                    قوی‌تر می‌شن و بالاخره شکوفه می‌دن.
+                </p>
+
+                <p>
+                    امیدوارم سال جدید زندگیت
+                    پر از همین شکوفه‌ها باشه؛
+                    <br>
+                    از اون اتفاق‌هایی که شاید امروز کوچیک به نظر برسن،
+                    ولی چند وقت بعد بفهمی چقدر قشنگ رشد کردن.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         بخش کیک / فوتبال
+    ========================== -->
+
+    <section id="cakePage" class="page hidden gift-page football-page">
+
+        <button class="back-button">← برگشت</button>
+
+        <div class="football-content">
+
+            <p class="gift-number">هدیه‌ی دوم</p>
+
+            <div class="level-title">
+                <span>LEVEL</span>
+                <strong>UP!</strong>
+            </div>
+
+            <p class="level-subtitle">
+                یک مرحله‌ی دیگه هم کامل شد ⚽
+            </p>
+
+            <div class="birthday-cake">
+
+                <div class="cake-candle candle-1">
+                    <div class="flame"></div>
+                </div>
+
+                <div class="cake-candle candle-2">
+                    <div class="flame"></div>
+                </div>
+
+                <div class="cake-candle candle-3">
+                    <div class="flame"></div>
+                </div>
+
+                <div class="cake-top"></div>
+                <div class="cake-middle"></div>
+                <div class="cake-bottom"></div>
+
+            </div>
+
+            <button id="blowCake" class="main-action">
+                شمع‌ها رو فوت کن 🎂
+            </button>
+
+            <div id="footballStats" class="football-stats hidden">
+
+                <div class="stat-box">
+                    <span>⚽</span>
+                    <strong>Football</strong>
+                    <p>برای تمام گل‌هایی که هنوز نزدی.</p>
+                </div>
+
+                <div class="stat-box">
+                    <span>🏃</span>
+                    <strong>Running</strong>
+                    <p>برای تمام خط پایان‌هایی که هنوز منتظر توئن.</p>
+                </div>
+
+                <div class="stat-box">
+                    <span>🏆</span>
+                    <strong>Dreams</strong>
+                    <p>برای چیزهایی که هنوز حتی شروعشون نکردی.</p>
+                </div>
+
+            </div>
+
+            <div id="realMessage" class="real-message hidden">
+
+                <div class="stadium-ball">⚽</div>
+
+                <h2>و یادت نره...</h2>
+
+                <p>
+                    این بازی هنوز ادامه داره.
+                </p>
+
+                <span>Hala Madrid 🤍</span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         بخش نامه
+    ========================== -->
+
+    <section id="letterPage" class="page hidden gift-page letter-page">
+
+        <button class="back-button">← برگشت</button>
+
+        <div class="letter-content">
+
+            <p class="gift-number">هدیه‌ی سوم</p>
+
+            <h1>یک نامه برای تو 💌</h1>
+
+            <div id="envelope" class="envelope">
+
+                <div class="envelope-back"></div>
+
+                <div class="letter-paper">
+
+                    <div class="letter-inner">
+
+                        <p class="letter-to">
+                            برای تو...
+                        </p>
+
+                        <div id="typedLetter"></div>
+
+                        <p class="letter-end">
+                            تولدت مبارک 🤍
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="envelope-front"></div>
+
+            </div>
+
+            <button id="openLetter" class="main-action">
+                نامه رو باز کن 💌
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         مرحله‌ی مخفی
+    ========================== -->
+
+    <section id="secretPage" class="page hidden secret-page">
+
+        <div class="stadium-lights"></div>
+
+        <div class="secret-content">
+
+            <p>SECRET LEVEL UNLOCKED</p>
+
+            <h1>
+                فکر کردی دیگه تموم شد؟
+            </h1>
+
+            <div class="stadium">
+
+                <div class="field-lines">
+                    <div class="center-circle"></div>
+                    <div class="center-line"></div>
+                </div>
+
+                <div class="stadium-ball-big">⚽</div>
+
+            </div>
+
+            <h2>برای تمام بازی‌های بعدی...</h2>
+
+            <p class="secret-text">
+                امیدوارم همیشه برای چیزی که دوستش داری
+                با همون انرژی بدوی که برای رسیدن به خط پایان می‌دوی.
+            </p>
+
+            <div class="final-message">
+                <span>۲۸ شهریور</span>
+                <strong>HAPPY BIRTHDAY</strong>
+                <small>Hala Madrid 🤍</small>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         JavaScript
+    ========================== -->
+
+    <script src="script.js"></script>
 
 </body>
 </html>
