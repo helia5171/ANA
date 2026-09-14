@@ -1,2115 +1,626 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
 
-/* =========================
-   PAGES
-========================= */
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const pages = {
-    calendar: document.getElementById("calendarPage"),
-    home: document.getElementById("homePage"),
-    flower: document.getElementById("flowerPage"),
-    cake: document.getElementById("cakePage"),
-    letter: document.getElementById("letterPage"),
-    secret: document.getElementById("secretPage")
-};
+    <title>تولد اناهیتا 🎂</title>
 
+    <link rel="stylesheet" href="style.css">
+</head>
 
-function showPage(page) {
+<body>
 
-    if (!page) return;
+    <!-- =====================================================
+         1. BIRTHDAY CALENDAR PAGE
+    ===================================================== -->
 
-    Object.values(pages).forEach(p => {
+    <section id="calendarPage" class="page calendar-page">
 
-        if (!p) return;
+        <div class="calendar-wrapper">
 
-        p.classList.remove("active");
-        p.classList.add("hidden");
+            <div class="calendar-decoration">🎂</div>
 
-    });
+            <h1>
+                تولد اناهیتا
+            </h1>
 
-    page.classList.remove("hidden");
+            <p class="calendar-subtitle">
+                اول باید تاریخ تولدت رو پیدا کنی...
+            </p>
 
-    requestAnimationFrame(() => {
-        page.classList.add("active");
-    });
-}
+            <div class="calendar-box">
 
+                <div class="calendar-header">
+                    <button id="prevMonth">‹</button>
 
-function goHome() {
-    showPage(pages.home);
-}
+                    <h2 id="calendarTitle">
+                        شهریور
+                    </h2>
 
+                    <button id="nextMonth">›</button>
+                </div>
 
-/* =====================================================
-   CALENDAR
-   ===================================================== */
+                <div class="weekdays">
+                    <span>ش</span>
+                    <span>ی</span>
+                    <span>د</span>
+                    <span>س</span>
+                    <span>چ</span>
+                    <span>پ</span>
+                    <span>ج</span>
+                </div>
 
-const monthNames = [
-    "فروردین",
-    "اردیبهشت",
-    "خرداد",
-    "تیر",
-    "مرداد",
-    "شهریور",
-    "مهر",
-    "آبان",
-    "آذر",
-    "دی",
-    "بهمن",
-    "اسفند"
-];
+                <div id="calendarDays" class="calendar-days"></div>
 
+            </div>
 
-const monthName =
-    document.getElementById("monthName");
+            <p id="calendarHint" class="calendar-hint">
+                تاریخ تولدت رو انتخاب کن 🌷
+            </p>
 
-const yearName =
-    document.getElementById("yearName");
+        </div>
 
-const calendarDays =
-    document.getElementById("calendarDays");
+    </section>
 
-const calendarMessage =
-    document.getElementById("calendarMessage");
 
+    <!-- =====================================================
+         2. HOME / GIFTS PAGE
+    ===================================================== -->
 
-let currentYear = 1405;
-let currentMonth = 5; // شهریور
+    <section id="homePage" class="page hidden home-page">
 
+        <div class="home-decoration">
+            <span>✦</span>
+            <span>♡</span>
+            <span>✦</span>
+        </div>
 
-function persianNumber(n) {
+        <main class="home-wrapper">
 
-    return String(n).replace(
-        /[0-9]/g,
-        d => "۰۱۲۳۴۵۶۷۸۹"[d]
-    );
-}
+            <p class="small-label">
+                برای اناهیتا
+            </p>
 
+            <h1 class="birthday-title">
+                تولد مبارک.
+            </h1>
 
-function daysInMonth(month) {
+            <p class="birthday-text">
+                روی هر کدوم بزن تا ببینی توش چیاس
+            </p>
 
-    if (month <= 5) {
-        return 31;
-    }
 
-    if (month <= 10) {
-        return 30;
-    }
+            <!-- GIFT CARDS -->
 
-    return 29;
-}
+            <div class="gifts-container">
 
 
-function renderCalendar() {
+                <!-- FLOWER -->
 
-    if (!calendarDays) return;
+                <button
+                    class="gift-card flower-card"
+                    onclick="openPage('flowerPage')">
 
-    monthName.textContent =
-        monthNames[currentMonth];
+                    <div class="gift-icon flower-icon">
+                        <div class="flower-stem"></div>
 
-    yearName.textContent =
-        persianNumber(currentYear);
+                        <div class="flower">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
 
-    calendarDays.innerHTML = "";
+                    <div class="gift-info">
 
+                        <h2>
+                            یک گل برای تو
+                        </h2>
 
-    const offset =
-        (
-            currentYear === 1405 &&
-            currentMonth === 5
-        )
-            ? 0
-            : (currentMonth * 2) % 7;
+                    </div>
 
+                </button>
 
-    /* روزهای خالی قبل از شروع ماه */
 
-    for (let i = 0; i < offset; i++) {
+                <!-- CAKE -->
 
-        const empty =
-            document.createElement("span");
+                <button
+                    class="gift-card cake-card"
+                    onclick="openPage('cakePage')">
 
-        empty.className =
-            "calendar-day empty";
+                    <div class="gift-icon cake-icon">
 
-        calendarDays.appendChild(empty);
-    }
+                        <div class="mini-cake">
 
+                            <div class="cake-top"></div>
 
-    /* روزهای ماه */
+                            <div class="cake-body"></div>
 
-    for (
-        let day = 1;
-        day <= daysInMonth(currentMonth);
-        day++
-    ) {
+                            <div class="candle">
+                                <span></span>
+                            </div>
 
-        const button =
-            document.createElement("button");
+                        </div>
 
-        button.type = "button";
+                    </div>
 
-        button.className =
-            "calendar-day";
+                    <div class="gift-info">
 
-        button.textContent =
-            persianNumber(day);
+                        <h2>
+                            یک Level جدید
+                        </h2>
 
+                    </div>
 
-        /* مشخص کردن ۲۸ شهریور */
+                </button>
 
-        if (
-            currentYear === 1405 &&
-            currentMonth === 5 &&
-            day === 28
-        ) {
 
-            button.classList.add("birthday");
-        }
+                <!-- LETTER -->
 
+                <button
+                    class="gift-card letter-card"
+                    onclick="openPage('letterPage')">
 
-        button.addEventListener("click", () => {
+                    <div class="gift-icon envelope-icon">
 
-            if (
-                currentYear === 1405 &&
-                currentMonth === 5 &&
-                day === 28
-            ) {
+                        <div class="envelope">
 
-                calendarMessage.textContent =
-                    "آره... همین تاریخه. 🤍";
+                            <div class="envelope-flap"></div>
 
-                calendarMessage.classList.add("success");
+                            <div class="envelope-paper">
+                                ♡
+                            </div>
 
-                createConfetti();
+                        </div>
 
+                    </div>
 
-                setTimeout(() => {
+                    <div class="gift-info">
 
-                    showPage(pages.home);
+                        <h2>
+                            یک نامه
+                        </h2>
 
-                }, 900);
+                    </div>
 
+                </button>
 
-            } else {
+            </div>
 
-                calendarMessage.textContent =
-                    "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
 
-                calendarMessage.classList.remove("success");
-            }
+            <!-- SECRET BUTTON -->
 
-        });
+            <button
+                id="secretButton"
+                class="secret-button hidden"
+                onclick="openPage('secretPage')">
 
+                🔓
+                یه چیز دیگه هم هست...
 
-        calendarDays.appendChild(button);
-    }
-}
+            </button>
 
+        </main>
 
-/* ماه قبل */
+    </section>
 
-document
-    .getElementById("prevMonth")
-    ?.addEventListener("click", () => {
 
-        currentMonth--;
+    <!-- =====================================================
+         3. FLOWER PAGE
+    ===================================================== -->
 
-        if (currentMonth < 0) {
+    <section id="flowerPage" class="page hidden flower-page">
 
-            currentMonth = 11;
-            currentYear--;
-        }
+        <button
+            class="back-button"
+            onclick="goHome()">
 
-        renderCalendar();
+            ← برگشت
 
-    });
+        </button>
 
 
-/* ماه بعد */
+        <main class="flower-wrapper">
 
-document
-    .getElementById("nextMonth")
-    ?.addEventListener("click", () => {
+            <p class="gift-label">
+                هدیه‌ی اول
+            </p>
 
-        currentMonth++;
+            <h1>
+                یک گل برای اناهیتا فقط
+            </h1>
 
-        if (currentMonth > 11) {
 
-            currentMonth = 0;
-            currentYear++;
-        }
+            <div class="flower-stage">
 
-        renderCalendar();
+                <div
+                    id="flowerPot"
+                    class="flower-pot">
 
-    });
+                    <div class="pot-rim"></div>
+                    <div class="pot-body"></div>
 
+                </div>
 
 
-/* =====================================================
-   THREE GIFTS
-   ===================================================== */
+                <div
+                    id="bigFlower"
+                    class="big-flower">
 
+                    <div class="big-flower-stem"></div>
 
-const openedGifts = new Set();
+                    <div class="big-flower-head">
 
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
 
-function openGift(section) {
+                        <div class="flower-center">
+                            ✦
+                        </div>
 
-    if (section === "flower") {
+                    </div>
 
-        openedGifts.add("flower");
+                    <div class="leaf leaf-one"></div>
+                    <div class="leaf leaf-two"></div>
 
-        showPage(pages.flower);
+                </div>
 
-    }
+            </div>
 
 
-    else if (section === "cake") {
+            <button
+                id="growFlowerButton"
+                class="main-action-button">
 
-        openedGifts.add("cake");
+                گل رو بکار 🌱
 
-        showPage(pages.cake);
+            </button>
 
-    }
 
+            <div
+                id="flowerMessage"
+                class="flower-message">
 
-    else if (section === "letter") {
+                <h2>
+                    یک گل برای اناهیتا فقط 🌸
+                </h2>
 
-        openedGifts.add("letter");
-
-        showPage(pages.letter);
-    }
-
-
-    updateGiftProgress();
-}
-
-
-
-/* =====================================================
-   GIFT PROGRESS
-   ===================================================== */
-
-
-function updateGiftProgress() {
-
-    const count =
-        document.getElementById("openedCount");
-
-
-    if (count) {
-
-        count.textContent =
-            persianNumber(openedGifts.size);
-    }
-
-
-    /*
-       مهم:
-       اینجا دیگر مرحله مخفی باز نمی‌شود.
-       فقط وضعیت قفل مرحله مخفی آپدیت می‌شود.
-    */
-
-    updateSecretLock();
-}
-
-
-
-/* کلیک روی کادوها */
-
-document
-    .querySelectorAll(".gift-card")
-    .forEach(card => {
-
-        card.addEventListener("click", () => {
-
-            openGift(card.dataset.section);
-
-        });
-
-    });
-
-
-
-/* دکمه‌های برگشت */
-
-document
-    .querySelectorAll(".back-button")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            goHome
-        );
-
-    });
-
-
-
-/* =====================================================
-   FLOWER
-   ===================================================== */
-
-
-const growFlower =
-    document.getElementById("growFlower");
-
-
-const flowerStem =
-    document.getElementById("flowerStem");
-
-
-const flowerHead =
-    document.getElementById("flowerHead");
-
-
-const flowerMessage =
-    document.getElementById("flowerMessage");
-
-
-let flowerGrown = false;
-
-
-growFlower?.addEventListener("click", () => {
-
-    if (flowerGrown) return;
-
-    flowerGrown = true;
-
-
-    growFlower.textContent =
-        "شکوفه داد 🌷";
-
-
-    /* رشد ساقه */
-
-    if (flowerStem) {
-
-        flowerStem.classList.add("grow");
-
-        flowerStem.style.height =
-            "150px";
-    }
-
-
-    /* باز شدن گل */
-
-    if (flowerHead) {
-
-        setTimeout(() => {
-
-            flowerHead.classList.add("bloom");
-
-            flowerHead.style.opacity =
-                "1";
-
-            flowerHead.style.transform =
-                "translateX(-50%) scale(1)";
-
-        }, 700);
-    }
-
-
-    /* نمایش متن */
-
-    setTimeout(() => {
-
-        flowerMessage?.classList.add("show");
-
-    }, 1300);
-
-});
-
-
-
-/* =====================================================
-   CAKE
-   ===================================================== */
-
-
-const blowCake =
-    document.getElementById("blowCake");
-
-
-const footballStats =
-    document.getElementById("footballStats");
-
-
-const realMessage =
-    document.getElementById("realMessage");
-
-
-let cakeBlown = false;
-
-
-blowCake?.addEventListener("click", () => {
-
-    if (cakeBlown) return;
-
-    cakeBlown = true;
-
-
-    blowCake.textContent =
-        "هورا ! 🎉";
-
-
-    createConfetti();
-
-
-    /* اطلاعات فوتبال */
-
-    if (footballStats) {
-
-        setTimeout(() => {
-
-            footballStats.classList.add("show");
-
-        }, 500);
-
-    }
-
-
-    /* پیام رئال */
-
-    if (realMessage) {
-
-        setTimeout(() => {
-
-            realMessage.classList.add("show");
-
-        }, 900);
-
-    }
-
-});
-
-
-
-/* =====================================================
-   LETTER
-   ===================================================== */
-
-
-const envelope =
-    document.getElementById("envelope");
-
-
-const openLetter =
-    document.getElementById("openLetter");
-
-
-const typedLetter =
-    document.getElementById("typedLetter");
-
-
-const letterSignature =
-    document.getElementById("letterSignature");
-
-
-
-const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
-
-خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
-خیلی خیلی دوست دارم و خیلی برام باارزشی،
-بابت تمام خنده‌ها و لحظات خوبی که برام ساختی، ممنونم.
-
-فرشته کوچولو،
-امیدوارم همیشه به تمام آرزوهات برسی
-و توی تمام زندگیت موفق و سلامت باشی.`;
-
-
-
-let letterOpened = false;
-
-
-
-openLetter?.addEventListener("click", () => {
-
-    if (letterOpened) return;
-
-    letterOpened = true;
-
-
-    envelope?.classList.add("open");
-
-
-    openLetter.textContent =
-        "نامه باز شد 🤍";
-
-
-    setTimeout(() => {
-
-        typeLetter();
-
-    }, 700);
-
-});
-
-
-
-function typeLetter() {
-
-    if (!typedLetter) return;
-
-
-    typedLetter.textContent = "";
-
-
-    if (letterSignature) {
-
-        letterSignature.classList.remove(
-            "show"
-        );
-    }
-
-
-    let i = 0;
-
-
-    function type() {
-
-        if (i < letterText.length) {
-
-            typedLetter.textContent +=
-                letterText[i];
-
-            i++;
-
-
-            setTimeout(
-                type,
-                25
-            );
-
-
-        } else {
-
-            /*
-               نامه کاملاً تمام شده.
-               امضا نمایش داده می‌شود.
-               مرحله مخفی اینجا باز نمی‌شود.
-            */
-
-            if (letterSignature) {
-
-                letterSignature.textContent =
-                    "از طرف هلیا ♡";
-
-                letterSignature.classList.add(
-                    "show"
-                );
-            }
-
-
-            /*
-               فقط وضعیت مرحله مخفی را
-               بعد از تمام شدن نامه بررسی می‌کنیم.
-            */
-
-            updateSecretLock();
-        }
-    }
-
-
-    type();
-}
-
-
-
-/* =====================================================
-   SECRET LEVEL
-   ===================================================== */
-
-
-const secretUnlockBox =
-    document.getElementById(
-        "secretUnlockBox"
-    );
-
-
-const secretUnlockButton =
-    document.getElementById(
-        "secretUnlockButton"
-    );
-
-
-const secretUnlockText =
-    document.getElementById(
-        "secretUnlockText"
-    );
-
-
-let secretUnlocked = false;
-
-
-
-/*
-   بررسی می‌کند که آیا هر سه کادو
-   باز شده‌اند یا نه.
-*/
-
-function updateSecretLock() {
-
-    if (
-        !secretUnlockBox ||
-        !secretUnlockButton
-    ) {
-        return;
-    }
-
-
-    /* اگر هنوز هر سه کادو باز نشده‌اند */
-
-    if (openedGifts.size < 3) {
-
-        secretUnlockBox.classList.add(
-            "locked"
-        );
-
-
-        secretUnlockButton.disabled =
-            true;
-
-
-        secretUnlockButton.textContent =
-            "هنوز قفله 🔒";
-
-
-        if (secretUnlockText) {
-
-            const remaining =
-                3 - openedGifts.size;
-
-
-            secretUnlockText.textContent =
-                `هنوز ${persianNumber(remaining)} کادو باقی مونده...`;
-        }
-
-
-        return;
-    }
-
-
-
-    /* هر سه کادو باز شده‌اند */
-
-    secretUnlockBox.classList.remove(
-        "locked"
-    );
-
-
-    secretUnlockButton.disabled =
-        false;
-
-
-    secretUnlockButton.textContent =
-        "باز کردن مرحله مخفی ✨";
-
-
-    if (secretUnlockText) {
-
-        secretUnlockText.textContent =
-            "هورا! هر سه کادو رو باز کردی. حالا می‌تونی وارد مرحله‌ی مخفی بشی 🤍";
-    }
-
-}
-
-
-
-/*
-   مرحله مخفی فقط با کلیک کاربر باز می‌شود.
-*/
-
-secretUnlockButton?.addEventListener(
-    "click",
-    () => {
-
-        /* اگر سه کادو باز نشده باشند */
-
-        if (openedGifts.size < 3) {
-            return;
-        }
-
-
-        /* اگر قبلاً باز شده */
-
-        if (secretUnlocked) {
-            return;
-        }
-
-
-        secretUnlocked = true;
-
-
-        createConfetti();
-
-
-        setTimeout(() => {
-
-            showPage(pages.secret);
-
-        }, 700);
-
-    }
-);
-
-
-
-/* =====================================================
-   CONFETTI
-   ===================================================== */
-
-
-function createConfetti() {
-
-    const colors = [
-        "#f2a7c4",
-        "#8fc8e7",
-        "#f7d477",
-        "#ffffff"
-    ];
-
-
-    for (let i = 0; i < 45; i++) {
-
-        const piece =
-            document.createElement("div");
-
-
-        const size =
-            Math.random() * 7 + 4;
-
-
-        const duration =
-            Math.random() * 1600 + 1800;
-
-
-        Object.assign(
-            piece.style,
-            {
-
-                position: "fixed",
-
-                width: `${size}px`,
-
-                height: `${size}px`,
-
-                left:
-                    `${Math.random() * 100}vw`,
-
-                top: "-15px",
-
-                background:
-                    colors[
-                        Math.floor(
-                            Math.random() *
-                            colors.length
-                        )
-                    ],
-
-                borderRadius: "3px",
-
-                zIndex: "100000",
-
-                pointerEvents: "none"
-            }
-        );
-
-
-        document.body.appendChild(
-            piece
-        );
-
-
-        piece.animate(
-            [
-                {
-                    transform:
-                        "translateY(0) rotate(0deg)",
-
-                    opacity: 1
-                },
-
-                {
-                    transform:
-                        `translateY(110vh) rotate(${Math.random() * 720}deg)`,
-
-                    opacity: 0
-                }
-            ],
-            {
-                duration: duration,
-
-                easing:
-                    "cubic-bezier(.2,.8,.3,1)"
-            }
-        );
-
-
-        setTimeout(() => {
-
-            piece.remove();
-
-        }, duration);
-    }
-}
-
-
-
-/* =====================================================
-   START
-   ===================================================== */
-
-
-showPage(pages.calendar);
-
-renderCalendar();
-
-updateGiftProgress();
-
-فقط یک نکته: این script.js به سه عنصر جدیدی که در پیام قبلی گفتم نیاز دارد:
-
-<div id="secretUnlockBox" class="secret-unlock-box locked">
-    <div class="secret-lock-icon">🔒</div>
-
-    <h2>مرحله‌ی مخفی</h2>
-
-    <p id="secretUnlockText">
-        اول هر سه کادو رو باز کن تا این مرحله باز بشه...
-    </p>
-
-    <button id="secretUnlockButton" type="button" disabled>
-        هنوز قفله 🔒
-    </button>
-</div>
-
-این بخش باید داخل letterPage و زیر نامه باشد. CSS مرحله مخفی هم باید اضافه شده باشد.
-
-باز شد دوباره که 
-
-آره، پس مشکل اینه که کد قبلی هنوز جایی مرحله مخفی رو به‌صورت خودکار صدا می‌زنه یا نسخه قدیمی JS هنوز روی سایت لود می‌شه.
-
-این بار بهتره حدس نزنیم. فایل‌های فعلی index.html و script.js رو بفرست/آپلود کن (همون دو فایلی که الان واقعاً روی سایت گذاشتی). من خود کدها رو بررسی می‌کنم و دقیقاً جایی که باعث باز شدن خودکار می‌شه رو حذف می‌کنم؛ بعد نسخه کامل و یک‌تکه‌ی اصلاح‌شده رو می‌دم.
-
-این دفعه نمی‌خوام دوباره کدی بدم که مجبور بشی چند قسمت رو دستی عوض کنی 😭❤️
-
-Pasted text(1).txt
-Document
-Pasted text (2).txt
-Document
-
-آهااا، الان دقیقاً معلوم شد مشکل کجاست 😭
-فایل واقعی script.js رو بررسی کردم و هنوز کد قدیمیِ بازشدن خودکار داخلش هست؛ مشخصاً در updateGiftProgress()، وقتی تعداد کادوها به ۳ می‌رسه، unlockSecretLevel() بعد از ۷۰۰ میلی‌ثانیه اجرا می‌شه.
-
-از طرفی در index.html فعلی اصلاً باکس مرحله مخفی زیر نامه وجود نداره؛ صفحه نامه در حال حاضر فقط پاکت و دکمه‌ی «نامه رو باز کن» داره.
-
-پس این بار باید دو تغییر واقعی بدیم:
-
-۱. در script.js
-
-بخش بازشدن خودکار را کلاً حذف می‌کنیم و مرحله مخفی فقط با کلیک باز می‌شود.
-
-۲. در index.html
-
-زیر دکمه‌ی نامه، این باکس را قرار می‌دهیم:
-
-<div id="secretUnlockBox" class="secret-unlock-box locked">
-
-    <div class="secret-lock-icon">
-        🔒
-    </div>
-
-    <h2>
-        مرحله‌ی مخفی
-    </h2>
-
-    <p id="secretUnlockText">
-        اول هر سه کادو رو باز کن تا این مرحله باز بشه...
-    </p>
-
-    <button
-        id="secretUnlockButton"
-        type="button"
-        disabled
-    >
-        هنوز قفله 🔒
-    </button>
-
-</div>
-
-نکته مهم: این کد باید داخل letterPage و دقیقاً بعد از این دکمه قرار بگیرد:
-
-<button id="openLetter" class="primary-button">
-    نامه رو باز کن 💌
-</button>
-
-یعنی ساختارش بشه:
-
-<button id="openLetter" class="primary-button">
-    نامه رو باز کن 💌
-</button>
-
-<div id="secretUnlockBox" class="secret-unlock-box locked">
-
-    <div class="secret-lock-icon">
-        🔒
-    </div>
-
-    <h2>
-        مرحله‌ی مخفی
-    </h2>
-
-    <p id="secretUnlockText">
-        اول هر سه کادو رو باز کن تا این مرحله باز بشه...
-    </p>
-
-    <button
-        id="secretUnlockButton"
-        type="button"
-        disabled
-    >
-        هنوز قفله 🔒
-    </button>
-
-</div>
-
-و دیگه هیچ setTimeout(unlockSecretLevel, 700) یا چیزی شبیه اون نباید وجود داشته باشه.
-
-اگر بخوای، در پیام بعدی می‌تونم 
-هر دو فایل index.html و script.js رو کامل و آماده‌ی جایگزینی بر اساس همین فایل‌هایی که فرستادی بهت بدم، بدون اینکه هیچ قسمت دیگه‌ای از سایتت تغییر کنه.
-
-حتماً، این هم کد کامل script.js:
-
-document.addEventListener("DOMContentLoaded", () => {
-    // =========================
-    // عناصر اصلی
-    // =========================
-
-    const pages = {
-        calendar: document.getElementById("calendarPage"),
-        home: document.getElementById("homePage"),
-        flower: document.getElementById("flowerPage"),
-        cake: document.getElementById("cakePage"),
-        letter: document.getElementById("letterPage"),
-        secret: document.getElementById("secretPage")
-    };
-
-    const openedGifts = new Set();
-
-    // =========================
-    // ابزارهای کمکی
-    // =========================
-
-    function persianNumber(number) {
-        return String(number).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
-    }
-
-    function showPage(page) {
-        Object.values(pages).forEach(p => {
-            if (p) p.classList.remove("active");
-        });
-
-        if (page) {
-            page.classList.add("active");
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
-    }
-
-    function createConfetti() {
-        const container = document.createElement("div");
-        container.className = "confetti-container";
-
-        for (let i = 0; i < 45; i++) {
-            const piece = document.createElement("span");
-            piece.className = "confetti";
-
-            piece.style.left = `${Math.random() * 100}%`;
-            piece.style.animationDelay = `${Math.random() * 0.8}s`;
-            piece.style.animationDuration =
-                `${2 + Math.random() * 2}s`;
-
-            container.appendChild(piece);
-        }
-
-        document.body.appendChild(container);
-
-        setTimeout(() => {
-            container.remove();
-        }, 4500);
-    }
-
-    // =========================
-    // تقویم
-    // =========================
-
-    const prevMonth = document.getElementById("prevMonth");
-    const nextMonth = document.getElementById("nextMonth");
-    const monthName = document.getElementById("monthName");
-    const yearName = document.getElementById("yearName");
-    const calendarDays = document.getElementById("calendarDays");
-    const calendarMessage = document.getElementById("calendarMessage");
-
-    const shamsiMonths = [
-        "فروردین",
-        "اردیبهشت",
-        "خرداد",
-        "تیر",
-        "مرداد",
-        "شهریور",
-        "مهر",
-        "آبان",
-        "آذر",
-        "دی",
-        "بهمن",
-        "اسفند"
-    ];
-
-    let calendarMonth = 5;
-    let calendarYear = 1405;
-
-    function renderCalendar() {
-        if (!calendarDays) return;
-
-        calendarDays.innerHTML = "";
-
-        if (monthName) {
-            monthName.textContent = shamsiMonths[calendarMonth];
-        }
-
-        if (yearName) {
-            yearName.textContent = persianNumber(calendarYear);
-        }
-
-        const daysInMonth =
-            calendarMonth < 6 ? 31 :
-            calendarMonth < 11 ? 30 :
-            29;
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            const button = document.createElement("button");
-
-            button.className = "calendar-day";
-            button.textContent = persianNumber(day);
-            button.type = "button";
-
-            if (day === 28 && calendarMonth === 5) {
-                button.classList.add("birthday-day");
-
-                button.addEventListener("click", () => {
-                    if (calendarMessage) {
-                        calendarMessage.textContent =
-                            "آرههه! خودشه! 🎂💗";
-                    }
-
-                    createConfetti();
-
-                    setTimeout(() => {
-                        showPage(pages.home);
-                    }, 900);
-                });
-            } else {
-                button.addEventListener("click", () => {
-                    if (calendarMessage) {
-                        calendarMessage.textContent =
-                            "نههه، تولد اناهیتا این روز نیست 😭";
-                    }
-                });
-            }
-
-            calendarDays.appendChild(button);
-        }
-    }
-
-    prevMonth?.addEventListener("click", () => {
-        calendarMonth--;
-
-        if (calendarMonth < 0) {
-            calendarMonth = 11;
-            calendarYear--;
-        }
-
-        renderCalendar();
-    });
-
-    nextMonth?.addEventListener("click", () => {
-        calendarMonth++;
-
-        if (calendarMonth > 11) {
-            calendarMonth = 0;
-            calendarYear++;
-        }
-
-        renderCalendar();
-    });
-
-    renderCalendar();
-
-    // =========================
-    // رفتن از خانه به کادوها
-    // =========================
-
-    document.querySelectorAll(".gift-card").forEach(card => {
-        card.addEventListener("click", () => {
-            const section = card.dataset.section;
-
-            if (!section || !pages[section]) return;
-
-            openedGifts.add(section);
-
-            showPage(pages[section]);
-
-            updateGiftProgress();
-            updateSecretLock();
-        });
-    });
-
-    // =========================
-    // دکمه‌های برگشت
-    // =========================
-
-    document.querySelectorAll("[data-back]").forEach(button => {
-        button.addEventListener("click", () => {
-            showPage(pages.home);
-        });
-    });
-
-    // =========================
-    // پیشرفت کادوها
-    // =========================
-
-    const giftProgress = document.getElementById("giftProgress");
-
-    function updateGiftProgress() {
-        if (!giftProgress) return;
-
-        giftProgress.textContent =
-            `${persianNumber(openedGifts.size)} از ${persianNumber(3)} کادو باز شده`;
-
-        updateSecretLock();
-    }
-
-    // =========================
-    // گل
-    // =========================
-
-    const growFlower = document.getElementById("growFlower");
-    const flowerStem = document.getElementById("flowerStem");
-    const flowerHead = document.getElementById("flowerHead");
-    const flowerMessage = document.getElementById("flowerMessage");
-
-    let flowerGrown = false;
-
-    growFlower?.addEventListener("click", () => {
-        if (flowerGrown) return;
-
-        flowerGrown = true;
-
-        if (flowerStem) {
-            flowerStem.classList.add("grown");
-        }
-
-        if (flowerHead) {
-            flowerHead.classList.add("bloom");
-        }
-
-        if (growFlower) {
-            growFlower.textContent = "گل شکوفه زد 🌸";
-            growFlower.disabled = true;
-        }
-
-        if (flowerMessage) {
-            flowerMessage.innerHTML = `
                 <p>
-                    برای اناهیتا قشنگم که مثل همین گل زیباس 🌸
+                    برای اناهیتا قشنگم که مثل همین گل زیباس،
+                    <br>
+                    امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه.
                 </p>
+
+            </div>
+
+        </main>
+
+    </section>
+
+
+    <!-- =====================================================
+         4. CAKE / FOOTBALL PAGE
+    ===================================================== -->
+
+    <section id="cakePage" class="page hidden football-page">
+
+        <button
+            class="back-button"
+            onclick="goHome()">
+
+            ← برگشت
+
+        </button>
+
+
+        <main class="football-wrapper">
+
+            <p class="gift-label">
+                هدیه‌ی دوم
+            </p>
+
+
+            <!-- بعد از فوت کردن کیک، این قسمت به «هورا ! 🎉» تغییر می‌کند -->
+
+            <div class="level-title">
+
+                <strong>
+                    هورا ! 🎉
+                </strong>
+
+            </div>
+
+
+            <p class="level-subtitle">
+                یک مرحله‌ی دیگه هم کامل شد ⚽
+            </p>
+
+
+            <!-- CAKE IMAGE -->
+
+            <div class="cake-container">
+
+                <img
+                    src="cake.jpg"
+                    alt="کیک تولد"
+                    class="cake-photo"
+                    id="cakeImage">
+
+            </div>
+
+
+            <p
+                id="cakeInstruction"
+                class="cake-instruction">
+
+                شمع‌ها رو فوت کن 🎂
+
+            </p>
+
+
+            <button
+                id="blowCakeButton"
+                class="main-action-button">
+
+                فوت کن 💨
+
+            </button>
+
+
+            <!-- FOOTBALL GAME -->
+
+            <div
+                id="footballGame"
+                class="football-game hidden">
+
+                <div class="football-field">
+
+                    <div class="goal"></div>
+
+                    <div
+                        id="footballBall"
+                        class="football-ball">
+
+                        ⚽
+
+                    </div>
+
+                </div>
+
+
                 <p>
-                    امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه 💗
+                    حالا وقت بازیه! ⚽
                 </p>
-            `;
-        }
 
-        createConfetti();
-    });
 
-    // =========================
-    // کیک
-    // =========================
+                <button
+                    id="footballButton"
+                    class="main-action-button">
 
-    const blowCake = document.getElementById("blowCake");
-    const footballStats = document.getElementById("footballStats");
-    const realMessage = document.getElementById("realMessage");
+                    بزن به توپ ⚽
 
-    let cakeBlown = false;
+                </button>
 
-    blowCake?.addEventListener("click", () => {
-        if (cakeBlown) return;
+            </div>
 
-        cakeBlown = true;
 
-        const cake = document.querySelector(".cake");
+            <!-- RUNNING -->
 
-        if (cake) {
-            cake.classList.add("blown");
-        }
+            <div
+                id="runningMessage"
+                class="running-message hidden">
 
-        blowCake.textContent = "هورا ! 🎉";
-        blowCake.disabled = true;
+                <div class="running-icon">
+                    🏃🏻‍♀️
+                </div>
 
-        if (footballStats) {
-            footballStats.classList.add("show");
-        }
+                <h2>
+                    بدوووو اناهیتا! 🏃🏻‍♀️💨
+                </h2>
 
-        if (realMessage) {
-            realMessage.innerHTML = `
                 <p>
-                    برای اناهیتایی که عاشق فوتباله ⚽🤍
+                    امیدوارم همیشه با همین انرژی
+                    دنبال آرزوهات بدوی.
                 </p>
+
+            </div>
+
+
+            <!-- DREAMS -->
+
+            <div
+                id="dreamMessage"
+                class="dream-message hidden">
+
+                <div class="dream-icon">
+                    ⭐
+                </div>
+
+                <h2>
+                    برای تمام آرزوهات
+                </h2>
+
                 <p>
-                    Hala Madrid! 🤍💙
+                    امیدوارم هر چیزی که آرزوش رو داری
+                    یه روزی بهش برسی.
                 </p>
+
+            </div>
+
+
+            <!-- REAL MESSAGE -->
+
+            <div
+                id="realMessage"
+                class="real-message hidden">
+
+                <div class="football-ball">
+                    ⚽
+                </div>
+
+                <h2>
+                    و یادت نره...
+                </h2>
+
+                <strong>
+                    Hala Madrid 🤍
+                </strong>
+
+            </div>
+
+        </main>
+
+    </section>
+
+
+    <!-- =====================================================
+         5. LETTER PAGE
+    ===================================================== -->
+
+    <section id="letterPage" class="page hidden letter-page">
+
+        <button
+            class="back-button"
+            onclick="goHome()">
+
+            ← برگشت
+
+        </button>
+
+
+        <main class="letter-wrapper">
+
+            <p class="gift-label">
+                هدیه‌ی سوم
+            </p>
+
+
+            <div class="letter-scene">
+
+                <!-- ENVELOPE -->
+
+                <div
+                    id="envelope"
+                    class="envelope-large">
+
+                    <div class="envelope-back"></div>
+
+                    <div class="letter-paper">
+
+                        <p class="letter-to">
+                            برای اناهیتا قشنگم ♡
+                        </p>
+
+                        <div
+                            id="typedLetter"
+                            class="typed-letter">
+                        </div>
+
+                        <div
+                            id="letterSignature"
+                            class="letter-signature">
+                        </div>
+
+                    </div>
+
+                    <div class="envelope-front"></div>
+
+                    <div class="envelope-flap-large"></div>
+
+                </div>
+
+
+                <button
+                    id="openLetterButton"
+                    class="main-action-button">
+
+                    نامه رو باز کن 💌
+
+                </button>
+
+            </div>
+
+        </main>
+
+    </section>
+
+
+    <!-- =====================================================
+         6. SECRET LEVEL
+    ===================================================== -->
+
+    <section
+        id="secretPage"
+        class="page hidden secret-page">
+
+        <button
+            class="back-button"
+            onclick="goHome()">
+
+            ← برگشت
+
+        </button>
+
+
+        <main class="secret-wrapper">
+
+            <p class="secret-label">
+                🔓 SECRET LEVEL UNLOCKED
+            </p>
+
+
+            <h1>
+                فکر کردی دیگه تموم شد؟
+            </h1>
+
+
+            <div class="secret-content">
+
+                <div class="secret-stars">
+                    ✦ ✧ ✦
+                </div>
+
+
                 <p>
-                    امیدوارم همیشه توی دویدن، فوتبال و رسیدن به
-                    آرزوهات موفق باشی ✨
+                    تولدت مبارک اناهیتاااا! 🎂
                 </p>
-            `;
-        }
 
-        createConfetti();
-    });
+                <p>
+                    امیدوارم امسال یکی از قشنگ‌ترین
+                    سال‌های زندگیت باشه.
+                </p>
 
-    // =========================
-    // نامه
-    // =========================
 
-    const openLetter = document.getElementById("openLetter");
-    const typedLetter = document.getElementById("typedLetter");
-    const letterSignature = document.getElementById("letterSignature");
+                <div class="secret-hearts">
+                    ♡ ♡ ♡
+                </div>
 
-    const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
 
-خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
-خیلی خیلی دوست دارم و خیلی برام باارزشی،
-بابت تمام خنده‌ها و لحظات خوبی که برام ساختی، ممنونم.
+                <strong>
+                    از طرف هلیا ♡
+                </strong>
 
-فرشته کوچولو،
-امیدوارم همیشه به تمام آرزوهات برسی
-و توی تمام زندگیت موفق و سلامت باشی.`;
+            </div>
 
-    let letterOpened = false;
+        </main>
 
-    function typeLetter() {
-        if (!typedLetter) return;
+    </section>
 
-        typedLetter.textContent = "";
-        if (letterSignature) {
-            letterSignature.classList.remove("show");
-        }
 
-        let index = 0;
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
 
-        const interval = setInterval(() => {
-            if (index < letterText.length) {
-                typedLetter.textContent += letterText[index];
-                index++;
+    <script src="script.js"></script>
 
-                typedLetter.scrollTop =
-                    typedLetter.scrollHeight;
-            } else {
-                clearInterval(interval);
+</body>
 
-                if (letterSignature) {
-                    letterSignature.textContent =
-                        "از طرف هلیا ♡";
-
-                    letterSignature.classList.add("show");
-                }
-
-                // فقط قفل مرحله مخفی را بررسی می‌کنیم.
-                // اینجا دیگر وارد مرحله مخفی نمی‌شویم.
-                updateSecretLock();
-            }
-        }, 35);
-    }
-
-    openLetter?.addEventListener("click", () => {
-        if (letterOpened) return;
-
-        letterOpened = true;
-
-        const envelope =
-            document.getElementById("envelope");
-
-        if (envelope) {
-            envelope.classList.add("open");
-        }
-
-        openLetter.textContent = "نامه باز شد 💌";
-        openLetter.disabled = true;
-
-        setTimeout(() => {
-            typeLetter();
-        }, 500);
-    });
-
-    // =========================
-    // مرحله مخفی
-    // =========================
-
-    const secretUnlockBox =
-        document.getElementById("secretUnlockBox");
-
-    const secretUnlockButton =
-        document.getElementById("secretUnlockButton");
-
-    const secretUnlockText =
-        document.getElementById("secretUnlockText");
-
-    let secretUnlocked = false;
-
-    function updateSecretLock() {
-        if (!secretUnlockBox || !secretUnlockButton) {
-            return;
-        }
-
-        if (openedGifts.size < 3) {
-            secretUnlockBox.classList.add("locked");
-
-            secretUnlockButton.disabled = true;
-            secretUnlockButton.textContent =
-                "هنوز قفله 🔒";
-
-            if (secretUnlockText) {
-                const remaining =
-                    3 - openedGifts.size;
-
-                secretUnlockText.textContent =
-                    `هنوز ${persianNumber(remaining)} کادو باقی مونده...`;
-            }
-
-            return;
-        }
-
-        secretUnlockBox.classList.remove("locked");
-
-        secretUnlockButton.disabled = false;
-        secretUnlockButton.textContent =
-            "باز کردن مرحله مخفی ✨";
-
-        if (secretUnlockText) {
-            secretUnlockText.textContent =
-                "هورا! هر سه کادو رو باز کردی. حالا می‌تونی وارد مرحله‌ی مخفی بشی 🤍";
-        }
-    }
-
-    secretUnlockButton?.addEventListener("click", () => {
-        if (openedGifts.size < 3) return;
-        if (secretUnlocked) return;
-
-        secretUnlocked = true;
-
-        createConfetti();
-
-        setTimeout(() => {
-            showPage(pages.secret);
-        }, 700);
-    });
-
-    // =========================
-    // مرحله مخفی
-    // =========================
-
-    const secretButton =
-        document.getElementById("secretButton");
-
-    secretButton?.addEventListener("click", () => {
-        createConfetti();
-    });
-
-    // =========================
-    // شروع
-    // =========================
-
-    updateGiftProgress();
-    updateSecretLock();
-});
-
-نکته مهم: این نسخه مرحله‌ی مخفی را خودکار باز نمی‌کند؛ بعد از باز شدن هر سه کادو، باید خود اناهیتا روی دکمه‌ی «باز کردن مرحله مخفی ✨» کلیک کند.
-
-نشد که دوباره اون ثانیه اش کجاس
-
-آره 😭 منظورِت همون ثانیه/تایمر مرحله مخفیه که توی نسخه قبلی بود و من توی کدی که فرستادم جا انداختم.
-
-اگر منظورت اون شمارش معکوس قبل از ورود به مرحله مخفیه، بگو مثلاً «۳...۲...۱» مدنظرت بود یا یک تایمر مشخص مثل ۱۰ ثانیه؛ همون قسمت رو دقیق برات برمی‌گردونم.
-
-نه بابا دوباره  همون مرحله مخفی میاد بالا زود
-
-آهااا 😭 فهمیدم چی میگی. مشکل از اینه که نسخه‌ای که الان داری، هنوز یک رفتار قدیمی/تداخل در اجرای صفحه‌ها داره. خود کدی که فرستادم ظاهراً انتقال خودکار به secretPage نداره؛ در فایل فعلی فقط دکمه‌ی مرحله مخفی باید با کلیک کاربر صفحه را باز کند.
-
-ولی یک نکته مهم: من نمی‌خوام دوباره کل اسکریپتت رو از نو بنویسم و چیزهای دیگه خراب بشه.
-
-کاری که الان انجام بده
-
-در script.js هر کدی که شبیه اینه پیدا کن:
-
-setTimeout(() => {
-    showPage(pages.secret);
-}, 700);
-
-اگر این کد جایی غیر از event کلیک دکمه‌ی secretUnlockButton وجود داره، حذفش کن.
-
-در نسخه‌ای که من الان بررسی کردم، تنها انتقال به مرحله مخفی همین قسمت است:
-
-secretUnlockButton?.addEventListener("click", () => {
-    if (openedGifts.size < 3) {
-        return;
-    }
-
-    if (secretUnlocked) {
-        return;
-    }
-
-    secretUnlocked = true;
-
-    createConfetti();
-
-    setTimeout(() => {
-        showPage(pages.secret);
-    }, 700);
-});
-
-این قسمت را نگه دار.
-
-و اگر منظورت اینه که همین که وارد صفحه نامه میشی، چند ثانیه بعد مرحله مخفی خودش ظاهر میشه، بهم بگو؛ اون موقع دقیقاً خود فایل script.js رو اصلاح می‌کنم و نسخه‌ی درستش رو بهت می‌دم، بدون اینکه بقیه قسمت‌های بازی دست بخوره.
-
-/* ANA - Birthday Website - script.js
-هماهنگ با index.html فعلی
-*/
-
-const pages = {
-calendar: document.getElementById("calendarPage"),
-home: document.getElementById("homePage"),
-flower: document.getElementById("flowerPage"),
-cake: document.getElementById("cakePage"),
-letter: document.getElementById("letterPage"),
-secret: document.getElementById("secretPage")
-};
-
-function showPage(page) {
-if (!page) return;
-
-Object.values(pages).forEach(p => {
-    if (!p) return;
-    p.classList.remove("active");
-    p.classList.add("hidden");
-});
-
-page.classList.remove("hidden");
-
-requestAnimationFrame(() => {
-    page.classList.add("active");
-});
-
-}
-
-function goHome() {
-showPage(pages.home);
-}
-
-/* =========================
-CALENDAR
-========================= */
-
-const monthNames = [
-"فروردین",
-"اردیبهشت",
-"خرداد",
-"تیر",
-"مرداد",
-"شهریور",
-"مهر",
-"آبان",
-"آذر",
-"دی",
-"بهمن",
-"اسفند"
-];
-
-const monthName = document.getElementById("monthName");
-const yearName = document.getElementById("yearName");
-const calendarDays = document.getElementById("calendarDays");
-const calendarMessage = document.getElementById("calendarMessage");
-
-let currentYear = 1405;
-let currentMonth = 5; // شهریور
-
-function persianNumber(n) {
-return String(n).replace(
-/[0-9]/g,
-d => "۰۱۲۳۴۵۶۷۸۹"[d]
-);
-}
-
-function daysInMonth(month) {
-return month <= 5
-? 31
-: (month <= 10 ? 30 : 29);
-}
-
-function renderCalendar() {
-if (!calendarDays) return;
-
-monthName.textContent = monthNames[currentMonth];
-yearName.textContent = persianNumber(currentYear);
-
-calendarDays.innerHTML = "";
-
-const offset =
-    (currentYear === 1405 && currentMonth === 5)
-        ? 0
-        : (currentMonth * 2) % 7;
-
-for (let i = 0; i < offset; i++) {
-    const empty = document.createElement("span");
-    empty.className = "calendar-day empty";
-    calendarDays.appendChild(empty);
-}
-
-for (
-    let day = 1;
-    day <= daysInMonth(currentMonth);
-    day++
-) {
-    const button = document.createElement("button");
-
-    button.type = "button";
-    button.className = "calendar-day";
-    button.textContent = persianNumber(day);
-
-    // تولد اناهیتا: ۲۸ شهریور
-    if (
-        currentYear === 1405 &&
-        currentMonth === 5 &&
-        day === 28
-    ) {
-        button.classList.add("birthday");
-    }
-
-    button.addEventListener("click", () => {
-
-        if (
-            currentYear === 1405 &&
-            currentMonth === 5 &&
-            day === 28
-        ) {
-            calendarMessage.textContent =
-                "آره... همین تاریخه. 🤍";
-
-            calendarMessage.classList.add("success");
-
-            createConfetti();
-
-            setTimeout(() => {
-                showPage(pages.home);
-            }, 900);
-
-        } else {
-
-            calendarMessage.textContent =
-                "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
-
-            calendarMessage.classList.remove("success");
-        }
-    });
-
-    calendarDays.appendChild(button);
-}
-
-}
-
-// ماه قبل
-document.getElementById("prevMonth")?.addEventListener(
-"click",
-() => {
-
-    currentMonth--;
-
-    if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-    }
-
-    renderCalendar();
-}
-
-);
-
-// ماه بعد
-document.getElementById("nextMonth")?.addEventListener(
-"click",
-() => {
-
-    currentMonth++;
-
-    if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-    }
-
-    renderCalendar();
-}
-
-);
-
-/* =========================
-THREE GIFTS
-========================= */
-
-const openedGifts = new Set();
-
-function openGift(section) {
-
-if (section === "flower") {
-    openedGifts.add("flower");
-    showPage(pages.flower);
-}
-
-else if (section === "cake") {
-    openedGifts.add("cake");
-    showPage(pages.cake);
-}
-
-else if (section === "letter") {
-    openedGifts.add("letter");
-    showPage(pages.letter);
-}
-
-updateGiftProgress();
-
-}
-
-function updateGiftProgress() {
-
-const count =
-    document.getElementById("openedCount");
-
-if (count) {
-    count.textContent =
-        persianNumber(openedGifts.size);
-}
-
-// وقتی هر سه هدیه باز شدند
-if (openedGifts.size === 3) {
-
-    setTimeout(
-        unlockSecretLevel,
-        700
-    );
-}
-
-}
-
-// کارت‌های هدیه
-document.querySelectorAll(".gift-card")
-.forEach(card => {
-
-    card.addEventListener("click", () => {
-
-        openGift(
-            card.dataset.section
-        );
-
-    });
-
-});
-
-// دکمه‌های برگشت
-document.querySelectorAll(".back-button")
-.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        goHome
-    );
-
-});
-
-/* =========================
-FLOWER
-========================= */
-
-const growFlower =
-document.getElementById("growFlower");
-
-const flowerStem =
-document.getElementById("flowerStem");
-
-const flowerHead =
-document.getElementById("flowerHead");
-
-const flowerMessage =
-document.getElementById("flowerMessage");
-
-let flowerGrown = false;
-
-growFlower?.addEventListener(
-"click",
-() => {
-
-    if (flowerGrown) return;
-
-    flowerGrown = true;
-
-    growFlower.textContent =
-        "شکوفه داد 🌷";
-
-
-    if (flowerStem) {
-
-        flowerStem.classList.add("grow");
-
-        flowerStem.style.height =
-            "150px";
-    }
-
-
-    if (flowerHead) {
-
-        setTimeout(() => {
-
-            flowerHead.classList.add(
-                "bloom"
-            );
-
-            flowerHead.style.opacity =
-                "1";
-
-            flowerHead.style.transform =
-                "translateX(-50%) scale(1)";
-
-        }, 700);
-    }
-
-
-    setTimeout(() => {
-
-        flowerMessage?.classList.add(
-            "show"
-        );
-
-    }, 1300);
-}
-
-);
-
-/* =========================
-CAKE
-========================= */
-
-const blowCake =
-document.getElementById("blowCake");
-
-const footballStats =
-document.getElementById("footballStats");
-
-const realMessage =
-document.getElementById("realMessage");
-
-let cakeBlown = false;
-
-blowCake?.addEventListener(
-"click",
-() => {
-
-    if (cakeBlown) return;
-
-    cakeBlown = true;
-
-    // متن جدید
-    blowCake.textContent =
-        "هورا ! 🎉";
-
-    createConfetti();
-
-
-    if (footballStats) {
-
-        setTimeout(() => {
-
-            footballStats.classList.add(
-                "show"
-            );
-
-        }, 500);
-    }
-
-
-    if (realMessage) {
-
-        setTimeout(() => {
-
-            realMessage.classList.add(
-                "show"
-            );
-
-        }, 900);
-    }
-}
-
-);
-
-/* =========================
-LETTER
-========================= */
-
-const envelope =
-document.getElementById("envelope");
-
-const openLetter =
-document.getElementById("openLetter");
-
-const typedLetter =
-document.getElementById("typedLetter");
-
-const letterSignature =
-document.getElementById("letterSignature");
-
-const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
-
-خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
-خیلی خیلی دوست دارم و خیلی برام باارزشی،
-بابت تمام خنده‌ها و لحظات خوبی که برام ساختی، ممنونم.
-
-فرشته کوچولو،
-امیدوارم همیشه به تمام آرزوهات برسی
-و توی تمام زندگیت موفق و سلامت باشی.`;
-
-let letterOpened = false;
-
-openLetter?.addEventListener(
-"click",
-() => {
-
-    if (letterOpened) return;
-
-    letterOpened = true;
-
-    envelope?.classList.add("open");
-
-    openLetter.textContent =
-        "نامه باز شد 🤍";
-
-    setTimeout(
-        typeLetter,
-        700
-    );
-}
-
-);
-
-function typeLetter() {
-
-if (!typedLetter) return;
-
-typedLetter.textContent = "";
-
-if (letterSignature) {
-    letterSignature.classList.remove(
-        "show"
-    );
-}
-
-let i = 0;
-
-
-function type() {
-
-    if (i < letterText.length) {
-
-        typedLetter.textContent +=
-            letterText[i];
-
-        i++;
-
-        setTimeout(
-            type,
-            25
-        );
-
-    } else {
-
-        if (letterSignature) {
-
-            letterSignature.textContent =
-                "از طرف هلیا ♡";
-
-            letterSignature.classList.add(
-                "show"
-            );
-        }
-    }
-}
-
-type();
-
-}
-
-/* =========================
-SECRET LEVEL
-========================= */
-
-let secretUnlocked = false;
-
-function unlockSecretLevel() {
-
-if (
-    secretUnlocked ||
-    openedGifts.size !== 3
-) {
-    return;
-}
-
-secretUnlocked = true;
-
-createConfetti();
-
-
-const notification =
-    document.createElement("div");
-
-notification.textContent =
-    "🔓 مرحله‌ی مخفی باز شد...";
-
-
-Object.assign(
-    notification.style,
-    {
-        position: "fixed",
-        left: "50%",
-        bottom: "25px",
-        transform:
-            "translateX(-50%)",
-        zIndex: "99999",
-        padding: "14px 22px",
-        borderRadius: "18px",
-        background: "#172b49",
-        color: "#fff",
-        fontSize: "14px",
-        boxShadow:
-            "0 10px 35px rgba(0,0,0,.22)"
-    }
-);
-
-
-document.body.appendChild(
-    notification
-);
-
-
-setTimeout(() => {
-
-    notification.remove();
-
-    showPage(
-        pages.secret
-    );
-
-}, 1800);
-
-}
-
-/* =========================
-CONFETTI
-========================= */
-
-function createConfetti() {
-
-const colors = [
-    "#f2a7c4",
-    "#8fc8e7",
-    "#f7d477",
-    "#ffffff"
-];
-
-
-for (let i = 0; i < 45; i++) {
-
-    const piece =
-        document.createElement("div");
-
-    const size =
-        Math.random() * 7 + 4;
-
-    const duration =
-        Math.random() * 1600 + 1800;
-
-
-    Object.assign(
-        piece.style,
-        {
-            position: "fixed",
-            width: `${size}px`,
-            height: `${size}px`,
-            left: `${Math.random() * 100}vw`,
-            top: "-15px",
-            background:
-                colors[
-                    Math.floor(
-                        Math.random() *
-                        colors.length
-                    )
-                ],
-            borderRadius: "3px",
-            zIndex: "100000",
-            pointerEvents: "none"
-        }
-    );
-
-
-    document.body.appendChild(
-        piece
-    );
-
-
-    piece.animate(
-        [
-            {
-                transform:
-                    "translateY(0) rotate(0deg)",
-                opacity: 1
-            },
-            {
-                transform:
-                    `translateY(110vh) rotate(${Math.random() * 720}deg)`,
-                opacity: 0
-            }
-        ],
-        {
-            duration: duration,
-            easing:
-                "cubic-bezier(.2,.8,.3,1)"
-        }
-    );
-
-
-    setTimeout(
-        () => piece.remove(),
-        duration
-    );
-}
-
-}
-
-/* =========================
-START
-========================= */
-
-showPage(pages.calendar);
-
-renderCalendar();
-
-updateGiftProgress();
-
-Close
+</html>
