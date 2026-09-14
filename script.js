@@ -1,401 +1,312 @@
-/* ANA - Birthday Website - script.js
-   هماهنگ با index.html فعلی
-*/
+document.addEventListener("DOMContentLoaded", () => {
+    // =========================
+    // عناصر اصلی
+    // =========================
 
-const pages = {
-    calendar: document.getElementById("calendarPage"),
-    home: document.getElementById("homePage"),
-    flower: document.getElementById("flowerPage"),
-    cake: document.getElementById("cakePage"),
-    letter: document.getElementById("letterPage"),
-    secret: document.getElementById("secretPage")
-};
+    const pages = {
+        calendar: document.getElementById("calendarPage"),
+        home: document.getElementById("homePage"),
+        flower: document.getElementById("flowerPage"),
+        cake: document.getElementById("cakePage"),
+        letter: document.getElementById("letterPage"),
+        secret: document.getElementById("secretPage")
+    };
 
-function showPage(page) {
-    if (!page) return;
+    const openedGifts = new Set();
 
-    Object.values(pages).forEach(p => {
-        if (!p) return;
-        p.classList.remove("active");
-        p.classList.add("hidden");
-    });
+    // =========================
+    // ابزارهای کمکی
+    // =========================
 
-    page.classList.remove("hidden");
-
-    requestAnimationFrame(() => {
-        page.classList.add("active");
-    });
-}
-
-function goHome() {
-    showPage(pages.home);
-}
-
-
-/* =========================
-   CALENDAR
-========================= */
-
-const monthNames = [
-    "فروردین",
-    "اردیبهشت",
-    "خرداد",
-    "تیر",
-    "مرداد",
-    "شهریور",
-    "مهر",
-    "آبان",
-    "آذر",
-    "دی",
-    "بهمن",
-    "اسفند"
-];
-
-const monthName = document.getElementById("monthName");
-const yearName = document.getElementById("yearName");
-const calendarDays = document.getElementById("calendarDays");
-const calendarMessage = document.getElementById("calendarMessage");
-
-let currentYear = 1405;
-let currentMonth = 5; // شهریور
-
-function persianNumber(n) {
-    return String(n).replace(
-        /[0-9]/g,
-        d => "۰۱۲۳۴۵۶۷۸۹"[d]
-    );
-}
-
-function daysInMonth(month) {
-    return month <= 5
-        ? 31
-        : (month <= 10 ? 30 : 29);
-}
-
-function renderCalendar() {
-    if (!calendarDays) return;
-
-    monthName.textContent = monthNames[currentMonth];
-    yearName.textContent = persianNumber(currentYear);
-
-    calendarDays.innerHTML = "";
-
-    const offset =
-        (currentYear === 1405 && currentMonth === 5)
-            ? 0
-            : (currentMonth * 2) % 7;
-
-    for (let i = 0; i < offset; i++) {
-        const empty = document.createElement("span");
-        empty.className = "calendar-day empty";
-        calendarDays.appendChild(empty);
+    function persianNumber(number) {
+        return String(number).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
     }
 
-    for (
-        let day = 1;
-        day <= daysInMonth(currentMonth);
-        day++
-    ) {
-        const button = document.createElement("button");
+    function showPage(page) {
+        Object.values(pages).forEach(p => {
+            if (p) p.classList.remove("active");
+        });
 
-        button.type = "button";
-        button.className = "calendar-day";
-        button.textContent = persianNumber(day);
+        if (page) {
+            page.classList.add("active");
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+    }
 
-        // تولد اناهیتا: ۲۸ شهریور
-        if (
-            currentYear === 1405 &&
-            currentMonth === 5 &&
-            day === 28
-        ) {
-            button.classList.add("birthday");
+    function createConfetti() {
+        const container = document.createElement("div");
+        container.className = "confetti-container";
+
+        for (let i = 0; i < 45; i++) {
+            const piece = document.createElement("span");
+            piece.className = "confetti";
+
+            piece.style.left = `${Math.random() * 100}%`;
+            piece.style.animationDelay = `${Math.random() * 0.8}s`;
+            piece.style.animationDuration =
+                `${2 + Math.random() * 2}s`;
+
+            container.appendChild(piece);
         }
 
-        button.addEventListener("click", () => {
+        document.body.appendChild(container);
 
-            if (
-                currentYear === 1405 &&
-                currentMonth === 5 &&
-                day === 28
-            ) {
-                calendarMessage.textContent =
-                    "آره... همین تاریخه. 🤍";
+        setTimeout(() => {
+            container.remove();
+        }, 4500);
+    }
 
-                calendarMessage.classList.add("success");
+    // =========================
+    // تقویم
+    // =========================
 
-                createConfetti();
+    const prevMonth = document.getElementById("prevMonth");
+    const nextMonth = document.getElementById("nextMonth");
+    const monthName = document.getElementById("monthName");
+    const yearName = document.getElementById("yearName");
+    const calendarDays = document.getElementById("calendarDays");
+    const calendarMessage = document.getElementById("calendarMessage");
 
-                setTimeout(() => {
-                    showPage(pages.home);
-                }, 900);
+    const shamsiMonths = [
+        "فروردین",
+        "اردیبهشت",
+        "خرداد",
+        "تیر",
+        "مرداد",
+        "شهریور",
+        "مهر",
+        "آبان",
+        "آذر",
+        "دی",
+        "بهمن",
+        "اسفند"
+    ];
 
+    let calendarMonth = 5;
+    let calendarYear = 1405;
+
+    function renderCalendar() {
+        if (!calendarDays) return;
+
+        calendarDays.innerHTML = "";
+
+        if (monthName) {
+            monthName.textContent = shamsiMonths[calendarMonth];
+        }
+
+        if (yearName) {
+            yearName.textContent = persianNumber(calendarYear);
+        }
+
+        const daysInMonth =
+            calendarMonth < 6 ? 31 :
+            calendarMonth < 11 ? 30 :
+            29;
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const button = document.createElement("button");
+
+            button.className = "calendar-day";
+            button.textContent = persianNumber(day);
+            button.type = "button";
+
+            if (day === 28 && calendarMonth === 5) {
+                button.classList.add("birthday-day");
+
+                button.addEventListener("click", () => {
+                    if (calendarMessage) {
+                        calendarMessage.textContent =
+                            "آرههه! خودشه! 🎂💗";
+                    }
+
+                    createConfetti();
+
+                    setTimeout(() => {
+                        showPage(pages.home);
+                    }, 900);
+                });
             } else {
-
-                calendarMessage.textContent =
-                    "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
-
-                calendarMessage.classList.remove("success");
+                button.addEventListener("click", () => {
+                    if (calendarMessage) {
+                        calendarMessage.textContent =
+                            "نههه، تولد اناهیتا این روز نیست 😭";
+                    }
+                });
             }
-        });
 
-        calendarDays.appendChild(button);
+            calendarDays.appendChild(button);
+        }
     }
-}
 
+    prevMonth?.addEventListener("click", () => {
+        calendarMonth--;
 
-// ماه قبل
-document.getElementById("prevMonth")?.addEventListener(
-    "click",
-    () => {
-
-        currentMonth--;
-
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
+        if (calendarMonth < 0) {
+            calendarMonth = 11;
+            calendarYear--;
         }
 
         renderCalendar();
-    }
-);
+    });
 
+    nextMonth?.addEventListener("click", () => {
+        calendarMonth++;
 
-// ماه بعد
-document.getElementById("nextMonth")?.addEventListener(
-    "click",
-    () => {
-
-        currentMonth++;
-
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
+        if (calendarMonth > 11) {
+            calendarMonth = 0;
+            calendarYear++;
         }
 
         renderCalendar();
-    }
-);
+    });
 
+    renderCalendar();
 
-/* =========================
-   THREE GIFTS
-========================= */
+    // =========================
+    // رفتن از خانه به کادوها
+    // =========================
 
-const openedGifts = new Set();
-
-function openGift(section) {
-
-    if (section === "flower") {
-        openedGifts.add("flower");
-        showPage(pages.flower);
-    }
-
-    else if (section === "cake") {
-        openedGifts.add("cake");
-        showPage(pages.cake);
-    }
-
-    else if (section === "letter") {
-        openedGifts.add("letter");
-        showPage(pages.letter);
-    }
-
-    updateGiftProgress();
-}
-
-
-function updateGiftProgress() {
-
-    const count =
-        document.getElementById("openedCount");
-
-    if (count) {
-        count.textContent =
-            persianNumber(openedGifts.size);
-    }
-
-    // وقتی هر سه هدیه باز شدند
-    if (openedGifts.size === 3) {
-
-        setTimeout(
-            unlockSecretLevel,
-            700
-        );
-    }
-}
-
-
-// کارت‌های هدیه
-document.querySelectorAll(".gift-card")
-    .forEach(card => {
-
+    document.querySelectorAll(".gift-card").forEach(card => {
         card.addEventListener("click", () => {
+            const section = card.dataset.section;
 
-            openGift(
-                card.dataset.section
-            );
+            if (!section || !pages[section]) return;
 
+            openedGifts.add(section);
+
+            showPage(pages[section]);
+
+            updateGiftProgress();
+            updateSecretLock();
         });
-
     });
 
+    // =========================
+    // دکمه‌های برگشت
+    // =========================
 
-// دکمه‌های برگشت
-document.querySelectorAll(".back-button")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            goHome
-        );
-
+    document.querySelectorAll("[data-back]").forEach(button => {
+        button.addEventListener("click", () => {
+            showPage(pages.home);
+        });
     });
 
+    // =========================
+    // پیشرفت کادوها
+    // =========================
 
-/* =========================
-   FLOWER
-========================= */
+    const giftProgress = document.getElementById("giftProgress");
 
-const growFlower =
-    document.getElementById("growFlower");
+    function updateGiftProgress() {
+        if (!giftProgress) return;
 
-const flowerStem =
-    document.getElementById("flowerStem");
+        giftProgress.textContent =
+            `${persianNumber(openedGifts.size)} از ${persianNumber(3)} کادو باز شده`;
 
-const flowerHead =
-    document.getElementById("flowerHead");
+        updateSecretLock();
+    }
 
-const flowerMessage =
-    document.getElementById("flowerMessage");
+    // =========================
+    // گل
+    // =========================
 
-let flowerGrown = false;
+    const growFlower = document.getElementById("growFlower");
+    const flowerStem = document.getElementById("flowerStem");
+    const flowerHead = document.getElementById("flowerHead");
+    const flowerMessage = document.getElementById("flowerMessage");
 
+    let flowerGrown = false;
 
-growFlower?.addEventListener(
-    "click",
-    () => {
-
+    growFlower?.addEventListener("click", () => {
         if (flowerGrown) return;
 
         flowerGrown = true;
 
-        growFlower.textContent =
-            "شکوفه داد 🌷";
-
-
         if (flowerStem) {
-
-            flowerStem.classList.add("grow");
-
-            flowerStem.style.height =
-                "150px";
+            flowerStem.classList.add("grown");
         }
-
 
         if (flowerHead) {
-
-            setTimeout(() => {
-
-                flowerHead.classList.add(
-                    "bloom"
-                );
-
-                flowerHead.style.opacity =
-                    "1";
-
-                flowerHead.style.transform =
-                    "translateX(-50%) scale(1)";
-
-            }, 700);
+            flowerHead.classList.add("bloom");
         }
 
+        if (growFlower) {
+            growFlower.textContent = "گل شکوفه زد 🌸";
+            growFlower.disabled = true;
+        }
 
-        setTimeout(() => {
+        if (flowerMessage) {
+            flowerMessage.innerHTML = `
+                <p>
+                    برای اناهیتا قشنگم که مثل همین گل زیباس 🌸
+                </p>
+                <p>
+                    امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه 💗
+                </p>
+            `;
+        }
 
-            flowerMessage?.classList.add(
-                "show"
-            );
+        createConfetti();
+    });
 
-        }, 1300);
-    }
-);
+    // =========================
+    // کیک
+    // =========================
 
+    const blowCake = document.getElementById("blowCake");
+    const footballStats = document.getElementById("footballStats");
+    const realMessage = document.getElementById("realMessage");
 
-/* =========================
-   CAKE
-========================= */
+    let cakeBlown = false;
 
-const blowCake =
-    document.getElementById("blowCake");
-
-const footballStats =
-    document.getElementById("footballStats");
-
-const realMessage =
-    document.getElementById("realMessage");
-
-let cakeBlown = false;
-
-
-blowCake?.addEventListener(
-    "click",
-    () => {
-
+    blowCake?.addEventListener("click", () => {
         if (cakeBlown) return;
 
         cakeBlown = true;
 
-        // متن جدید
-        blowCake.textContent =
-            "هورا ! 🎉";
+        const cake = document.querySelector(".cake");
 
-        createConfetti();
+        if (cake) {
+            cake.classList.add("blown");
+        }
 
+        blowCake.textContent = "هورا ! 🎉";
+        blowCake.disabled = true;
 
         if (footballStats) {
-
-            setTimeout(() => {
-
-                footballStats.classList.add(
-                    "show"
-                );
-
-            }, 500);
+            footballStats.classList.add("show");
         }
-
 
         if (realMessage) {
-
-            setTimeout(() => {
-
-                realMessage.classList.add(
-                    "show"
-                );
-
-            }, 900);
+            realMessage.innerHTML = `
+                <p>
+                    برای اناهیتایی که عاشق فوتباله ⚽🤍
+                </p>
+                <p>
+                    Hala Madrid! 🤍💙
+                </p>
+                <p>
+                    امیدوارم همیشه توی دویدن، فوتبال و رسیدن به
+                    آرزوهات موفق باشی ✨
+                </p>
+            `;
         }
-    }
-);
 
+        createConfetti();
+    });
 
-/* =========================
-   LETTER
-========================= */
+    // =========================
+    // نامه
+    // =========================
 
-const envelope =
-    document.getElementById("envelope");
+    const openLetter = document.getElementById("openLetter");
+    const typedLetter = document.getElementById("typedLetter");
+    const letterSignature = document.getElementById("letterSignature");
 
-const openLetter =
-    document.getElementById("openLetter");
-
-const typedLetter =
-    document.getElementById("typedLetter");
-
-const letterSignature =
-    document.getElementById("letterSignature");
-
-
-const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
+    const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
 
 خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
 خیلی خیلی دوست دارم و خیلی برام باارزشی،
@@ -405,231 +316,140 @@ const letterText = `سلام اناهیتا قشنگم، تولدت مبارک �
 امیدوارم همیشه به تمام آرزوهات برسی
 و توی تمام زندگیت موفق و سلامت باشی.`;
 
+    let letterOpened = false;
 
-let letterOpened = false;
+    function typeLetter() {
+        if (!typedLetter) return;
 
+        typedLetter.textContent = "";
+        if (letterSignature) {
+            letterSignature.classList.remove("show");
+        }
 
-openLetter?.addEventListener(
-    "click",
-    () => {
+        let index = 0;
 
+        const interval = setInterval(() => {
+            if (index < letterText.length) {
+                typedLetter.textContent += letterText[index];
+                index++;
+
+                typedLetter.scrollTop =
+                    typedLetter.scrollHeight;
+            } else {
+                clearInterval(interval);
+
+                if (letterSignature) {
+                    letterSignature.textContent =
+                        "از طرف هلیا ♡";
+
+                    letterSignature.classList.add("show");
+                }
+
+                // فقط قفل مرحله مخفی را بررسی می‌کنیم.
+                // اینجا دیگر وارد مرحله مخفی نمی‌شویم.
+                updateSecretLock();
+            }
+        }, 35);
+    }
+
+    openLetter?.addEventListener("click", () => {
         if (letterOpened) return;
 
         letterOpened = true;
 
-        envelope?.classList.add("open");
+        const envelope =
+            document.getElementById("envelope");
 
-        openLetter.textContent =
-            "نامه باز شد 🤍";
+        if (envelope) {
+            envelope.classList.add("open");
+        }
 
-        setTimeout(
-            typeLetter,
-            700
-        );
-    }
-);
+        openLetter.textContent = "نامه باز شد 💌";
+        openLetter.disabled = true;
 
+        setTimeout(() => {
+            typeLetter();
+        }, 500);
+    });
 
-function typeLetter() {
+    // =========================
+    // مرحله مخفی
+    // =========================
 
-    if (!typedLetter) return;
+    const secretUnlockBox =
+        document.getElementById("secretUnlockBox");
 
-    typedLetter.textContent = "";
+    const secretUnlockButton =
+        document.getElementById("secretUnlockButton");
 
-    if (letterSignature) {
-        letterSignature.classList.remove(
-            "show"
-        );
-    }
+    const secretUnlockText =
+        document.getElementById("secretUnlockText");
 
-    let i = 0;
+    let secretUnlocked = false;
 
+    function updateSecretLock() {
+        if (!secretUnlockBox || !secretUnlockButton) {
+            return;
+        }
 
-    function type() {
+        if (openedGifts.size < 3) {
+            secretUnlockBox.classList.add("locked");
 
-        if (i < letterText.length) {
+            secretUnlockButton.disabled = true;
+            secretUnlockButton.textContent =
+                "هنوز قفله 🔒";
 
-            typedLetter.textContent +=
-                letterText[i];
+            if (secretUnlockText) {
+                const remaining =
+                    3 - openedGifts.size;
 
-            i++;
-
-            setTimeout(
-                type,
-                25
-            );
-
-        } else {
-
-            if (letterSignature) {
-
-                letterSignature.textContent =
-                    "از طرف هلیا ♡";
-
-                letterSignature.classList.add(
-                    "show"
-                );
+                secretUnlockText.textContent =
+                    `هنوز ${persianNumber(remaining)} کادو باقی مونده...`;
             }
+
+            return;
+        }
+
+        secretUnlockBox.classList.remove("locked");
+
+        secretUnlockButton.disabled = false;
+        secretUnlockButton.textContent =
+            "باز کردن مرحله مخفی ✨";
+
+        if (secretUnlockText) {
+            secretUnlockText.textContent =
+                "هورا! هر سه کادو رو باز کردی. حالا می‌تونی وارد مرحله‌ی مخفی بشی 🤍";
         }
     }
 
-    type();
-}
+    secretUnlockButton?.addEventListener("click", () => {
+        if (openedGifts.size < 3) return;
+        if (secretUnlocked) return;
 
+        secretUnlocked = true;
 
-/* =========================
-   SECRET LEVEL
-========================= */
+        createConfetti();
 
-let secretUnlocked = false;
+        setTimeout(() => {
+            showPage(pages.secret);
+        }, 700);
+    });
 
+    // =========================
+    // مرحله مخفی
+    // =========================
 
-function unlockSecretLevel() {
+    const secretButton =
+        document.getElementById("secretButton");
 
-    if (
-        secretUnlocked ||
-        openedGifts.size !== 3
-    ) {
-        return;
-    }
+    secretButton?.addEventListener("click", () => {
+        createConfetti();
+    });
 
-    secretUnlocked = true;
+    // =========================
+    // شروع
+    // =========================
 
-    createConfetti();
-
-
-    const notification =
-        document.createElement("div");
-
-    notification.textContent =
-        "🔓 مرحله‌ی مخفی باز شد...";
-
-
-    Object.assign(
-        notification.style,
-        {
-            position: "fixed",
-            left: "50%",
-            bottom: "25px",
-            transform:
-                "translateX(-50%)",
-            zIndex: "99999",
-            padding: "14px 22px",
-            borderRadius: "18px",
-            background: "#172b49",
-            color: "#fff",
-            fontSize: "14px",
-            boxShadow:
-                "0 10px 35px rgba(0,0,0,.22)"
-        }
-    );
-
-
-    document.body.appendChild(
-        notification
-    );
-
-
-    setTimeout(() => {
-
-        notification.remove();
-
-        showPage(
-            pages.secret
-        );
-
-    }, 1800);
-}
-
-
-/* =========================
-   CONFETTI
-========================= */
-
-function createConfetti() {
-
-    const colors = [
-        "#f2a7c4",
-        "#8fc8e7",
-        "#f7d477",
-        "#ffffff"
-    ];
-
-
-    for (let i = 0; i < 45; i++) {
-
-        const piece =
-            document.createElement("div");
-
-        const size =
-            Math.random() * 7 + 4;
-
-        const duration =
-            Math.random() * 1600 + 1800;
-
-
-        Object.assign(
-            piece.style,
-            {
-                position: "fixed",
-                width: `${size}px`,
-                height: `${size}px`,
-                left: `${Math.random() * 100}vw`,
-                top: "-15px",
-                background:
-                    colors[
-                        Math.floor(
-                            Math.random() *
-                            colors.length
-                        )
-                    ],
-                borderRadius: "3px",
-                zIndex: "100000",
-                pointerEvents: "none"
-            }
-        );
-
-
-        document.body.appendChild(
-            piece
-        );
-
-
-        piece.animate(
-            [
-                {
-                    transform:
-                        "translateY(0) rotate(0deg)",
-                    opacity: 1
-                },
-                {
-                    transform:
-                        `translateY(110vh) rotate(${Math.random() * 720}deg)`,
-                    opacity: 0
-                }
-            ],
-            {
-                duration: duration,
-                easing:
-                    "cubic-bezier(.2,.8,.3,1)"
-            }
-        );
-
-
-        setTimeout(
-            () => piece.remove(),
-            duration
-        );
-    }
-}
-
-
-/* =========================
-   START
-========================= */
-
-showPage(pages.calendar);
-
-renderCalendar();
-
-updateGiftProgress();
+    updateGiftProgress();
+    updateSecretLock();
+});
