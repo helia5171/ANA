@@ -1,6 +1,12 @@
-/* ANA - Birthday Website - script.js
-   هماهنگ با index.html فعلی
-*/
+/* =====================================================
+   ANA - Birthday Website
+   script.js
+   ===================================================== */
+
+
+/* =========================
+   PAGES
+========================= */
 
 const pages = {
     calendar: document.getElementById("calendarPage"),
@@ -11,14 +17,18 @@ const pages = {
     secret: document.getElementById("secretPage")
 };
 
+
 function showPage(page) {
+
     if (!page) return;
 
     Object.values(pages).forEach(p => {
+
         if (!p) return;
 
         p.classList.remove("active");
         p.classList.add("hidden");
+
     });
 
     page.classList.remove("hidden");
@@ -28,14 +38,15 @@ function showPage(page) {
     });
 }
 
+
 function goHome() {
     showPage(pages.home);
 }
 
 
-/* =========================
+/* =====================================================
    CALENDAR
-========================= */
+   ===================================================== */
 
 const monthNames = [
     "فروردین",
@@ -52,64 +63,114 @@ const monthNames = [
     "اسفند"
 ];
 
-const monthName = document.getElementById("monthName");
-const yearName = document.getElementById("yearName");
-const calendarDays = document.getElementById("calendarDays");
-const calendarMessage = document.getElementById("calendarMessage");
+
+const monthName =
+    document.getElementById("monthName");
+
+const yearName =
+    document.getElementById("yearName");
+
+const calendarDays =
+    document.getElementById("calendarDays");
+
+const calendarMessage =
+    document.getElementById("calendarMessage");
+
 
 let currentYear = 1405;
 let currentMonth = 5; // شهریور
 
+
 function persianNumber(n) {
+
     return String(n).replace(
         /[0-9]/g,
         d => "۰۱۲۳۴۵۶۷۸۹"[d]
     );
 }
 
+
 function daysInMonth(month) {
-    return month <= 5 ? 31 : (month <= 10 ? 30 : 29);
+
+    if (month <= 5) {
+        return 31;
+    }
+
+    if (month <= 10) {
+        return 30;
+    }
+
+    return 29;
 }
 
+
 function renderCalendar() {
+
     if (!calendarDays) return;
 
-    monthName.textContent = monthNames[currentMonth];
-    yearName.textContent = persianNumber(currentYear);
+    monthName.textContent =
+        monthNames[currentMonth];
+
+    yearName.textContent =
+        persianNumber(currentYear);
 
     calendarDays.innerHTML = "";
 
+
     const offset =
-        (currentYear === 1405 && currentMonth === 5)
+        (
+            currentYear === 1405 &&
+            currentMonth === 5
+        )
             ? 0
             : (currentMonth * 2) % 7;
 
-    for (let i = 0; i < offset; i++) {
-        const empty = document.createElement("span");
 
-        empty.className = "calendar-day empty";
+    /* روزهای خالی قبل از شروع ماه */
+
+    for (let i = 0; i < offset; i++) {
+
+        const empty =
+            document.createElement("span");
+
+        empty.className =
+            "calendar-day empty";
 
         calendarDays.appendChild(empty);
     }
+
+
+    /* روزهای ماه */
 
     for (
         let day = 1;
         day <= daysInMonth(currentMonth);
         day++
     ) {
-        const button = document.createElement("button");
+
+        const button =
+            document.createElement("button");
 
         button.type = "button";
-        button.className = "calendar-day";
-        button.textContent = persianNumber(day);
+
+        button.className =
+            "calendar-day";
+
+        button.textContent =
+            persianNumber(day);
+
+
+        /* مشخص کردن ۲۸ شهریور */
 
         if (
             currentYear === 1405 &&
             currentMonth === 5 &&
             day === 28
         ) {
+
             button.classList.add("birthday");
         }
+
 
         button.addEventListener("click", () => {
 
@@ -118,6 +179,7 @@ function renderCalendar() {
                 currentMonth === 5 &&
                 day === 28
             ) {
+
                 calendarMessage.textContent =
                     "آره... همین تاریخه. 🤍";
 
@@ -125,9 +187,13 @@ function renderCalendar() {
 
                 createConfetti();
 
+
                 setTimeout(() => {
+
                     showPage(pages.home);
+
                 }, 900);
+
 
             } else {
 
@@ -136,11 +202,16 @@ function renderCalendar() {
 
                 calendarMessage.classList.remove("success");
             }
+
         });
+
 
         calendarDays.appendChild(button);
     }
 }
+
+
+/* ماه قبل */
 
 document
     .getElementById("prevMonth")
@@ -149,12 +220,17 @@ document
         currentMonth--;
 
         if (currentMonth < 0) {
+
             currentMonth = 11;
             currentYear--;
         }
 
         renderCalendar();
+
     });
+
+
+/* ماه بعد */
 
 document
     .getElementById("nextMonth")
@@ -163,54 +239,88 @@ document
         currentMonth++;
 
         if (currentMonth > 11) {
+
             currentMonth = 0;
             currentYear++;
         }
 
         renderCalendar();
+
     });
 
 
-/* =========================
+
+/* =====================================================
    THREE GIFTS
-========================= */
+   ===================================================== */
+
 
 const openedGifts = new Set();
+
 
 function openGift(section) {
 
     if (section === "flower") {
+
         openedGifts.add("flower");
+
         showPage(pages.flower);
 
-    } else if (section === "cake") {
+    }
+
+
+    else if (section === "cake") {
+
         openedGifts.add("cake");
+
         showPage(pages.cake);
 
-    } else if (section === "letter") {
+    }
+
+
+    else if (section === "letter") {
+
         openedGifts.add("letter");
+
         showPage(pages.letter);
     }
+
 
     updateGiftProgress();
 }
 
 
-/* 
-   فقط تعداد کادوهای بازشده را نمایش می‌دهیم.
-   مرحله مخفی اینجا فعال نمی‌شود تا وسط نامه ظاهر نشود.
-*/
+
+/* =====================================================
+   GIFT PROGRESS
+   ===================================================== */
+
 
 function updateGiftProgress() {
 
-    const count = document.getElementById("openedCount");
+    const count =
+        document.getElementById("openedCount");
+
 
     if (count) {
+
         count.textContent =
             persianNumber(openedGifts.size);
     }
+
+
+    /*
+       مهم:
+       اینجا دیگر مرحله مخفی باز نمی‌شود.
+       فقط وضعیت قفل مرحله مخفی آپدیت می‌شود.
+    */
+
+    updateSecretLock();
 }
 
+
+
+/* کلیک روی کادوها */
 
 document
     .querySelectorAll(".gift-card")
@@ -225,32 +335,45 @@ document
     });
 
 
+
+/* دکمه‌های برگشت */
+
 document
     .querySelectorAll(".back-button")
     .forEach(button => {
 
-        button.addEventListener("click", goHome);
+        button.addEventListener(
+            "click",
+            goHome
+        );
 
     });
 
 
-/* =========================
+
+/* =====================================================
    FLOWER
-========================= */
+   ===================================================== */
+
 
 const growFlower =
     document.getElementById("growFlower");
 
+
 const flowerStem =
     document.getElementById("flowerStem");
+
 
 const flowerHead =
     document.getElementById("flowerHead");
 
+
 const flowerMessage =
     document.getElementById("flowerMessage");
 
+
 let flowerGrown = false;
+
 
 growFlower?.addEventListener("click", () => {
 
@@ -258,15 +381,23 @@ growFlower?.addEventListener("click", () => {
 
     flowerGrown = true;
 
+
     growFlower.textContent =
         "شکوفه داد 🌷";
+
+
+    /* رشد ساقه */
 
     if (flowerStem) {
 
         flowerStem.classList.add("grow");
 
-        flowerStem.style.height = "150px";
+        flowerStem.style.height =
+            "150px";
     }
+
+
+    /* باز شدن گل */
 
     if (flowerHead) {
 
@@ -274,13 +405,17 @@ growFlower?.addEventListener("click", () => {
 
             flowerHead.classList.add("bloom");
 
-            flowerHead.style.opacity = "1";
+            flowerHead.style.opacity =
+                "1";
 
             flowerHead.style.transform =
                 "translateX(-50%) scale(1)";
 
         }, 700);
     }
+
+
+    /* نمایش متن */
 
     setTimeout(() => {
 
@@ -291,20 +426,26 @@ growFlower?.addEventListener("click", () => {
 });
 
 
-/* =========================
+
+/* =====================================================
    CAKE
-========================= */
+   ===================================================== */
+
 
 const blowCake =
     document.getElementById("blowCake");
 
+
 const footballStats =
     document.getElementById("footballStats");
+
 
 const realMessage =
     document.getElementById("realMessage");
 
+
 let cakeBlown = false;
+
 
 blowCake?.addEventListener("click", () => {
 
@@ -312,10 +453,15 @@ blowCake?.addEventListener("click", () => {
 
     cakeBlown = true;
 
+
     blowCake.textContent =
         "هورا ! 🎉";
 
+
     createConfetti();
+
+
+    /* اطلاعات فوتبال */
 
     if (footballStats) {
 
@@ -324,7 +470,11 @@ blowCake?.addEventListener("click", () => {
             footballStats.classList.add("show");
 
         }, 500);
+
     }
+
+
+    /* پیام رئال */
 
     if (realMessage) {
 
@@ -333,26 +483,33 @@ blowCake?.addEventListener("click", () => {
             realMessage.classList.add("show");
 
         }, 900);
+
     }
 
 });
 
 
-/* =========================
+
+/* =====================================================
    LETTER
-========================= */
+   ===================================================== */
+
 
 const envelope =
     document.getElementById("envelope");
 
+
 const openLetter =
     document.getElementById("openLetter");
+
 
 const typedLetter =
     document.getElementById("typedLetter");
 
+
 const letterSignature =
     document.getElementById("letterSignature");
+
 
 
 const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
@@ -365,7 +522,11 @@ const letterText = `سلام اناهیتا قشنگم، تولدت مبارک �
 امیدوارم همیشه به تمام آرزوهات برسی
 و توی تمام زندگیت موفق و سلامت باشی.`;
 
+
+
 let letterOpened = false;
+
+
 
 openLetter?.addEventListener("click", () => {
 
@@ -373,27 +534,42 @@ openLetter?.addEventListener("click", () => {
 
     letterOpened = true;
 
+
     envelope?.classList.add("open");
+
 
     openLetter.textContent =
         "نامه باز شد 🤍";
 
-    setTimeout(typeLetter, 700);
+
+    setTimeout(() => {
+
+        typeLetter();
+
+    }, 700);
 
 });
+
 
 
 function typeLetter() {
 
     if (!typedLetter) return;
 
+
     typedLetter.textContent = "";
 
+
     if (letterSignature) {
-        letterSignature.classList.remove("show");
+
+        letterSignature.classList.remove(
+            "show"
+        );
     }
 
+
     let i = 0;
+
 
     function type() {
 
@@ -404,110 +580,190 @@ function typeLetter() {
 
             i++;
 
-            setTimeout(type, 25);
+
+            setTimeout(
+                type,
+                25
+            );
+
 
         } else {
 
-            /* وقتی نامه کاملاً نوشته شد */
+            /*
+               نامه کاملاً تمام شده.
+               امضا نمایش داده می‌شود.
+               مرحله مخفی اینجا باز نمی‌شود.
+            */
 
             if (letterSignature) {
 
                 letterSignature.textContent =
                     "از طرف هلیا ♡";
 
-                letterSignature.classList.add("show");
+                letterSignature.classList.add(
+                    "show"
+                );
             }
 
 
             /*
-               مرحله مخفی فقط بعد از تمام شدن
-               تایپ نامه باز می‌شود.
-               ۳.۵ ثانیه هم صبر می‌کنیم تا
-               اناهیتا فرصت داشته باشد نامه را ببیند.
+               فقط وضعیت مرحله مخفی را
+               بعد از تمام شدن نامه بررسی می‌کنیم.
             */
 
-            if (openedGifts.size === 3) {
-
-                setTimeout(() => {
-
-                    unlockSecretLevel();
-
-                }, 3500);
-            }
+            updateSecretLock();
         }
     }
+
 
     type();
 }
 
 
-/* =========================
+
+/* =====================================================
    SECRET LEVEL
-========================= */
+   ===================================================== */
+
+
+const secretUnlockBox =
+    document.getElementById(
+        "secretUnlockBox"
+    );
+
+
+const secretUnlockButton =
+    document.getElementById(
+        "secretUnlockButton"
+    );
+
+
+const secretUnlockText =
+    document.getElementById(
+        "secretUnlockText"
+    );
+
 
 let secretUnlocked = false;
 
-function unlockSecretLevel() {
+
+
+/*
+   بررسی می‌کند که آیا هر سه کادو
+   باز شده‌اند یا نه.
+*/
+
+function updateSecretLock() {
 
     if (
-        secretUnlocked ||
-        openedGifts.size !== 3
+        !secretUnlockBox ||
+        !secretUnlockButton
     ) {
         return;
     }
 
-    secretUnlocked = true;
 
-    createConfetti();
+    /* اگر هنوز هر سه کادو باز نشده‌اند */
 
-    const notification =
-        document.createElement("div");
+    if (openedGifts.size < 3) {
 
-    notification.textContent =
-        "🔓 مرحله‌ی مخفی باز شد...";
+        secretUnlockBox.classList.add(
+            "locked"
+        );
 
-    Object.assign(notification.style, {
 
-        position: "fixed",
+        secretUnlockButton.disabled =
+            true;
 
-        left: "50%",
 
-        bottom: "25px",
+        secretUnlockButton.textContent =
+            "هنوز قفله 🔒";
 
-        transform:
-            "translateX(-50%)",
 
-        zIndex: "99999",
+        if (secretUnlockText) {
 
-        padding: "14px 22px",
+            const remaining =
+                3 - openedGifts.size;
 
-        borderRadius: "18px",
 
-        background: "#172b49",
+            secretUnlockText.textContent =
+                `هنوز ${persianNumber(remaining)} کادو باقی مونده...`;
+        }
 
-        color: "#fff",
 
-        fontSize: "14px",
+        return;
+    }
 
-        boxShadow:
-            "0 10px 35px rgba(0,0,0,.22)"
-    });
 
-    document.body.appendChild(notification);
 
-    setTimeout(() => {
+    /* هر سه کادو باز شده‌اند */
 
-        notification.remove();
+    secretUnlockBox.classList.remove(
+        "locked"
+    );
 
-        showPage(pages.secret);
 
-    }, 1800);
+    secretUnlockButton.disabled =
+        false;
+
+
+    secretUnlockButton.textContent =
+        "باز کردن مرحله مخفی ✨";
+
+
+    if (secretUnlockText) {
+
+        secretUnlockText.textContent =
+            "هورا! هر سه کادو رو باز کردی. حالا می‌تونی وارد مرحله‌ی مخفی بشی 🤍";
+    }
+
 }
 
 
-/* =========================
+
+/*
+   مرحله مخفی فقط با کلیک کاربر باز می‌شود.
+*/
+
+secretUnlockButton?.addEventListener(
+    "click",
+    () => {
+
+        /* اگر سه کادو باز نشده باشند */
+
+        if (openedGifts.size < 3) {
+            return;
+        }
+
+
+        /* اگر قبلاً باز شده */
+
+        if (secretUnlocked) {
+            return;
+        }
+
+
+        secretUnlocked = true;
+
+
+        createConfetti();
+
+
+        setTimeout(() => {
+
+            showPage(pages.secret);
+
+        }, 700);
+
+    }
+);
+
+
+
+/* =====================================================
    CONFETTI
-========================= */
+   ===================================================== */
+
 
 function createConfetti() {
 
@@ -518,45 +774,57 @@ function createConfetti() {
         "#ffffff"
     ];
 
+
     for (let i = 0; i < 45; i++) {
 
         const piece =
             document.createElement("div");
 
+
         const size =
             Math.random() * 7 + 4;
+
 
         const duration =
             Math.random() * 1600 + 1800;
 
-        Object.assign(piece.style, {
 
-            position: "fixed",
+        Object.assign(
+            piece.style,
+            {
 
-            width: `${size}px`,
+                position: "fixed",
 
-            height: `${size}px`,
+                width: `${size}px`,
 
-            left: `${Math.random() * 100}vw`,
+                height: `${size}px`,
 
-            top: "-15px",
+                left:
+                    `${Math.random() * 100}vw`,
 
-            background:
-                colors[
-                    Math.floor(
-                        Math.random() *
-                        colors.length
-                    )
-                ],
+                top: "-15px",
 
-            borderRadius: "3px",
+                background:
+                    colors[
+                        Math.floor(
+                            Math.random() *
+                            colors.length
+                        )
+                    ],
 
-            zIndex: "100000",
+                borderRadius: "3px",
 
-            pointerEvents: "none"
-        });
+                zIndex: "100000",
 
-        document.body.appendChild(piece);
+                pointerEvents: "none"
+            }
+        );
+
+
+        document.body.appendChild(
+            piece
+        );
+
 
         piece.animate(
             [
@@ -575,12 +843,13 @@ function createConfetti() {
                 }
             ],
             {
-                duration,
+                duration: duration,
 
                 easing:
                     "cubic-bezier(.2,.8,.3,1)"
             }
         );
+
 
         setTimeout(() => {
 
@@ -591,9 +860,11 @@ function createConfetti() {
 }
 
 
-/* =========================
+
+/* =====================================================
    START
-========================= */
+   ===================================================== */
+
 
 showPage(pages.calendar);
 
