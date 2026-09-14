@@ -11,11 +11,17 @@ const pages = {
     secret: document.getElementById("secretPage")
 };
 
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
 function showPage(page) {
     if (!page) return;
 
     Object.values(pages).forEach(p => {
         if (!p) return;
+
         p.classList.remove("active");
         p.classList.add("hidden");
     });
@@ -25,6 +31,14 @@ function showPage(page) {
     requestAnimationFrame(() => {
         page.classList.add("active");
     });
+}
+
+function openPage(pageId) {
+    const page = document.getElementById(pageId);
+
+    if (page) {
+        showPage(page);
+    }
 }
 
 function goHome() {
@@ -51,13 +65,18 @@ const monthNames = [
     "اسفند"
 ];
 
-const monthName = document.getElementById("monthName");
-const yearName = document.getElementById("yearName");
-const calendarDays = document.getElementById("calendarDays");
-const calendarMessage = document.getElementById("calendarMessage");
+const calendarTitle =
+    document.getElementById("calendarTitle");
+
+const calendarDays =
+    document.getElementById("calendarDays");
+
+const calendarHint =
+    document.getElementById("calendarHint");
 
 let currentYear = 1405;
 let currentMonth = 5; // شهریور
+
 
 function persianNumber(n) {
     return String(n).replace(
@@ -66,17 +85,19 @@ function persianNumber(n) {
     );
 }
 
+
 function daysInMonth(month) {
     return month <= 5
         ? 31
         : (month <= 10 ? 30 : 29);
 }
 
-function renderCalendar() {
-    if (!calendarDays) return;
 
-    monthName.textContent = monthNames[currentMonth];
-    yearName.textContent = persianNumber(currentYear);
+function renderCalendar() {
+    if (!calendarDays || !calendarTitle) return;
+
+    calendarTitle.textContent =
+        `${monthNames[currentMonth]} ${persianNumber(currentYear)}`;
 
     calendarDays.innerHTML = "";
 
@@ -85,22 +106,32 @@ function renderCalendar() {
             ? 0
             : (currentMonth * 2) % 7;
 
+
     for (let i = 0; i < offset; i++) {
-        const empty = document.createElement("span");
-        empty.className = "calendar-day empty";
+
+        const empty =
+            document.createElement("span");
+
+        empty.className =
+            "calendar-day empty";
+
         calendarDays.appendChild(empty);
     }
+
 
     for (
         let day = 1;
         day <= daysInMonth(currentMonth);
         day++
     ) {
-        const button = document.createElement("button");
+
+        const button =
+            document.createElement("button");
 
         button.type = "button";
         button.className = "calendar-day";
         button.textContent = persianNumber(day);
+
 
         // تولد اناهیتا: ۲۸ شهریور
         if (
@@ -108,8 +139,10 @@ function renderCalendar() {
             currentMonth === 5 &&
             day === 28
         ) {
+
             button.classList.add("birthday");
         }
+
 
         button.addEventListener("click", () => {
 
@@ -118,12 +151,19 @@ function renderCalendar() {
                 currentMonth === 5 &&
                 day === 28
             ) {
-                calendarMessage.textContent =
-                    "آره... همین تاریخه. 🤍";
 
-                calendarMessage.classList.add("success");
+                if (calendarHint) {
+
+                    calendarHint.textContent =
+                        "آره... همین تاریخه. 🤍";
+
+                    calendarHint.classList.add(
+                        "success"
+                    );
+                }
 
                 createConfetti();
+
 
                 setTimeout(() => {
                     showPage(pages.home);
@@ -131,48 +171,59 @@ function renderCalendar() {
 
             } else {
 
-                calendarMessage.textContent =
-                    "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
+                if (calendarHint) {
 
-                calendarMessage.classList.remove("success");
+                    calendarHint.textContent =
+                        "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
+
+                    calendarHint.classList.remove(
+                        "success"
+                    );
+                }
             }
+
         });
+
 
         calendarDays.appendChild(button);
     }
 }
 
 
-// ماه قبل
-document.getElementById("prevMonth")?.addEventListener(
-    "click",
-    () => {
+/* ماه قبل */
+
+document
+    .getElementById("prevMonth")
+    ?.addEventListener("click", () => {
+
         currentMonth--;
 
         if (currentMonth < 0) {
+
             currentMonth = 11;
             currentYear--;
         }
 
         renderCalendar();
-    }
-);
+    });
 
 
-// ماه بعد
-document.getElementById("nextMonth")?.addEventListener(
-    "click",
-    () => {
+/* ماه بعد */
+
+document
+    .getElementById("nextMonth")
+    ?.addEventListener("click", () => {
+
         currentMonth++;
 
         if (currentMonth > 11) {
+
             currentMonth = 0;
             currentYear++;
         }
 
         renderCalendar();
-    }
-);
+    });
 
 
 /* =========================
@@ -181,21 +232,28 @@ document.getElementById("nextMonth")?.addEventListener(
 
 const openedGifts = new Set();
 
+
 function openGift(section) {
 
     if (section === "flower") {
+
         openedGifts.add("flower");
         showPage(pages.flower);
+
     }
 
     else if (section === "cake") {
+
         openedGifts.add("cake");
         showPage(pages.cake);
+
     }
 
     else if (section === "letter") {
+
         openedGifts.add("letter");
         showPage(pages.letter);
+
     }
 
     updateGiftProgress();
@@ -204,64 +262,35 @@ function openGift(section) {
 
 function updateGiftProgress() {
 
-    const count =
-        document.getElementById("openedCount");
+    const secretButton =
+        document.getElementById("secretButton");
 
-    if (count) {
-        count.textContent =
-            persianNumber(openedGifts.size);
-    }
+    /*
+       مرحله مخفی فقط وقتی هر سه هدیه باز شوند
+       دکمه‌اش روی صفحه اصلی ظاهر می‌شود.
+       خودش صفحه مخفی را باز نمی‌کند.
+    */
 
-    // وقتی هر سه هدیه باز شدند
-    if (openedGifts.size === 3) {
+    if (
+        secretButton &&
+        openedGifts.size === 3
+    ) {
 
-        setTimeout(
-            unlockSecretLevel,
-            700
-        );
+        secretButton.classList.remove("hidden");
+
     }
 }
-
-
-// کارت‌های هدیه
-document.querySelectorAll(".gift-card")
-    .forEach(card => {
-
-        card.addEventListener("click", () => {
-
-            openGift(
-                card.dataset.section
-            );
-
-        });
-
-    });
-
-
-// دکمه‌های برگشت
-document.querySelectorAll(".back-button")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            goHome
-        );
-
-    });
 
 
 /* =========================
    FLOWER
 ========================= */
 
-const growFlower =
-    document.getElementById("growFlower");
+const growFlowerButton =
+    document.getElementById("growFlowerButton");
 
-const flowerStem =
-    document.getElementById("flowerStem");
-
-const flowerHead =
-    document.getElementById("flowerHead");
+const bigFlower =
+    document.getElementById("bigFlower");
 
 const flowerMessage =
     document.getElementById("flowerMessage");
@@ -269,7 +298,7 @@ const flowerMessage =
 let flowerGrown = false;
 
 
-growFlower?.addEventListener(
+growFlowerButton?.addEventListener(
     "click",
     () => {
 
@@ -277,46 +306,22 @@ growFlower?.addEventListener(
 
         flowerGrown = true;
 
-        growFlower.textContent =
+
+        growFlowerButton.textContent =
             "شکوفه داد 🌷";
 
 
-        if (flowerStem) {
+        if (bigFlower) {
 
-            flowerStem.classList.add("grow");
-
-            flowerStem.style.height =
-                "150px";
-
-        }
-
-
-        if (flowerHead) {
-
-            setTimeout(() => {
-
-                flowerHead.classList.add(
-                    "bloom"
-                );
-
-                flowerHead.style.opacity =
-                    "1";
-
-                flowerHead.style.transform =
-                    "translateX(-50%) scale(1)";
-
-            }, 700);
-
+            bigFlower.classList.add("bloom");
         }
 
 
         setTimeout(() => {
 
-            flowerMessage?.classList.add(
-                "show"
-            );
+            flowerMessage?.classList.add("show");
 
-        }, 1300);
+        }, 900);
 
     }
 );
@@ -326,11 +331,26 @@ growFlower?.addEventListener(
    CAKE
 ========================= */
 
-const blowCake =
-    document.getElementById("blowCake");
+const blowCakeButton =
+    document.getElementById("blowCakeButton");
 
-const footballStats =
-    document.getElementById("footballStats");
+const cakeInstruction =
+    document.getElementById("cakeInstruction");
+
+const footballGame =
+    document.getElementById("footballGame");
+
+const footballButton =
+    document.getElementById("footballButton");
+
+const footballBall =
+    document.getElementById("footballBall");
+
+const runningMessage =
+    document.getElementById("runningMessage");
+
+const dreamMessage =
+    document.getElementById("dreamMessage");
 
 const realMessage =
     document.getElementById("realMessage");
@@ -338,7 +358,7 @@ const realMessage =
 let cakeBlown = false;
 
 
-blowCake?.addEventListener(
+blowCakeButton?.addEventListener(
     "click",
     () => {
 
@@ -346,37 +366,85 @@ blowCake?.addEventListener(
 
         cakeBlown = true;
 
-        // متن جدید
-        blowCake.textContent =
+
+        blowCakeButton.textContent =
             "هورا ! 🎉";
+
+
+        if (cakeInstruction) {
+
+            cakeInstruction.textContent =
+                "یک مرحله‌ی دیگه هم کامل شد ⚽";
+        }
+
 
         createConfetti();
 
 
-        if (footballStats) {
+        footballGame?.classList.remove("hidden");
 
-            setTimeout(() => {
+    }
+);
 
-                footballStats.classList.add(
-                    "show"
-                );
 
-            }, 500);
+/* =========================
+   FOOTBALL
+========================= */
 
+let footballPlayed = false;
+
+
+footballButton?.addEventListener(
+    "click",
+    () => {
+
+        if (footballPlayed) return;
+
+        footballPlayed = true;
+
+
+        if (footballBall) {
+
+            footballBall.classList.add("kick");
         }
 
 
-        if (realMessage) {
+        setTimeout(() => {
 
-            setTimeout(() => {
+            footballGame?.classList.add("hidden");
 
-                realMessage.classList.add(
-                    "show"
-                );
+            runningMessage?.classList.remove(
+                "hidden"
+            );
 
-            }, 900);
+        }, 800);
 
-        }
+
+        setTimeout(() => {
+
+            runningMessage?.classList.add(
+                "show"
+            );
+
+        }, 900);
+
+
+        setTimeout(() => {
+
+            dreamMessage?.classList.remove(
+                "hidden"
+            );
+
+        }, 1600);
+
+
+        setTimeout(() => {
+
+            realMessage?.classList.remove(
+                "hidden"
+            );
+
+        }, 2300);
 
     }
 );
@@ -389,8 +457,8 @@ blowCake?.addEventListener(
 const envelope =
     document.getElementById("envelope");
 
-const openLetter =
-    document.getElementById("openLetter");
+const openLetterButton =
+    document.getElementById("openLetterButton");
 
 const typedLetter =
     document.getElementById("typedLetter");
@@ -413,7 +481,7 @@ const letterText = `سلام اناهیتا قشنگم، تولدت مبارک �
 let letterOpened = false;
 
 
-openLetter?.addEventListener(
+openLetterButton?.addEventListener(
     "click",
     () => {
 
@@ -421,10 +489,13 @@ openLetter?.addEventListener(
 
         letterOpened = true;
 
+
         envelope?.classList.add("open");
 
-        openLetter.textContent =
+
+        openLetterButton.textContent =
             "نامه باز شد 🤍";
+
 
         setTimeout(
             typeLetter,
@@ -441,6 +512,7 @@ function typeLetter() {
 
     typedLetter.textContent = "";
 
+
     if (letterSignature) {
 
         letterSignature.classList.remove(
@@ -448,6 +520,7 @@ function typeLetter() {
         );
 
     }
+
 
     let i = 0;
 
@@ -461,12 +534,15 @@ function typeLetter() {
 
             i++;
 
+
             setTimeout(
                 type,
                 25
             );
 
-        } else {
+        }
+
+        else {
 
             if (letterSignature) {
 
@@ -476,12 +552,10 @@ function typeLetter() {
                 letterSignature.classList.add(
                     "show"
                 );
-
             }
-
         }
-
     }
+
 
     type();
 }
@@ -507,48 +581,7 @@ function unlockSecretLevel() {
 
     createConfetti();
 
-
-    const notification =
-        document.createElement("div");
-
-    notification.textContent =
-        "🔓 مرحله‌ی مخفی باز شد...";
-
-
-    Object.assign(
-        notification.style,
-        {
-            position: "fixed",
-            left: "50%",
-            bottom: "25px",
-            transform:
-                "translateX(-50%)",
-            zIndex: "99999",
-            padding: "14px 22px",
-            borderRadius: "18px",
-            background: "#172b49",
-            color: "#fff",
-            fontSize: "14px",
-            boxShadow:
-                "0 10px 35px rgba(0,0,0,.22)"
-        }
-    );
-
-
-    document.body.appendChild(
-        notification
-    );
-
-
-    setTimeout(() => {
-
-        notification.remove();
-
-        showPage(
-            pages.secret
-        );
-
-    }, 1800);
+    showPage(pages.secret);
 }
 
 
@@ -566,13 +599,19 @@ function createConfetti() {
     ];
 
 
-    for (let i = 0; i < 45; i++) {
+    for (
+        let i = 0;
+        i < 45;
+        i++
+    ) {
 
         const piece =
             document.createElement("div");
 
+
         const size =
             Math.random() * 7 + 4;
+
 
         const duration =
             Math.random() * 1600 + 1800;
@@ -630,7 +669,6 @@ function createConfetti() {
             () => piece.remove(),
             duration
         );
-
     }
 }
 
