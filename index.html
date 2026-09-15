@@ -1,2907 +1,620 @@
-Today 6:21 PM
-index (2).html
-File
-
-آخخخ 😭 الان فهمیدم چرا قبلی جواب نداده. مشکل اصلی احتمالاً خود کد نیست؛ فایل script.js روی GitHub به درستی در کنار index.html قرار نگرفته یا اسمش دقیقاً script.js نیست.
-
-چون در index.html تو این خط وجود دارد:
-
-<script src="script.js"></script>
-
-و از طرفی در CSS، همه‌ی صفحه‌ها به‌صورت پیش‌فرض نامرئی هستند و فقط صفحه‌ای که active باشد دیده می‌شود:
-
-.page {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.page.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-پس اگر script.js لود نشود، تقویم هم active نمی‌شود → نتیجه دقیقاً همان صفحه کاملاً سفید است. 😭
-
-الان این کار رو بکن 👇
-
-داخل GitHub برو به پوشه‌ی ANA.
-
-باید دقیقاً این ۴ فایل را ببینی:
-
-ANA
-│
-├── index.html
-├── style.css
-├── script.js
-├── anahita.jpg
-└── cake.jpg
-
-و خیلی مهم:
-
-❌ نباید این باشد:
-
-script.js.txt
-
-❌ یا:
-
-script (1).js
-
-❌ یا:
-
-script_edited.js
-
-✅ دقیقاً باید باشد:
-
-script.js
-یک تست خیلی سریع
-
-در GitHub روی script.js کلیک کن.
-
-اگر فایل باز شد و بالایش اسم script.js نوشته شده، به من بگو «هست».
-
-اگر اصلاً فایل script.js را نمی‌بینی، بگو «نیست».
-
-اون‌وقت دقیقاً قدم بعدی رو بهت می‌گم؛ این بار نمی‌ذاریم دوباره سایت سفید بشه 😭🤝❤️
-
-Pasted text.txt
-Document
-
-آآآآ 😭 الان خود فایل HTML واقعی‌ای که فرستادی رو دیدم و مشکل رو دقیق پیدا کردم.
-
-مشکل قبلی این بود که من اسم بعضی IDها رو اشتباه گرفته بودم. مثلاً در HTML واقعی تو:
-
-گل: growFlower است، نه growFlowerButton
-کیک: blowCake است، نه blowCakeButton
-نامه: openLetter است، نه openLetterButton
-تقویم هم monthName و yearName و calendarMessage دارد.
-
-پس این نسخه‌ای که الان ساختم دقیقاً بر اساس همین HTML است.
-
-کد درست آماده است:
-
-دانلود script_fixed.js
-
-اسمش را بعد از دانلود حتماً به:
-
-script.js
-
-تغییر بده و جای script.js قبلی در GitHub بگذار.
-
-و یک نکته خیلی مهم: در HTML تو خود تقویم از اول active است، بنابراین حتی اگر JS لود نشود باید تقویم دیده شود.
-
-اگر بعد از جایگزین کردن این فایل باز هم سفید شد، دیگه حدس نمی‌زنیم؛ خطای واقعی GitHub Pages/Console رو پیدا می‌کنیم و دقیق درستش می‌کنیم. ❤️
-
-script_fixed.js
-Code
-کدش رو بده
-
-حتماً 😭❤️ اینم کد کامل script.js که با index.html فعلی‌ات هماهنگه:
-
-/* ANA - Birthday Website - script.js
-   هماهنگ با index.html فعلی
-*/
-
-const pages = {
-    calendar: document.getElementById("calendarPage"),
-    home: document.getElementById("homePage"),
-    flower: document.getElementById("flowerPage"),
-    cake: document.getElementById("cakePage"),
-    letter: document.getElementById("letterPage"),
-    secret: document.getElementById("secretPage")
-};
-
-function showPage(page) {
-    if (!page) return;
-
-    Object.values(pages).forEach(p => {
-        if (!p) return;
-        p.classList.remove("active");
-        p.classList.add("hidden");
-    });
-
-    page.classList.remove("hidden");
-
-    requestAnimationFrame(() => {
-        page.classList.add("active");
-    });
-}
-
-function goHome() {
-    showPage(pages.home);
-}
-
-
-/* =========================
-   CALENDAR
-========================= */
-
-const monthNames = [
-    "فروردین",
-    "اردیبهشت",
-    "خرداد",
-    "تیر",
-    "مرداد",
-    "شهریور",
-    "مهر",
-    "آبان",
-    "آذر",
-    "دی",
-    "بهمن",
-    "اسفند"
-];
-
-const monthName = document.getElementById("monthName");
-const yearName = document.getElementById("yearName");
-const calendarDays = document.getElementById("calendarDays");
-const calendarMessage = document.getElementById("calendarMessage");
-
-let currentYear = 1405;
-let currentMonth = 5; // شهریور
-
-function persianNumber(n) {
-    return String(n).replace(
-        /[0-9]/g,
-        d => "۰۱۲۳۴۵۶۷۸۹"[d]
-    );
-}
-
-function daysInMonth(month) {
-    return month <= 5
-        ? 31
-        : (month <= 10 ? 30 : 29);
-}
-
-function renderCalendar() {
-    if (!calendarDays) return;
-
-    monthName.textContent = monthNames[currentMonth];
-    yearName.textContent = persianNumber(currentYear);
-
-    calendarDays.innerHTML = "";
-
-    const offset =
-        (currentYear === 1405 && currentMonth === 5)
-            ? 0
-            : (currentMonth * 2) % 7;
-
-    for (let i = 0; i < offset; i++) {
-        const empty = document.createElement("span");
-        empty.className = "calendar-day empty";
-        calendarDays.appendChild(empty);
-    }
-
-    for (
-        let day = 1;
-        day <= daysInMonth(currentMonth);
-        day++
-    ) {
-        const button = document.createElement("button");
-
-        button.type = "button";
-        button.className = "calendar-day";
-        button.textContent = persianNumber(day);
-
-        // تولد اناهیتا: ۲۸ شهریور
-        if (
-            currentYear === 1405 &&
-            currentMonth === 5 &&
-            day === 28
-        ) {
-            button.classList.add("birthday");
-        }
-
-        button.addEventListener("click", () => {
-
-            if (
-                currentYear === 1405 &&
-                currentMonth === 5 &&
-                day === 28
-            ) {
-                calendarMessage.textContent =
-                    "آره... همین تاریخه. 🤍";
-
-                calendarMessage.classList.add("success");
-
-                createConfetti();
-
-                setTimeout(() => {
-                    showPage(pages.home);
-                }, 900);
-
-            } else {
-
-                calendarMessage.textContent =
-                    "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
-
-                calendarMessage.classList.remove("success");
-            }
-        });
-
-        calendarDays.appendChild(button);
-    }
-}
-
-
-// ماه قبل
-document.getElementById("prevMonth")?.addEventListener(
-    "click",
-    () => {
-
-        currentMonth--;
-
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-
-        renderCalendar();
-    }
-);
-
-
-// ماه بعد
-document.getElementById("nextMonth")?.addEventListener(
-    "click",
-    () => {
-
-        currentMonth++;
-
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-
-        renderCalendar();
-    }
-);
-
-
-/* =========================
-   THREE GIFTS
-========================= */
-
-const openedGifts = new Set();
-
-function openGift(section) {
-
-    if (section === "flower") {
-        openedGifts.add("flower");
-        showPage(pages.flower);
-    }
-
-    else if (section === "cake") {
-        openedGifts.add("cake");
-        showPage(pages.cake);
-    }
-
-    else if (section === "letter") {
-        openedGifts.add("letter");
-        showPage(pages.letter);
-    }
-
-    updateGiftProgress();
-}
-
-
-function updateGiftProgress() {
-
-    const count =
-        document.getElementById("openedCount");
-
-    if (count) {
-        count.textContent =
-            persianNumber(openedGifts.size);
-    }
-
-    // وقتی هر سه هدیه باز شدند
-    if (openedGifts.size === 3) {
-
-        setTimeout(
-            unlockSecretLevel,
-            700
-        );
-    }
-}
-
-
-// کارت‌های هدیه
-document.querySelectorAll(".gift-card")
-    .forEach(card => {
-
-        card.addEventListener("click", () => {
-
-            openGift(
-                card.dataset.section
-            );
-
-        });
-
-    });
-
-
-// دکمه‌های برگشت
-document.querySelectorAll(".back-button")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            goHome
-        );
-
-    });
-
-
-/* =========================
-   FLOWER
-========================= */
-
-const growFlower =
-    document.getElementById("growFlower");
-
-const flowerStem =
-    document.getElementById("flowerStem");
-
-const flowerHead =
-    document.getElementById("flowerHead");
-
-const flowerMessage =
-    document.getElementById("flowerMessage");
-
-let flowerGrown = false;
-
-
-growFlower?.addEventListener(
-    "click",
-    () => {
-
-        if (flowerGrown) return;
-
-        flowerGrown = true;
-
-        growFlower.textContent =
-            "شکوفه داد 🌷";
-
-
-        if (flowerStem) {
-
-            flowerStem.classList.add("grow");
-
-            flowerStem.style.height =
-                "150px";
-        }
-
-
-        if (flowerHead) {
-
-            setTimeout(() => {
-
-                flowerHead.classList.add(
-                    "bloom"
-                );
-
-                flowerHead.style.opacity =
-                    "1";
-
-                flowerHead.style.transform =
-                    "translateX(-50%) scale(1)";
-
-            }, 700);
-        }
-
-
-        setTimeout(() => {
-
-            flowerMessage?.classList.add(
-                "show"
-            );
-
-        }, 1300);
-    }
-);
-
-
-/* =========================
-   CAKE
-========================= */
-
-const blowCake =
-    document.getElementById("blowCake");
-
-const footballStats =
-    document.getElementById("footballStats");
-
-const realMessage =
-    document.getElementById("realMessage");
-
-let cakeBlown = false;
-
-
-blowCake?.addEventListener(
-    "click",
-    () => {
-
-        if (cakeBlown) return;
-
-        cakeBlown = true;
-
-        // متن جدید
-        blowCake.textContent =
-            "هورا ! 🎉";
-
-        createConfetti();
-
-
-        if (footballStats) {
-
-            setTimeout(() => {
-
-                footballStats.classList.add(
-                    "show"
-                );
-
-            }, 500);
-        }
-
-
-        if (realMessage) {
-
-            setTimeout(() => {
-
-                realMessage.classList.add(
-                    "show"
-                );
-
-            }, 900);
-        }
-    }
-);
-
-
-/* =========================
-   LETTER
-========================= */
-
-const envelope =
-    document.getElementById("envelope");
-
-const openLetter =
-    document.getElementById("openLetter");
-
-const typedLetter =
-    document.getElementById("typedLetter");
-
-const letterSignature =
-    document.getElementById("letterSignature");
-
-
-const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
-
-خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
-خیلی خیلی دوست دارم و خیلی برام باارزشی،
-بابت تمام خنده‌ها و لحظات خوبی که برام ساختی، ممنونم.
-
-فرشته کوچولو،
-امیدوارم همیشه به تمام آرزوهات برسی
-و توی تمام زندگیت موفق و سلامت باشی.`;
-
-
-let letterOpened = false;
-
-
-openLetter?.addEventListener(
-    "click",
-    () => {
-
-        if (letterOpened) return;
-
-        letterOpened = true;
-
-        envelope?.classList.add("open");
-
-        openLetter.textContent =
-            "نامه باز شد 🤍";
-
-        setTimeout(
-            typeLetter,
-            700
-        );
-    }
-);
-
-
-function typeLetter() {
-
-    if (!typedLetter) return;
-
-    typedLetter.textContent = "";
-
-    if (letterSignature) {
-        letterSignature.classList.remove(
-            "show"
-        );
-    }
-
-    let i = 0;
-
-
-    function type() {
-
-        if (i < letterText.length) {
-
-            typedLetter.textContent +=
-                letterText[i];
-
-            i++;
-
-            setTimeout(
-                type,
-                25
-            );
-
-        } else {
-
-            if (letterSignature) {
-
-                letterSignature.textContent =
-                    "از طرف هلیا ♡";
-
-                letterSignature.classList.add(
-                    "show"
-                );
-            }
-        }
-    }
-
-    type();
-}
-
-
-/* =========================
-   SECRET LEVEL
-========================= */
-
-let secretUnlocked = false;
-
-
-function unlockSecretLevel() {
-
-    if (
-        secretUnlocked ||
-        openedGifts.size !== 3
-    ) {
-        return;
-    }
-
-    secretUnlocked = true;
-
-    createConfetti();
-
-
-    const notification =
-        document.createElement("div");
-
-    notification.textContent =
-        "🔓 مرحله‌ی مخفی باز شد...";
-
-
-    Object.assign(
-        notification.style,
-        {
-            position: "fixed",
-            left: "50%",
-            bottom: "25px",
-            transform:
-                "translateX(-50%)",
-            zIndex: "99999",
-            padding: "14px 22px",
-            borderRadius: "18px",
-            background: "#172b49",
-            color: "#fff",
-            fontSize: "14px",
-            boxShadow:
-                "0 10px 35px rgba(0,0,0,.22)"
-        }
-    );
-
-
-    document.body.appendChild(
-        notification
-    );
-
-
-    setTimeout(() => {
-
-        notification.remove();
-
-        showPage(
-            pages.secret
-        );
-
-    }, 1800);
-}
-
-
-/* =========================
-   CONFETTI
-========================= */
-
-function createConfetti() {
-
-    const colors = [
-        "#f2a7c4",
-        "#8fc8e7",
-        "#f7d477",
-        "#ffffff"
-    ];
-
-
-    for (let i = 0; i < 45; i++) {
-
-        const piece =
-            document.createElement("div");
-
-        const size =
-            Math.random() * 7 + 4;
-
-        const duration =
-            Math.random() * 1600 + 1800;
-
-
-        Object.assign(
-            piece.style,
-            {
-                position: "fixed",
-                width: `${size}px`,
-                height: `${size}px`,
-                left: `${Math.random() * 100}vw`,
-                top: "-15px",
-                background:
-                    colors[
-                        Math.floor(
-                            Math.random() *
-                            colors.length
-                        )
-                    ],
-                borderRadius: "3px",
-                zIndex: "100000",
-                pointerEvents: "none"
-            }
-        );
-
-
-        document.body.appendChild(
-            piece
-        );
-
-
-        piece.animate(
-            [
-                {
-                    transform:
-                        "translateY(0) rotate(0deg)",
-                    opacity: 1
-                },
-                {
-                    transform:
-                        `translateY(110vh) rotate(${Math.random() * 720}deg)`,
-                    opacity: 0
-                }
-            ],
-            {
-                duration: duration,
-                easing:
-                    "cubic-bezier(.2,.8,.3,1)"
-            }
-        );
-
-
-        setTimeout(
-            () => piece.remove(),
-            duration
-        );
-    }
-}
-
-
-/* =========================
-   START
-========================= */
-
-showPage(pages.calendar);
-
-renderCalendar();
-
-updateGiftProgress();
-
-این نسخه رو کامل جایگزین script.js قبلیت کن.
-اسم فایل هم دقیقاً باید این باشه:
-
-script.js
-
-و داخل index.html هم همین خط باید باقی بمونه:
-
-<script src="script.js"></script>
-
-این نسخه با IDهای همین index.html آخری که فرستادی هماهنگه و متن نامه هم «باارزشی» و جمله‌ی «بابت تمام خنده‌ها...» رو درست داره.
-
-Pasted text(1).txt
-Document
-Pasted text (2).txt
-Document
-چزا اینو خراب کردیییییی
-
-آره 😭 این بار کد خودِ script.js اصلیت رو می‌دم و فقط یک تغییر روش انجام شده: مرحله مخفی دیگه بعد از برگشت به خانه خودش باز نمی‌شه. بقیه‌اش همون کد اصلیه.
-
-/* =====================================================
-   ANA - BIRTHDAY WEBSITE
-   script.js — هماهنگ با index.html فعلی
-===================================================== */
-
-/* =====================================================
-   PAGE ELEMENTS
-===================================================== */
-
-const pages = {
-    calendar: document.getElementById("calendarPage"),
-    home: document.getElementById("homePage"),
-    flower: document.getElementById("flowerPage"),
-    cake: document.getElementById("cakePage"),
-    letter: document.getElementById("letterPage"),
-    secret: document.getElementById("secretPage")
-};
-
-/* =====================================================
-   PAGE NAVIGATION
-===================================================== */
-
-function showPage(page) {
-    if (!page) return;
-
-    Object.values(pages).forEach(item => {
-        if (!item) return;
-        item.classList.remove("active");
-        item.classList.add("hidden");
-    });
-
-    page.classList.remove("hidden");
-
-    requestAnimationFrame(() => {
-        page.classList.add("active");
-    });
-}
-
-function openPage(pageId) {
-    const pageMap = {
-        calendarPage: pages.calendar,
-        homePage: pages.home,
-        flowerPage: pages.flower,
-        cakePage: pages.cake,
-        letterPage: pages.letter,
-        secretPage: pages.secret
-    };
-
-    const page = pageMap[pageId];
-    if (!page) return;
-
-    if (pageId === "flowerPage") openedGifts.add("flower");
-    if (pageId === "cakePage") openedGifts.add("cake");
-    if (pageId === "letterPage") openedGifts.add("letter");
-
-    showPage(page);
-    updateSecretButton();
-}
-
-function goHome() {
-    showPage(pages.home);
-    updateSecretButton();
-
-    // مرحله مخفی دیگر خودکار باز نمی‌شود.
-    // فقط دکمه‌ی آن بعد از باز شدن هر سه هدیه نمایش داده می‌شود.
-}
-
-/* =====================================================
-   PERSIAN NUMBERS
-===================================================== */
-
-function toPersianNumber(number) {
-    const persian = "۰۱۲۳۴۵۶۷۸۹";
-    return String(number).replace(
-        /[0-9]/g,
-        digit => persian[Number(digit)]
-    );
-}
-
-/* =====================================================
-   JALALI CALENDAR
-===================================================== */
-
-const monthNames = [
-    "فروردین", "اردیبهشت", "خرداد", "تیر",
-    "مرداد", "شهریور", "مهر", "آبان",
-    "آذر", "دی", "بهمن", "اسفند"
-];
-
-let currentYear = 1405;
-let currentMonth = 5;
-
-const calendarTitle =
-    document.getElementById("calendarTitle");
-
-const calendarDays =
-    document.getElementById("calendarDays");
-
-const calendarHint =
-    document.getElementById("calendarHint");
-
-function getMonthDays(year, month) {
-    if (month <= 5) return 31;
-    if (month <= 10) return 30;
-    return 29;
-}
-
-function getFirstDayOffset(year, month) {
-    if (year === 1405 && month === 5) return 1;
-
-    return (month * 2) % 7;
-}
-
-function renderCalendar() {
-    if (!calendarDays || !calendarTitle) return;
-
-    calendarTitle.textContent =
-        `${monthNames[currentMonth]} ${toPersianNumber(currentYear)}`;
-
-    calendarDays.innerHTML = "";
-
-    const offset =
-        getFirstDayOffset(currentYear, currentMonth);
-
-    for (let i = 0; i < offset; i++) {
-        const empty =
-            document.createElement("div");
-
-        empty.className =
-            "calendar-day empty";
-
-        calendarDays.appendChild(empty);
-    }
-
-    const totalDays =
-        getMonthDays(currentYear, currentMonth);
-
-    for (
-        let day = 1;
-        day <= totalDays;
-        day++
-    ) {
-
-        const button =
-            document.createElement("button");
-
-        button.type = "button";
-        button.className = "calendar-day";
-        button.textContent =
-            toPersianNumber(day);
-
-        if (
-            currentYear === 1405 &&
-            currentMonth === 5 &&
-            day === 28
-        ) {
-            button.classList.add("birthday");
-        }
-
-        button.addEventListener(
-            "click",
-            () => {
-                checkBirthday(
-                    currentMonth,
-                    day
-                );
-            }
-        );
-
-        calendarDays.appendChild(button);
-    }
-}
-
-function checkBirthday(month, day) {
-    if (!calendarHint) return;
-
-    if (month === 5 && day === 28) {
-
-        calendarHint.textContent =
-            "آره... همین تاریخه. 🤍";
-
-        calendarHint.style.color =
-            "#559dc5";
-
-        createConfetti();
-
-        setTimeout(() => {
-            openBirthday();
-        }, 1000);
-
-    } else {
-
-        calendarHint.textContent =
-            "نه... این تاریخ نیست 😌 دوباره امتحان کن.";
-
-        calendarHint.style.color =
-            "#df7fa8";
-    }
-}
-
-function openBirthday() {
-    showPage(pages.home);
-    createConfetti();
-}
-
-/* Calendar arrows */
-
-document
-    .getElementById("prevMonth")
-    ?.addEventListener(
-        "click",
-        () => {
-
-            currentMonth--;
-
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-
-            renderCalendar();
-        }
-    );
-
-document
-    .getElementById("nextMonth")
-    ?.addEventListener(
-        "click",
-        () => {
-
-            currentMonth++;
-
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-
-            renderCalendar();
-        }
-    );
-
-/* =====================================================
-   GIFT SYSTEM
-===================================================== */
-
-const openedGifts = new Set();
-
-function updateSecretButton() {
-
-    const secretButton =
-        document.getElementById("secretButton");
-
-    if (!secretButton) return;
-
-    if (openedGifts.size === 3) {
-
-        secretButton.classList.remove(
-            "hidden"
-        );
-
-    } else {
-
-        secretButton.classList.add(
-            "hidden"
-        );
-    }
-}
-
-document
-    .querySelectorAll(".gift-card")
-    .forEach(card => {
-
-        card.addEventListener(
-            "click",
-            () => {
-
-                if (
-                    card.classList.contains(
-                        "flower-card"
-                    )
-                ) {
-                    openedGifts.add(
-                        "flower"
-                    );
-                }
-
-                if (
-                    card.classList.contains(
-                        "cake-card"
-                    )
-                ) {
-                    openedGifts.add(
-                        "cake"
-                    );
-                }
-
-                if (
-                    card.classList.contains(
-                        "letter-card"
-                    )
-                ) {
-                    openedGifts.add(
-                        "letter"
-                    );
-                }
-
-                updateSecretButton();
-            }
-        );
-    });
-
-/* =====================================================
-   BACK BUTTONS
-===================================================== */
-
-document
-    .querySelectorAll(".back-button")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-                goHome();
-            }
-        );
-    });
-
-/* =====================================================
-   FLOWER
-===================================================== */
-
-const growFlowerButton =
-    document.getElementById(
-        "growFlowerButton"
-    );
-
-const bigFlower =
-    document.getElementById(
-        "bigFlower"
-    );
-
-const flowerMessage =
-    document.getElementById(
-        "flowerMessage"
-    );
-
-let flowerAlreadyGrown = false;
-
-growFlowerButton?.addEventListener(
-    "click",
-    () => {
-
-        if (flowerAlreadyGrown) return;
-
-        flowerAlreadyGrown = true;
-
-        growFlowerButton.textContent =
-            "شکوفه داد 🌷";
-
-        const stem =
-            bigFlower?.querySelector(
-                ".big-flower-stem"
-            );
-
-        const head =
-            bigFlower?.querySelector(
-                ".big-flower-head"
-            );
-
-        if (stem) {
-            stem.style.height =
-                "150px";
-        }
-
-        bigFlower
-            ?.querySelectorAll(".leaf")
-            .forEach(leaf => {
-
-                setTimeout(() => {
-
-                    leaf.style.opacity =
-                        "1";
-
-                }, 700);
-            });
-
-        if (head) {
-
-            setTimeout(() => {
-
-                head.style.opacity =
-                    "1";
-
-                head.style.transform =
-                    "translateX(-50%) scale(1)";
-
-            }, 900);
-        }
-
-        setTimeout(() => {
-
-            flowerMessage
-                ?.classList
-                .add("show");
-
-        }, 1800);
-    }
-);
-
-/* =====================================================
-   CAKE + FOOTBALL
-===================================================== */
-
-const blowCakeButton =
-    document.getElementById(
-        "blowCakeButton"
-    );
-
-const cakeInstruction =
-    document.getElementById(
-        "cakeInstruction"
-    );
-
-const footballGame =
-    document.getElementById(
-        "footballGame"
-    );
-
-const footballButton =
-    document.getElementById(
-        "footballButton"
-    );
-
-const footballBall =
-    document.getElementById(
-        "footballBall"
-    );
-
-const runningMessage =
-    document.getElementById(
-        "runningMessage"
-    );
-
-const dreamMessage =
-    document.getElementById(
-        "dreamMessage"
-    );
-
-const realMessage =
-    document.getElementById(
-        "realMessage"
-    );
-
-let cakeAlreadyBlown = false;
-let footballStarted = false;
-
-blowCakeButton?.addEventListener(
-    "click",
-    () => {
-
-        if (cakeAlreadyBlown) return;
-
-        cakeAlreadyBlown = true;
-
-        blowCakeButton.textContent =
-            "هورا ! 🎉";
-
-        if (cakeInstruction) {
-
-            cakeInstruction.textContent =
-                "یک مرحله‌ی دیگه هم کامل شد ⚽";
-        }
-
-        createConfetti();
-
-        if (footballGame) {
-
-            setTimeout(() => {
-
-                footballGame.classList.remove(
-                    "hidden"
-                );
-
-                footballGame.classList.add(
-                    "show"
-                );
-
-            }, 500);
-        }
-    }
-);
-
-footballButton?.addEventListener(
-    "click",
-    () => {
-
-        if (footballStarted) return;
-
-        footballStarted = true;
-
-        if (footballBall) {
-
-            footballBall.animate(
-                [
-                    {
-                        transform:
-                            "translateX(0) translateY(0) rotate(0deg)"
-                    },
-                    {
-                        transform:
-                            "translateX(150px) translateY(-45px) rotate(360deg)"
-                    },
-                    {
-                        transform:
-                            "translateX(280px) translateY(0) rotate(720deg)"
-                    }
-                ],
-                {
-                    duration: 1000,
-                    easing: "ease-out",
-                    fill: "forwards"
-                }
-            );
-        }
-
-        if (runningMessage) {
-
-            setTimeout(() => {
-
-                runningMessage.classList.remove(
-                    "hidden"
-                );
-
-                runningMessage.classList.add(
-                    "show"
-                );
-
-            }, 900);
-        }
-
-        if (dreamMessage) {
-
-            setTimeout(() => {
-
-                dreamMessage.classList.remove(
-                    "hidden"
-                );
-
-                dreamMessage.classList.add(
-                    "show"
-                );
-
-            }, 1800);
-        }
-
-        if (realMessage) {
-
-            setTimeout(() => {
-
-                realMessage.classList.remove(
-                    "hidden"
-                );
-
-                realMessage.classList.add(
-                    "show"
-                );
-
-                createConfetti();
-
-            }, 2800);
-        }
-    }
-);
-
-/* =====================================================
-   LETTER
-===================================================== */
-
-const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
-
-خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
-خیلی خیلی دوست دارم و خیلی برام باارزشی،
-بابت تمام خنده‌ها و لحظات خوبی که برام ساختی، ممنونم.
-
-فرشته کوچولو،
-امیدوارم همیشه به تمام آرزوهات برسی
-و توی تمام زندگیت موفق و سلامت باشی.`;
-
-const envelope =
-    document.getElementById(
-        "envelope"
-    );
-
-const openLetterButton =
-    document.getElementById(
-        "openLetterButton"
-    );
-
-const typedLetter =
-    document.getElementById(
-        "typedLetter"
-    );
-
-const letterSignature =
-    document.getElementById(
-        "letterSignature"
-    );
-
-let letterAlreadyOpened = false;
-
-openLetterButton?.addEventListener(
-    "click",
-    () => {
-
-        if (letterAlreadyOpened) return;
-
-        letterAlreadyOpened = true;
-
-        envelope?.classList.add(
-            "open"
-        );
-
-        openLetterButton.textContent =
-            "نامه باز شد 🤍";
-
-        setTimeout(
-            typeLetter,
-            800
-        );
-    }
-);
-
-function typeLetter() {
-
-    if (!typedLetter) return;
-
-    let index = 0;
-    const speed = 28;
-
-    typedLetter.textContent = "";
-
-    function type() {
-
-        if (index < letterText.length) {
-
-            typedLetter.textContent +=
-                letterText.charAt(index);
-
-            index++;
-
-            setTimeout(
-                type,
-                speed
-            );
-
-        } else {
-
-            setTimeout(() => {
-
-                if (letterSignature) {
-
-                    letterSignature.textContent =
-                        "از طرف هلیا ♡";
-
-                    letterSignature.classList.add(
-                        "show"
-                    );
-                }
-
-            }, 500);
-        }
-    }
-
-    type();
-}
-
-/* =====================================================
-   SECRET LEVEL
-===================================================== */
-
-let secretNotificationShown = false;
-
-function showSecretNotification() {
-
-    if (
-        secretNotificationShown ||
-        openedGifts.size !== 3
-    ) {
-        return;
-    }
-
-    secretNotificationShown = true;
-
-    const notification =
-        document.createElement("div");
-
-    notification.textContent =
-        "🔓 یک مرحله‌ی مخفی هم برات باز شده...";
-
-    Object.assign(
-        notification.style,
-        {
-            position: "fixed",
-            left: "50%",
-            bottom: "25px",
-            transform:
-                "translateX(-50%)",
-            zIndex: "99999",
-            padding: "14px 20px",
-            borderRadius: "16px",
-            background: "#172b49",
-            color: "white",
-            fontSize: "11px",
-            boxShadow:
-                "0 10px 35px rgba(0,0,0,.2)"
-        }
-    );
-
-    document.body.appendChild(
-        notification
-    );
-
-    setTimeout(() => {
-
-        notification.remove();
-
-        showPage(
-            pages.secret
-        );
-
-    }, 2200);
-}
-
-/* =====================================================
-   CONFETTI
-===================================================== */
-
-function createConfetti() {
-
-    const amount = 55;
-
-    const colors = [
-        "#f2a7c4",
-        "#8fc8e7",
-        "#f7d477",
-        "#ffffff"
-    ];
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        const piece =
-            document.createElement(
-                "div"
-            );
-
-        const size =
-            Math.random() * 7 + 4;
-
-        const duration =
-            Math.random() * 1800 + 2200;
-
-        Object.assign(
-            piece.style,
-            {
-                position: "fixed",
-                width: `${size}px`,
-                height: `${size}px`,
-                left: `${Math.random() * 100}vw`,
-                top: "-20px",
-                background:
-                    colors[
-                        Math.floor(
-                            Math.random() *
-                            colors.length
-                        )
-                    ],
-                borderRadius: "3px",
-                zIndex: "100000",
-                pointerEvents: "none"
-            }
-        );
-
-        document.body.appendChild(
-            piece
-        );
-
-        piece.animate(
-            [
-                {
-                    transform:
-                        "translateY(0) rotate(0deg)",
-                    opacity: 1
-                },
-                {
-                    transform:
-                        `translateY(110vh) rotate(${Math.random() * 720}deg)`,
-                    opacity: 0
-                }
-            ],
-            {
-                duration,
-                easing:
-                    "cubic-bezier(.2,.8,.3,1)"
-            }
-        );
-
-        setTimeout(
-            () => piece.remove(),
-            duration
-        );
-    }
-}
-
-/* =====================================================
-   INITIALIZE
-===================================================== */
-
-// مهم: صفحه‌ی تقویم باید در شروع فعال باشد.
-showPage(pages.calendar);
-
-renderCalendar();
-
-updateSecretButton();
-
-مهم: این بار index.html و style.css رو تغییر نده. فقط همین را داخل script.js بگذار.
-
-script(1).js
-JavaScript
-index (3).html
-File
-بدون هیچ تغییری توی هیچ جاش فقط و فقط اون بخش مرحله ی مخفی رو تبدیل به یک ایکون کن که تا وقتی که 3 تای اول رو باز نکرده اون باز نشه و بعد وقتی کلیک کرد مرحله ی مخفی بیاد بالا
-
-آره، دقیقاً فهمیدم چی می‌خوای 😭❤️
-هیچ جای دیگه دست نمی‌زنیم. فقط خود «مرحله مخفی» تغییر می‌کنه.
-
-در فایل فعلی‌ات، مرحله مخفی الان یک باکس با قفل، عنوان و متن است.
-
-۱. در index.html
-
-کل این بخش:
-
-<!-- SECRET LEVEL UNLOCK -->
-
-<div id="secretUnlockBox"
-     class="secret-unlock-box locked">
-
-    <div class="secret-lock-icon">
-        🔒
-    </div>
-
-    <h2>
-        مرحله‌ی مخفی
-    </h2>
-
-    <p id="secretUnlockText">
-        اول هر سه کادو رو باز کن تا این مرحله باز بشه...
-    </p>
-
-    <button id="secretUnlockButton"
-            type="button"
-            disabled>
-
-        هنوز قفله 🔒
-
-    </button>
-
-</div>
-
-را فقط با این جایگزین کن:
-
-<!-- SECRET LEVEL UNLOCK -->
-
-<button
-    id="secretUnlockButton"
-    type="button"
-    disabled
-    aria-label="مرحله مخفی"
-    style="
-        background: transparent;
-        border: none;
-        padding: 10px;
-        font-size: 38px;
-        cursor: default;
-        opacity: 0.45;
-        transition: all 0.3s ease;
-    ">
-    🔒
-</button>
-
-یعنی در حالت اول فقط 🔒 می‌بینی.
-
-۲. در script.js
-
-بخش فعلی مربوط به مرحله مخفی که با این شروع می‌شود:
-
-const secretUnlockBox =
-    document.getElementById("secretUnlockBox");
-
-را کامل حذف کن و این را دقیقاً جایش بگذار:
-
-// =========================
-// مرحله مخفی
-// =========================
-
-const secretUnlockButton =
-    document.getElementById("secretUnlockButton");
-
-let secretUnlocked = false;
-
-function updateSecretLock() {
-
-    if (!secretUnlockButton) {
-        return;
-    }
-
-    // تا وقتی هر سه هدیه باز نشده‌اند
-    if (openedGifts.size < 3) {
-
-        secretUnlockButton.disabled = true;
-
-        secretUnlockButton.textContent =
-            "🔒";
-
-        secretUnlockButton.style.opacity =
-            "0.45";
-
-        secretUnlockButton.style.cursor =
-            "default";
-
-        return;
-    }
-
-    // هر سه هدیه باز شده‌اند
-    secretUnlockButton.disabled = false;
-
-    secretUnlockButton.textContent =
-        "🔓";
-
-    secretUnlockButton.style.opacity =
-        "1";
-
-    secretUnlockButton.style.cursor =
-        "pointer";
-
-    secretUnlockButton.style.transform =
-        "scale(1.08)";
-}
-
-
-// فقط با کلیک خود کاربر باز می‌شود
-secretUnlockButton?.addEventListener(
-    "click",
-    () => {
-
-        if (openedGifts.size < 3) {
-            return;
-        }
-
-        if (secretUnlocked) {
-            return;
-        }
-
-        secretUnlocked = true;
-
-        createConfetti();
-
-        setTimeout(() => {
-
-            showPage(pages.secret);
-
-        }, 500);
-    }
-);
-
-و پایین فایل، همان:
-
-updateGiftProgress();
-updateSecretLock();
-
-را نگه دار؛ چون همین باعث می‌شود بعد از باز شدن هدیه‌ها، قفل به 🔓 تبدیل شود. در نسخه فعلی هم updateSecretLock() بعد از پیشرفت هدیه‌ها اجرا می‌شود.
-
-نتیجه دقیقاً این می‌شود:
-
-۰ تا ۲ هدیه:
-
-🔒
-
-غیرفعال، کلیک نمی‌شود.
-
-هر ۳ هدیه باز شدند:
-
-🔓
-
-قابل کلیک می‌شود.
-
-روی 🔓 کلیک کند:
-
-🎉 → مرحله مخفی باز می‌شود.
-
-و مهم‌تر از همه: مرحله مخفی دیگر خودش اتوماتیک باز نمی‌شود. فقط با کلیک روی آیکون باز می‌شود.
-
-هیچ تغییری در تقویم، گل، کیک، نامه، عکس، انیمیشن‌ها یا بقیه کد نمی‌دهیم. ❤️
-
-خب  تب های کد ها بهم خورد چی بزنم که درست شه
-
-آهاا، منظورت تورفتگی (Indentation) کدهاست 😭
-اگر منظورت اینه که همه‌ی کدها چسبیده شدن و تب‌ها/فاصله‌ها به‌هم ریخته، ساده‌ترین راه:
-
-اگر در VS Code هستی:
-کل کد را انتخاب کن: Ctrl + A
-مرتب‌سازی خودکار را بزن:
-Shift + Alt + F
-
-خود VS Code کد HTML / CSS / JS را مرتب و تورفتگی‌ها را درست می‌کند. ✨
-
-اگر فقط چند خط به‌هم ریخته:
-یک خط یا چند خط را انتخاب کن.
-Tab → یک سطح جلو می‌رود.
-Shift + Tab → یک سطح عقب می‌آید.
-
-⚠️ اگر منظورت اینه که خود تب‌های بالای فایل‌ها (مثلاً index.html و style.css و script.js) به‌هم خورده، بگو؛ اون یک چیز دیگه‌ست.
-
-Chat paused until usage resets at 10:39 PM
-You’ve reached the limit for chats that include files or images. Start a new text-only chat or upgrade to continue now.
-New chat
-Claim free offer
-
-document.addEventListener("DOMContentLoaded", () => {
-    // =========================
-    // عناصر اصلی
-    // =========================
-
-    const pages = {
-        calendar: document.getElementById("calendarPage"),
-        home: document.getElementById("homePage"),
-        flower: document.getElementById("flowerPage"),
-        cake: document.getElementById("cakePage"),
-        letter: document.getElementById("letterPage"),
-        secret: document.getElementById("secretPage")
-    };
-
-    const openedGifts = new Set();
-
-    // =========================
-    // ابزارهای کمکی
-    // =========================
-
-    function persianNumber(number) {
-        return String(number).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
-    }
-
-    function showPage(page) {
-        Object.values(pages).forEach(p => {
-            if (p) p.classList.remove("active");
-        });
-
-        if (page) {
-            page.classList.add("active");
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
-    }
-
-    function createConfetti() {
-        const container = document.createElement("div");
-        container.className = "confetti-container";
-
-        for (let i = 0; i < 45; i++) {
-            const piece = document.createElement("span");
-            piece.className = "confetti";
-
-            piece.style.left = `${Math.random() * 100}%`;
-            piece.style.animationDelay = `${Math.random() * 0.8}s`;
-            piece.style.animationDuration =
-                `${2 + Math.random() * 2}s`;
-
-            container.appendChild(piece);
-        }
-
-        document.body.appendChild(container);
-
-        setTimeout(() => {
-            container.remove();
-        }, 4500);
-    }
-
-    // =========================
-    // تقویم
-    // =========================
-
-    const prevMonth = document.getElementById("prevMonth");
-    const nextMonth = document.getElementById("nextMonth");
-    const monthName = document.getElementById("monthName");
-    const yearName = document.getElementById("yearName");
-    const calendarDays = document.getElementById("calendarDays");
-    const calendarMessage = document.getElementById("calendarMessage");
-
-    const shamsiMonths = [
-        "فروردین",
-        "اردیبهشت",
-        "خرداد",
-        "تیر",
-        "مرداد",
-        "شهریور",
-        "مهر",
-        "آبان",
-        "آذر",
-        "دی",
-        "بهمن",
-        "اسفند"
-    ];
-
-    let calendarMonth = 5;
-    let calendarYear = 1405;
-
-    function renderCalendar() {
-        if (!calendarDays) return;
-
-        calendarDays.innerHTML = "";
-
-        if (monthName) {
-            monthName.textContent = shamsiMonths[calendarMonth];
-        }
-
-        if (yearName) {
-            yearName.textContent = persianNumber(calendarYear);
-        }
-
-        const daysInMonth =
-            calendarMonth < 6 ? 31 :
-            calendarMonth < 11 ? 30 :
-            29;
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            const button = document.createElement("button");
-
-            button.className = "calendar-day";
-            button.textContent = persianNumber(day);
-            button.type = "button";
-
-            if (day === 28 && calendarMonth === 5) {
-                button.classList.add("birthday-day");
-
-                button.addEventListener("click", () => {
-                    if (calendarMessage) {
-                        calendarMessage.textContent =
-                            "آرههه! خودشه! 🎂💗";
-                    }
-
-                    createConfetti();
-
-                    setTimeout(() => {
-                        showPage(pages.home);
-                    }, 900);
-                });
-            } else {
-                button.addEventListener("click", () => {
-                    if (calendarMessage) {
-                        calendarMessage.textContent =
-                            "نههه، تولد اناهیتا این روز نیست 😭";
-                    }
-                });
-            }
-
-            calendarDays.appendChild(button);
-        }
-    }
-
-    prevMonth?.addEventListener("click", () => {
-        calendarMonth--;
-
-        if (calendarMonth < 0) {
-            calendarMonth = 11;
-            calendarYear--;
-        }
-
-        renderCalendar();
-    });
-
-    nextMonth?.addEventListener("click", () => {
-        calendarMonth++;
-
-        if (calendarMonth > 11) {
-            calendarMonth = 0;
-            calendarYear++;
-        }
-
-        renderCalendar();
-    });
-
-    renderCalendar();
-
-    // =========================
-    // رفتن از خانه به کادوها
-    // =========================
-
-    document.querySelectorAll(".gift-card").forEach(card => {
-        card.addEventListener("click", () => {
-            const section = card.dataset.section;
-
-            if (!section || !pages[section]) return;
-
-            openedGifts.add(section);
-
-            showPage(pages[section]);
-
-            updateGiftProgress();
-            updateSecretLock();
-        });
-    });
-
-    // =========================
-    // دکمه‌های برگشت
-    // =========================
-
-    document.querySelectorAll("[data-back]").forEach(button => {
-        button.addEventListener("click", () => {
-            showPage(pages.home);
-        });
-    });
-
-    // =========================
-    // پیشرفت کادوها
-    // =========================
-
-    const giftProgress = document.getElementById("giftProgress");
-
-    function updateGiftProgress() {
-        if (!giftProgress) return;
-
-        giftProgress.textContent =
-            `${persianNumber(openedGifts.size)} از ${persianNumber(3)} کادو باز شده`;
-
-        updateSecretLock();
-    }
-
-    // =========================
-    // گل
-    // =========================
-
-    const growFlower = document.getElementById("growFlower");
-    const flowerStem = document.getElementById("flowerStem");
-    const flowerHead = document.getElementById("flowerHead");
-    const flowerMessage = document.getElementById("flowerMessage");
-
-    let flowerGrown = false;
-
-    growFlower?.addEventListener("click", () => {
-        if (flowerGrown) return;
-
-        flowerGrown = true;
-
-        if (flowerStem) {
-            flowerStem.classList.add("grown");
-        }
-
-        if (flowerHead) {
-            flowerHead.classList.add("bloom");
-        }
-
-        if (growFlower) {
-            growFlower.textContent = "گل شکوفه زد 🌸";
-            growFlower.disabled = true;
-        }
-
-        if (flowerMessage) {
-            flowerMessage.innerHTML = `
-                <p>
-                    برای اناهیتا قشنگم که مثل همین گل زیباس 🌸
-                </p>
-                <p>
-                    امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه 💗
-                </p>
-            `;
-        }
-
-        createConfetti();
-    });
-
-    // =========================
-    // کیک
-    // =========================
-
-    const blowCake = document.getElementById("blowCake");
-    const footballStats = document.getElementById("footballStats");
-    const realMessage = document.getElementById("realMessage");
-
-    let cakeBlown = false;
-
-    blowCake?.addEventListener("click", () => {
-        if (cakeBlown) return;
-
-        cakeBlown = true;
-
-        const cake = document.querySelector(".cake");
-
-        if (cake) {
-            cake.classList.add("blown");
-        }
-
-        blowCake.textContent = "هورا ! 🎉";
-        blowCake.disabled = true;
-
-        if (footballStats) {
-            footballStats.classList.add("show");
-        }
-
-        if (realMessage) {
-            realMessage.innerHTML = `
-                <p>
-                    برای اناهیتایی که عاشق فوتباله ⚽🤍
-                </p>
-                <p>
-                    Hala Madrid! 🤍💙
-                </p>
-                <p>
-                    امیدوارم همیشه توی دویدن، فوتبال و رسیدن به
-                    آرزوهات موفق باشی ✨
-                </p>
-            `;
-        }
-
-        createConfetti();
-    });
-
-    // =========================
-    // نامه
-    // =========================
-
-    const openLetter = document.getElementById("openLetter");
-    const typedLetter = document.getElementById("typedLetter");
-    const letterSignature = document.getElementById("letterSignature");
-
-    const letterText = `سلام اناهیتا قشنگم، تولدت مبارک باشه. ♡
-
-خیلی خوشحالم که تونستم با فرشته‌ی خوشگلی مثل تو آشنا بشم.
-خیلی خیلی دوست دارم و خیلی برام باارزشی،
-بابت تمام خنده‌ها و لحظات خوبی که برام ساختی، ممنونم.
-
-فرشته کوچولو،
-امیدوارم همیشه به تمام آرزوهات برسی
-و توی تمام زندگیت موفق و سلامت باشی.`;
-
-    let letterOpened = false;
-
-    function typeLetter() {
-        if (!typedLetter) return;
-
-        typedLetter.textContent = "";
-        if (letterSignature) {
-            letterSignature.classList.remove("show");
-        }
-
-        let index = 0;
-
-        const interval = setInterval(() => {
-            if (index < letterText.length) {
-                typedLetter.textContent += letterText[index];
-                index++;
-
-                typedLetter.scrollTop =
-                    typedLetter.scrollHeight;
-            } else {
-                clearInterval(interval);
-
-                if (letterSignature) {
-                    letterSignature.textContent =
-                        "از طرف هلیا ♡";
-
-                    letterSignature.classList.add("show");
-                }
-
-                // فقط قفل مرحله مخفی را بررسی می‌کنیم.
-                // اینجا دیگر وارد مرحله مخفی نمی‌شویم.
-                updateSecretLock();
-            }
-        }, 35);
-    }
-
-    openLetter?.addEventListener("click", () => {
-        if (letterOpened) return;
-
-        letterOpened = true;
-
-        const envelope =
-            document.getElementById("envelope");
-
-        if (envelope) {
-            envelope.classList.add("open");
-        }
-
-        openLetter.textContent = "نامه باز شد 💌";
-        openLetter.disabled = true;
-
-        setTimeout(() => {
-            typeLetter();
-        }, 500);
-    });
-
-    // =========================
-    // مرحله مخفی
-    // =========================
-
-  // =========================
-// مرحله مخفی
-// =========================
-
-const secretUnlockButton =
-    document.getElementById("secretUnlockButton");
-
-let secretUnlocked = false;
-
-function updateSecretLock() {
-
-    if (!secretUnlockButton) {
-        return;
-    }
-
-    // تا وقتی هر سه هدیه باز نشده‌اند
-    if (openedGifts.size < 3) {
-
-        secretUnlockButton.disabled = true;
-
-        secretUnlockButton.textContent =
-            "🔒";
-
-        secretUnlockButton.style.opacity =
-            "0.45";
-
-        secretUnlockButton.style.cursor =
-            "default";
-
-        return;
-    }
-
-    // هر سه هدیه باز شده‌اند
-    secretUnlockButton.disabled = false;
-
-    secretUnlockButton.textContent =
-        "🔓";
-
-    secretUnlockButton.style.opacity =
-        "1";
-
-    secretUnlockButton.style.cursor =
-        "pointer";
-
-    secretUnlockButton.style.transform =
-        "scale(1.08)";
-}
-
-
-// فقط با کلیک خود کاربر باز می‌شود
-secretUnlockButton?.addEventListener(
-    "click",
-    () => {
-
-        if (openedGifts.size < 3) {
-            return;
-        }
-
-        if (secretUnlocked) {
-            return;
-        }
-
-        secretUnlocked = true;
-
-        createConfetti();
-
-        setTimeout(() => {
-
-            showPage(pages.secret);
-
-        }, 500);
-    }
-);
-
-    // =========================
-    // مرحله مخفی
-    // =========================
-
-    const secretButton =
-        document.getElementById("secretButton");
-
-    secretButton?.addEventListener("click", () => {
-        createConfetti();
-    });
-
-    // =========================
-    // شروع
-    // =========================
-
-    updateGiftProgress();
-    updateSecretLock();
-});
- اونی که بالا گفتی رو به این اضافه کن
-
 <!DOCTYPE html>
-
 <html lang="fa" dir="rtl">
 
-<head> <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<title>برای اناهیتا ♡</title>
+    <title>برای اناهیتا ♡</title>
 
-<meta name="description"
-      content="یک هدیه‌ی کوچک برای اناهیتا">
+    <meta name="description"
+          content="یک هدیه‌ی کوچک برای اناهیتا">
 
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- ===================================================== BACKGROUND ===================================================== -->
-
 <div id="particles"></div>
 
-<!-- ===================================================== 1. CALENDAR PAGE ===================================================== -->
+
+<!-- =====================================================
+     1. CALENDAR PAGE
+===================================================== -->
 
 <section id="calendarPage" class="page active">
 
-<div class="background-glow glow-pink"></div>
-<div class="background-glow glow-blue"></div>
+    <div class="background-glow glow-pink"></div>
+    <div class="background-glow glow-blue"></div>
 
-<main class="calendar-wrapper">
+    <main class="calendar-wrapper">
 
-    <div class="small-heart">♡</div>
+        <div class="small-heart">♡</div>
 
-    <p class="eyebrow">
-        یک تاریخ خاص...
-    </p>
+        <p class="eyebrow">
+            یک تاریخ خاص...
+        </p>
 
-    <h1 class="calendar-title">
-        بعضی تاریخ‌ها
-        <br>
-        فقط یک تاریخ نیستن.
-    </h1>
+        <h1 class="calendar-title">
+            بعضی تاریخ‌ها
+            <br>
+            فقط یک تاریخ نیستن.
+        </h1>
 
-    <p class="calendar-subtitle">
-        تاریخ تولدت رو انتخاب کن
-        <br>
-        تا چیزی که برات آماده شده رو ببینی.
-    </p>
+        <p class="calendar-subtitle">
+            تاریخ تولدت رو انتخاب کن
+            <br>
+            تا چیزی که برات آماده شده رو ببینی.
+        </p>
 
 
-    <div class="calendar-box">
+        <div class="calendar-box">
 
-        <div class="calendar-header">
+            <div class="calendar-header">
 
-            <button id="prevMonth"
-                    class="month-button">
-                ‹
-            </button>
+                <button id="prevMonth"
+                        class="month-button"
+                        type="button">
+                    ‹
+                </button>
 
-            <div class="month-title">
-                <strong id="monthName">
-                    شهریور
-                </strong>
+                <div class="month-title">
 
-                <span id="yearName">
-                    ۱۴۰۵
-                </span>
+                    <strong id="monthName">
+                        شهریور
+                    </strong>
+
+                    <span id="yearName">
+                        ۱۴۰۵
+                    </span>
+
+                </div>
+
+                <button id="nextMonth"
+                        class="month-button"
+                        type="button">
+                    ›
+                </button>
+
             </div>
 
-            <button id="nextMonth"
-                    class="month-button">
-                ›
-            </button>
+
+            <div class="weekdays">
+
+                <span>ش</span>
+                <span>ی</span>
+                <span>د</span>
+                <span>س</span>
+                <span>چ</span>
+                <span>پ</span>
+                <span>ج</span>
+
+            </div>
+
+
+            <div id="calendarDays"
+                 class="calendar-days">
+            </div>
 
         </div>
 
 
-        <div class="weekdays">
+        <p id="calendarMessage"
+           class="calendar-message">
+            منتظر انتخاب توئه... 💗
+        </p>
 
-            <span>ش</span>
-            <span>ی</span>
-            <span>د</span>
-            <span>س</span>
-            <span>چ</span>
-            <span>پ</span>
-            <span>ج</span>
-
-        </div>
-
-
-        <div id="calendarDays"
-             class="calendar-days">
-        </div>
-
-    </div>
-
-
-    <p id="calendarMessage"
-       class="calendar-message">
-        منتظر انتخاب توئه... 💗
-    </p>
-
-</main>
+    </main>
 
 </section>
 
 
 
-
-<!-- ===================================================== 2. HOME PAGE ===================================================== -->
+<!-- =====================================================
+     2. HOME PAGE
+===================================================== -->
 
 <section id="homePage" class="page hidden">
 
-<div class="home-decoration decoration-one">♡</div>
-<div class="home-decoration decoration-two">✦</div>
-<div class="home-decoration decoration-three">♡</div>
+    <div class="home-decoration decoration-one">♡</div>
+    <div class="home-decoration decoration-two">✦</div>
+    <div class="home-decoration decoration-three">♡</div>
 
-<main class="home-wrapper">
+    <main class="home-wrapper">
+
+        <p class="welcome-label">
+            بالاخره رسیدی...
+        </p>
 
 
-    <p class="welcome-label">
-        بالاخره رسیدی...
-    </p>
+        <!-- PHOTO -->
 
+        <div class="photo-frame">
 
-    <!-- PHOTO -->
+            <div class="photo-glow"></div>
 
-    <div class="photo-frame">
+            <img src="anahita.jpg"
+                 alt="عکس اناهیتا"
+                 class="anahita-photo">
 
-        <div class="photo-glow"></div>
+            <div class="photo-heart">
+                ♡
+            </div>
 
-        <img src="anahita.jpg"
-             alt="عکس اناهیتا"
-             class="anahita-photo">
-
-        <div class="photo-heart">
-            ♡
         </div>
 
-    </div>
+
+        <h1 class="birthday-title">
+            تولد مبارک.
+        </h1>
 
 
-    <h1 class="birthday-title">
-        تولد مبارک.
-    </h1>
+        <p class="birthday-intro">
+            روی هر کدوم بزن تا ببینی توش چیاس
+        </p>
 
 
-    <p class="birthday-intro">
-        روی هر کدوم بزن تا ببینی توش چیاس
-    </p>
+        <!-- GIFT CARDS -->
+
+        <div class="gift-cards">
 
 
-    <!-- GIFT CARDS -->
+            <!-- FLOWER -->
 
-    <div class="gift-cards">
+            <button class="gift-card flower-card"
+                    data-section="flower"
+                    type="button">
+
+                <div class="gift-icon flower-icon">
+                    🌷
+                </div>
+
+                <div class="gift-info">
+
+                    <h2>
+                        یک گل برای تو
+                    </h2>
+
+                </div>
+
+                <span class="gift-arrow">
+                    ←
+                </span>
+
+            </button>
 
 
-        <!-- FLOWER -->
 
-        <button class="gift-card"
-                data-section="flower">
+            <!-- CAKE -->
 
-            <div class="gift-icon flower-icon">
-                🌷
-            </div>
+            <button class="gift-card cake-card"
+                    data-section="cake"
+                    type="button">
 
-            <div class="gift-info">
+                <div class="gift-icon cake-icon">
+                    🎂
+                </div>
 
-                <h2>
-                    یک گل برای تو
-                </h2>
+                <div class="gift-info">
 
-            </div>
+                    <h2>
+                        کیک
+                    </h2>
 
-            <span class="gift-arrow">
-                ←
+                </div>
+
+                <span class="gift-arrow">
+                    ←
+                </span>
+
+            </button>
+
+
+
+            <!-- LETTER -->
+
+            <button class="gift-card letter-card"
+                    data-section="letter"
+                    type="button">
+
+                <div class="gift-icon letter-icon">
+                    💌
+                </div>
+
+                <div class="gift-info">
+
+                    <h2>
+                        یک نامه
+                    </h2>
+
+                </div>
+
+                <span class="gift-arrow">
+                    ←
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="gift-progress">
+
+            <span id="openedCount">
+                ۰
             </span>
+
+            / ۳ هدیه باز شده
+
+        </div>
+
+    </main>
+
+</section>
+
+
+
+<!-- =====================================================
+     3. FLOWER PAGE
+===================================================== -->
+
+<section id="flowerPage"
+         class="page hidden gift-page flower-page">
+
+    <button class="back-button"
+            type="button">
+        ← برگشت
+    </button>
+
+
+    <main class="flower-wrapper">
+
+        <p class="gift-label">
+            هدیه‌ی اول
+        </p>
+
+
+        <h1>
+            یک گل برای اناهیتا فقط
+        </h1>
+
+
+        <!-- GARDEN -->
+
+        <div class="flower-garden">
+
+            <div class="moon"></div>
+
+            <div class="little-star star-a">
+                ✦
+            </div>
+
+            <div class="little-star star-b">
+                ✧
+            </div>
+
+            <div class="little-star star-c">
+                ✦
+            </div>
+
+
+            <div class="ground"></div>
+
+
+            <!-- STEM -->
+
+            <div id="flowerStem"
+                 class="flower-stem">
+
+                <div class="leaf leaf-left"></div>
+
+                <div class="leaf leaf-right"></div>
+
+            </div>
+
+
+            <!-- FLOWER -->
+
+            <div id="flowerHead"
+                 class="flower-head">
+
+                <div class="petal petal-1"></div>
+                <div class="petal petal-2"></div>
+                <div class="petal petal-3"></div>
+                <div class="petal petal-4"></div>
+                <div class="petal petal-5"></div>
+
+                <div class="flower-center"></div>
+
+            </div>
+
+        </div>
+
+
+        <button id="growFlower"
+                class="primary-button"
+                type="button">
+
+            گل رو رشد بده 🌱
 
         </button>
 
+
+        <!-- MESSAGE -->
+
+        <div id="flowerMessage"
+             class="flower-message">
+
+            <h2>
+                یک گل برای اناهیتا فقط 🌸
+            </h2>
+
+            <p>
+                برای اناهیتا قشنگم که مثل همین گل زیباس
+                <br>
+                امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه
+            </p>
+
+        </div>
+
+    </main>
+
+</section>
+
+
+
+<!-- =====================================================
+     4. CAKE / FOOTBALL PAGE
+===================================================== -->
+
+<section id="cakePage"
+         class="page hidden gift-page football-page">
+
+    <button class="back-button"
+            type="button">
+        ← برگشت
+    </button>
+
+
+    <main class="football-wrapper">
+
+        <p class="gift-label">
+            هدیه‌ی دوم
+        </p>
+
+
+        <div class="level-title">
+
+            <span>
+                کیک تولد
+            </span>
+
+        </div>
 
 
         <!-- CAKE -->
 
-        <button class="gift-card"
-                data-section="cake">
+        <div class="cake-photo-wrapper">
 
-            <div class="gift-icon cake-icon">
-                🎂
-            </div>
+            <div class="cake-photo-glow"></div>
 
-            <div class="gift-info">
-
-                <h2>
-                    یک Level جدید
-                </h2>
-
-            </div>
-
-            <span class="gift-arrow">
-                ←
-            </span>
-
-        </button>
-
-
-
-        <!-- LETTER -->
-
-        <button class="gift-card"
-                data-section="letter">
-
-            <div class="gift-icon letter-icon">
-                💌
-            </div>
-
-            <div class="gift-info">
-
-                <h2>
-                    یک نامه
-                </h2>
-
-            </div>
-
-            <span class="gift-arrow">
-                ←
-            </span>
-
-        </button>
-
-
-    </div>
-
-
-    <div class="gift-progress">
-
-        <span id="openedCount">
-            ۰
-        </span>
-
-        / ۳ هدیه باز شده
-
-    </div>
-
-
-</main>
-
-</section>
-
-
-
-
-<!-- ===================================================== 3. FLOWER PAGE ===================================================== -->
-
-<section id="flowerPage" class="page hidden gift-page flower-page">
-
-<button class="back-button">
-    ← برگشت
-</button>
-
-
-<main class="flower-wrapper">
-
-    <p class="gift-label">
-        هدیه‌ی اول
-    </p>
-
-    <h1>
-        یک گل برای اناهیتا فقط
-    </h1>
-
-
-    <!-- GARDEN -->
-
-    <div class="flower-garden">
-
-        <div class="moon"></div>
-
-        <div class="little-star star-a">✦</div>
-        <div class="little-star star-b">✧</div>
-        <div class="little-star star-c">✦</div>
-
-
-        <div class="ground"></div>
-
-
-        <!-- STEM -->
-
-        <div id="flowerStem"
-             class="flower-stem">
-
-            <div class="leaf leaf-left"></div>
-            <div class="leaf leaf-right"></div>
+            <img src="cake.jpg"
+                 alt="کیک تولد"
+                 class="cake-photo">
 
         </div>
 
 
-        <!-- FLOWER -->
+        <button id="blowCake"
+                class="primary-button"
+                type="button">
 
-        <div id="flowerHead"
-             class="flower-head">
+            شمع‌ها رو فوت کن 🎂
 
-            <div class="petal petal-1"></div>
-            <div class="petal petal-2"></div>
-            <div class="petal petal-3"></div>
-            <div class="petal petal-4"></div>
-            <div class="petal petal-5"></div>
+        </button>
 
-            <div class="flower-center"></div>
+
+        <!-- FOOTBALL STATS -->
+
+        <div id="footballStats"
+             class="football-stats hidden">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⚽
+                </div>
+
+                <h3>
+                    Football
+                </h3>
+
+                <p>
+                    برای تمام گل‌هایی
+                    <br>
+                    که هنوز نزدی.
+                </p>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏃
+                </div>
+
+                <h3>
+                    Running
+                </h3>
+
+                <p>
+                    برای تمام خط پایان‌هایی
+                    <br>
+                    که هنوز منتظر توئن.
+                </p>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏆
+                </div>
+
+                <h3>
+                    Dreams
+                </h3>
+
+                <p>
+                    برای تمام رویاهایی
+                    <br>
+                    که هنوز شروع نشدن.
+                </p>
+
+            </div>
 
         </div>
 
 
-    </div>
+        <!-- FOOTBALL GAME -->
+
+        <div id="footballGame"
+             class="football-game hidden">
+
+            <div id="footballBall"
+                 class="football-ball">
+                ⚽
+            </div>
+
+            <button id="footballButton"
+                    class="primary-button"
+                    type="button">
+
+                شوت کن ⚽
+
+            </button>
+
+        </div>
 
 
-    <button id="growFlower"
-            class="primary-button">
+        <p id="runningMessage"
+           class="running-message hidden">
 
-        گل رو رشد بده 🌱
+            برای تمام مسیرهایی که با دویدن طی می‌کنی 🏃
 
-    </button>
-
-
-    <!-- MESSAGE -->
-
-    <div id="flowerMessage"
-         class="flower-message">
-
-        <h2>
-            یک گل برای اناهیتا فقط 🌸
-        </h2>
-
-        <p>
-            برای اناهیتا قشنگم که مثل همین گل زیباس،
-            <br>
-            امیدوارم سال های زندگیت همیشه پر از شکوفه و گل های زیبا باشه.
         </p>
 
-    </div>
 
-</main>
+        <p id="dreamMessage"
+           class="dream-message hidden">
 
-</section>
+            برای تمام رویاهایی که هنوز منتظر رسیدنن ✨
 
-
-
-
-<!-- ===================================================== 4. CAKE / FOOTBALL PAGE ===================================================== -->
-
-<section id="cakePage" class="page hidden gift-page football-page">
-
-<button class="back-button">
-    ← برگشت
-</button>
+        </p>
 
 
-<main class="football-wrapper">
+        <!-- REAL MADRID -->
 
-    <p class="gift-label">
-        هدیه‌ی دوم
-    </p>
+        <div id="realMessage"
+             class="real-message hidden">
 
-
-    <div class="level-title">
-
-        <span>
-            کیک تولد
-        </span>
-
-    </div>
-
-
-    <!-- CAKE IMAGE -->
-
-    <div class="cake-photo-wrapper">
-
-        <div class="cake-photo-glow"></div>
-
-        <img src="cake.jpg"
-             alt="کیک تولد"
-             class="cake-photo">
-
-    </div>
-
-
-    <button id="blowCake"
-            class="primary-button">
-
-        شمع‌ها رو فوت کن 🎂
-
-    </button>
-
-
-    <!-- FOOTBALL STATS -->
-
-    <div id="footballStats"
-         class="football-stats">
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
+            <div class="football-ball">
                 ⚽
             </div>
 
-            <h3>
-                Football
-            </h3>
+            <h2>
+                و یادت نره...
+            </h2>
 
-            <p>
-                برای تمام گل‌هایی
-                <br>
-                که هنوز نزدی.
-            </p>
+            <strong>
+                Hala Madrid 🤍
+            </strong>
 
         </div>
 
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                🏃
-            </div>
-
-            <h3>
-                Running
-            </h3>
-
-            <p>
-                برای تمام خط پایان‌هایی
-                <br>
-                که هنوز منتظر توئن.
-            </p>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                🏆
-            </div>
-
-            <h3>
-                Dreams
-            </h3>
-
-            <p>
-                برای تمام رویاهایی
-                <br>
-                که هنوز شروع نشدن.
-            </p>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- REAL MADRID -->
-
-    <div id="realMessage"
-         class="real-message">
-
-        <div class="football-ball">
-            ⚽
-        </div>
-
-        <h2>
-            و یادت نره...
-        </h2>
-
-        <strong>
-            Hala Madrid 🤍
-        </strong>
-
-    </div>
-
-</main>
+    </main>
 
 </section>
 
 
 
+<!-- =====================================================
+     5. LETTER PAGE
+===================================================== -->
 
-<!-- ===================================================== 5. LETTER PAGE ===================================================== -->
+<section id="letterPage"
+         class="page hidden gift-page letter-page">
 
-<section id="letterPage" class="page hidden gift-page letter-page">
-
-<button class="back-button">
-    ← برگشت
-</button>
-
-
-<main class="letter-wrapper">
-
-    <p class="gift-label">
-        هدیه‌ی سوم
-    </p>
-
-
-    <!-- ENVELOPE -->
-
-    <div id="envelope"
-         class="envelope">
-
-        <div class="envelope-back"></div>
-
-
-        <div class="letter-paper">
-
-            <div class="letter-inner">
-
-                <p class="letter-to">
-                    برای اناهیتا قشنگم ♡
-                </p>
-
-                <div id="typedLetter"></div>
-
-                <p id="letterSignature"
-                   class="letter-signature">
-
-                    از طرف هلیا ♡
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="envelope-front"></div>
-
-    </div>
-
-
-    <button id="openLetter"
-            class="primary-button">
-
-        نامه رو باز کن 💌
-
+    <button class="back-button"
+            type="button">
+        ← برگشت
     </button>
 
 
-</main>
+    <main class="letter-wrapper">
 
-</section>
-
-
-
-
-<!-- ===================================================== 6. SECRET LEVEL ===================================================== -->
-
-<section id="secretPage" class="page hidden secret-page">
-
-<div class="stadium-light light-left"></div>
-<div class="stadium-light light-right"></div>
+        <p class="gift-label">
+            هدیه‌ی سوم
+        </p>
 
 
-<main class="secret-wrapper">
+        <!-- ENVELOPE -->
 
-    <p class="secret-label">
-        🔓 SECRET LEVEL UNLOCKED
-    </p>
+        <div id="envelope"
+             class="envelope">
 
-
-    <h1>
-        فکر کردی دیگه تموم شد؟
-    </h1>
+            <div class="envelope-back"></div>
 
 
-    <!-- STADIUM -->
+            <div class="letter-paper">
 
-    <div class="stadium">
+                <div class="letter-inner">
 
-        <div class="field">
+                    <p class="letter-to">
+                        برای اناهیتا قشنگم ♡
+                    </p>
 
-            <div class="field-center-line"></div>
+                    <div id="typedLetter"></div>
 
-            <div class="field-center-circle"></div>
+                    <p id="letterSignature"
+                       class="letter-signature">
 
-            <div class="penalty-box penalty-left"></div>
+                        از طرف هلیا ♡
 
-            <div class="penalty-box penalty-right"></div>
+                    </p>
 
-            <div class="football-final">
-                ⚽
+                </div>
+
             </div>
+
+
+            <div class="envelope-front"></div>
 
         </div>
 
-    </div>
 
+        <button id="openLetter"
+                class="primary-button"
+                type="button">
 
-    <h2>
-        برای تمام بازی‌های بعدی...
-    </h2>
+            نامه رو باز کن 💌
 
+        </button>
 
-    <p class="secret-text">
-
-        امیدوارم همیشه برای چیزی که دوستش داری
-        <br>
-
-        با همون انرژی بدوی
-        <br>
-
-        که برای رسیدن به خط پایان می‌دوی.
-
-    </p>
-
-
-    <div class="final-message">
-
-        <span>
-            ۲۸ شهریور
-        </span>
-
-        <strong>
-            HAPPY BIRTHDAY
-        </strong>
-
-        <small>
-            برای اناهیتا ♡
-        </small>
-
-        <b>
-            Hala Madrid 🤍
-        </b>
-
-    </div>
-
-
-</main>
+    </main>
 
 </section>
 
 
-
-
-<!-- ===================================================== SCRIPT ===================================================== -->
 
 <script src="script.js"></script>
 
-</body> </html>
-
-Close
+</body>
+</html>
